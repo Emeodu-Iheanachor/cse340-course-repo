@@ -1,30 +1,230 @@
-html, body {
-    background-color: lightblue;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
+:root {
+    --ink: #17324d;
+    --muted: #526577;
+    --surface: #ffffff;
+    --page: #eef5f3;
+    --accent: #d45d38;
+    --accent-dark: #a94327;
+    --teal: #176b68;
+    --line: #d3e2df;
+    --shadow: 0 18px 40px rgba(23, 50, 77, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    background: var(--page);
 }
 
 body {
-    nav {
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
+    min-height: 100vh;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    color: var(--ink);
+    background: var(--surface);
+    font-family: 'Trebuchet MS', Verdana, sans-serif;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+}
 
-        li {
-            display: inline;
-            margin-right: 15px;
-        }
 
-        a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
+nav {
+    border-bottom: 1px solid var(--line);
+    padding: 1.25rem 0;
+}
 
-            &:hover {
-                color: #0066cc;
-            }
-        }
+nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    color: var(--ink);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+nav a:hover,
+nav a:focus-visible {
+    color: var(--accent-dark);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25rem;
+    
+}
+
+nav a.active {
+    color: var(--accent);
+    font-weight: 700;
+    border-bottom: 3px solid var(--accent);
+}
+
+
+main {
+    flex: 1;
+    padding: clamp(3rem, 8vw, 6rem) clamp(0.25rem, 5vw, 4.5rem);
+}
+
+
+h1,
+h2 {
+    line-height: 1.15;
+}
+
+h1 {
+    max-width: 14ch;
+    margin: 0 0 1.25rem;
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(2.6rem, 7vw, 5.25rem);
+    letter-spacing: 0;
+}
+
+h2 {
+    margin: 0;
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+p {
+    max-width: 65ch;
+    color: var(--muted);
+    font-size: 1.05rem;
+}
+
+.page-hero {
+    max-width: 46rem;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.page-hero p {
+    margin-bottom: 0;
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+}
+
+.categories {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.category-card {
+    position: relative;
+    min-height: 12rem;
+    padding: 1.75rem;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    background: #f8fbfa;
+    box-shadow: var(--shadow);
+}
+
+.category-card::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.4rem;
+    height: 100%;
+    background: var(--accent);
+    content: '';
+}
+
+.category-card h2,
+.category-card p {
+    position: relative;
+    margin-left: 0.5rem;
+}
+
+.category-card p {
+    margin-bottom: 0;
+}
+
+.main-logo {
+    display: block;
+    width: min(100%, 26rem);
+    height: auto;
+    margin-top: 2rem;
+}
+
+.category-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    max-width: 45rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.category-list li {
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-left: 0.35rem solid var(--accent);
+    background: #f7fbfa;
+    font-weight: 700;
+}
+
+footer {
+    width: 100%;
+    margin-top: auto;
+    padding: 1.5rem 0 2rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.85rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+footer p {
+    width: 100%;
+    max-width: none;
+    margin: 0.25rem 0;
+    font-size: inherit;
+    text-align: center;
+}
+
+footer img {
+    display: block;
+    margin: 1rem auto;
+}
+
+@media (max-width: 640px) {
+    body {
+        padding: 0 1rem;
     }
-}                
+
+    nav ul {
+        justify-content: flex-start;
+        gap: 0.5rem 1rem;
+        
+    }
+
+    main {
+        padding-top: 3.25rem;
+    }
+
+    .categories,
+    .category-list {
+        grid-template-columns: 1fr;
+    }
+
+    .category-card {
+        min-height: auto;
+    }
+}
