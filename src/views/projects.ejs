@@ -1,12 +1,93 @@
 <%- include('partials/header') %>
 
-<main> <section class="page-hero"> <h1><%= title %></h1>
+<main class="projects-page">
 
-    <p>
-        Explore service projects and opportunities available through
-        the CSE 340 Service Network.
-    </p>
-</section>
+    <section class="page-intro">
+        <h1><%= title %></h1>
+
+        <p>
+            Explore service opportunities and discover projects
+            where you can make a positive difference in the community.
+        </p>
+    </section>
+
+    <% if (projects && projects.length > 0) { %>
+
+        <section class="projects-list" aria-label="Service projects">
+
+            <% projects.forEach(project => { %>
+
+                <article class="project-card">
+
+                    <div class="project-card-content">
+
+                        <p class="project-label">Service Project</p>
+
+                        <h2><%= project.title %></h2>
+
+                        <p class="project-description">
+                            <%= project.description %>
+                        </p>
+
+                        <div class="project-details">
+
+                            <div class="project-detail">
+                                <span class="detail-label">Organization</span>
+                                <span class="detail-value">
+                                    <%= project.organization_name %>
+                                </span>
+                            </div>
+
+                            <div class="project-detail">
+                                <span class="detail-label">Start Date</span>
+                                <span class="detail-value">
+                                    <%= new Date(project.start_date).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        timeZone: 'UTC'
+                                    }) %>
+                                </span>
+                            </div>
+
+                            <% if (project.end_date) { %>
+
+                                <div class="project-detail">
+                                    <span class="detail-label">End Date</span>
+                                    <span class="detail-value">
+                                        <%= new Date(project.end_date).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric',
+                                            timeZone: 'UTC'
+                                        }) %>
+                                    </span>
+                                </div>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            <% }) %>
+
+        </section>
+
+    <% } else { %>
+
+        <section class="no-projects">
+            <h2>No Service Projects Available</h2>
+
+            <p>
+                There are currently no service projects available.
+                Please check back later.
+            </p>
+        </section>
+
+    <% } %>
 
 </main>
 
