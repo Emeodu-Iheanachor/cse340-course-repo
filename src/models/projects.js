@@ -1,5 +1,9 @@
-import pool from './db.js';
+import db from './db.js';
 
+/**
+ * Get all service projects from the database.
+ * @returns {Promise<Array>} List of service projects
+ */
 const getAllProjects = async () => {
     const query = `
         SELECT
@@ -10,17 +14,15 @@ const getAllProjects = async () => {
             sp.end_date,
             sp.organization_id,
             o.name AS organization_name
-        FROM service_project sp
-        JOIN organization o
+        FROM public.service_project sp
+        JOIN public.organization o
             ON sp.organization_id = o.organization_id
         ORDER BY sp.start_date;
     `;
 
-    const result = await pool.query(query);
+    const result = await db.query(query);
 
     return result.rows;
 };
 
-export {
-    getAllProjects
-};
+export { getAllProjects };
