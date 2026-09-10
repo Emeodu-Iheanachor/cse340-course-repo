@@ -1,19 +1,24 @@
-import db from './db.js';
+import pool from './db.js';
 
 /**
- * Get all categories from the database
- * @returns {Promise<Array>} Array of category objects
+
+ * Get all service project categories
+ * @returns {Promise<Array>} List of categories
  */
-const getAllCategories = async () => {
-    const query = `
-        SELECT category_id, category_name
-        FROM public.category
-        ORDER BY category_name ASC;
-    `;
+export async function getAllCategories() {
+    try {
+        const [rows] = await pool.query(`
+            SELECT
+                category_id,
+                category_name,
+                description
+            FROM categories
+            ORDER BY category_name ASC
+        `);
 
-    const result = await db.query(query);
-
-    return result.rows;
-};
-
-export { getAllCategories };
+        return rows;
+    } catch (error) {
+        console.error('Error retrieving categories:', error);
+        throw error;
+    }
+}

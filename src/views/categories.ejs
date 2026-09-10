@@ -18,7 +18,17 @@
             <% categories.forEach(category => { %>
 
                 <article class="category-card">
-                    <h2><%= category.category_name %></h2>
+
+                    <h2>
+                        <%= category.category_name %>
+                    </h2>
+
+                    <% if (category.description) { %>
+                        <p>
+                            <%= category.description %>
+                        </p>
+                    <% } %>
+
                 </article>
 
             <% }); %>
@@ -27,7 +37,9 @@
 
     <% } else { %>
 
-        <p>No categories are currently available.</p>
+        <p class="no-results">
+            No categories are currently available.
+        </p>
 
     <% } %>
 
