@@ -490,6 +490,178 @@ p {
 }
 
 
+
+
+
+/* =========================================
+   CATEGORIES PAGE
+========================================= */
+
+.categories-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+
+/* =========================================
+   PAGE INTRODUCTION
+========================================= */
+
+.categories-page .page-intro {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+}
+
+.categories-page .page-intro h1 {
+    margin: 0 0 0.75rem;
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.categories-page .page-intro p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   CATEGORIES GRID
+========================================= */
+
+.categories-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+}
+
+
+/* =========================================
+   CATEGORY CARD
+========================================= */
+
+.category-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 170px;
+    padding: 1.5rem;
+
+    background: var(--surface);
+    border: 1px solid rgba(23, 50, 77, 0.12);
+    border-radius: 12px;
+
+    text-align: center;
+
+    box-shadow: 0 4px 12px rgba(23, 50, 77, 0.08);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* =========================================
+   CARD HOVER
+========================================= */
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(23, 50, 77, 0.14);
+}
+
+
+/* =========================================
+   CATEGORY TITLE
+========================================= */
+
+.category-card h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.categories-page > p {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.25rem;
+
+    text-align: center;
+
+    background: var(--surface);
+    border: 1px solid rgba(23, 50, 77, 0.1);
+    border-radius: 10px;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+    .categories-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .categories-page {
+        padding: 2rem 1rem 3rem;
+    }
+
+    .categories-page .page-intro {
+        margin-bottom: 2rem;
+    }
+
+    .categories-page .page-intro h1 {
+        font-size: 1.7rem;
+    }
+
+    .categories-page .page-intro p {
+        font-size: 0.95rem;
+    }
+
+    .categories-list {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .category-card {
+        min-height: 130px;
+        padding: 1.25rem;
+    }
+
+    .category-card h2 {
+        font-size: 1.1rem;
+    }
+
+}
+
+
+
+
+
 /* ---------- Footer ---------- */
 
 footer {

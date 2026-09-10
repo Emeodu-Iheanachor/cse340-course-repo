@@ -1,32 +1,36 @@
 <%- include('partials/header') %>
 
 <main class="categories-page">
-    <section class="page-hero">
+
+    <section class="page-intro">
         <h1><%= title %></h1>
-        <p>Explore service project categories and find opportunities to make a difference.</p>
+
+        <p>
+            Explore service project categories and discover
+            opportunities to make a positive difference in the community.
+        </p>
     </section>
 
-    <section class="categories">
-        <div class="category-card">
-            <h2>Environmental</h2>
-            <p>Projects focused on protecting and improving our environment.</p>
-        </div>
+    <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
 
-        <div class="category-card">
-            <h2>Educational</h2>
-            <p>Projects that support learning, teaching, and educational development.</p>
-        </div>
+        <section class="categories-list" aria-label="Service project categories">
 
-        <div class="category-card">
-            <h2>Community Service</h2>
-            <p>Projects designed to strengthen and support local communities.</p>
-        </div>
+            <% categories.forEach(category => { %>
 
-        <div class="category-card">
-            <h2>Health and Wellness</h2>
-            <p>Projects that promote health, wellness, and quality of life.</p>
-        </div>
-    </section>
+                <article class="category-card">
+                    <h2><%= category.category_name %></h2>
+                </article>
+
+            <% }); %>
+
+        </section>
+
+    <% } else { %>
+
+        <p>No categories are currently available.</p>
+
+    <% } %>
+
 </main>
 
 <%- include('partials/footer') %>
