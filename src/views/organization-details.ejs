@@ -1,0 +1,144 @@
+<%- include('partials/header') %>
+
+<main>
+
+    <% if (organizationDetails) { %>
+
+        <section class="page-intro">
+            <h1><%= organizationDetails.name %></h1>
+
+            <p>
+                Learn more about this partner organization and the
+                service opportunities it provides.
+            </p>
+        </section>
+
+
+        <section class="organization-details-card">
+
+            <div class="organization-details-logo">
+                <img
+                    src="/images/<%= organizationDetails.logo_filename %>"
+                    alt="<%= organizationDetails.name %> logo"
+                >
+            </div>
+
+            <div class="organization-information">
+
+                <h2>About the Organization</h2>
+
+                <p>
+                    <%= organizationDetails.description %>
+                </p>
+
+                <p class="contact-email">
+                    <strong>Contact Email:</strong>
+                    <a href="mailto:<%= organizationDetails.contact_email %>">
+                        <%= organizationDetails.contact_email %>
+                    </a>
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="organization-projects">
+
+            <h2>Service Projects</h2>
+
+            <% if (projects && projects.length > 0) { %>
+
+                <div class="project-list">
+
+                    <% projects.forEach(project => { %>
+
+                        <article class="project-card">
+
+                            <div class="project-card-content">
+
+                                <h3>
+                                    <%= project.title %>
+                                </h3>
+
+                                <p class="project-description">
+                                    <%= project.description %>
+                                </p>
+
+                                <div class="project-details">
+
+                                    <div class="project-detail">
+                                        <span class="detail-label">
+                                            Start Date
+                                        </span>
+
+                                        <span class="detail-value">
+                                            <%= project.start_date %>
+                                        </span>
+                                    </div>
+
+                                    <% if (project.end_date) { %>
+
+                                        <div class="project-detail">
+                                            <span class="detail-label">
+                                                End Date
+                                            </span>
+
+                                            <span class="detail-value">
+                                                <%= project.end_date %>
+                                            </span>
+                                        </div>
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    <% }) %>
+
+                </div>
+
+            <% } else { %>
+
+                <p class="no-projects">
+                    This organization currently has no service projects.
+                </p>
+
+            <% } %>
+
+        </section>
+
+
+        <div class="page-actions">
+
+            <a href="/organizations" class="page-link">
+                Back to Partner Organizations
+            </a>
+
+        </div>
+
+
+    <% } else { %>
+
+        <section class="page-intro">
+
+            <h1>Organization Not Found</h1>
+
+            <p>
+                The organization you are looking for could not be found.
+            </p>
+
+            <a href="/organizations" class="page-link">
+                Return to Partner Organizations
+            </a>
+
+        </section>
+
+    <% } %>
+
+</main>
+
+<%- include('partials/footer') %>

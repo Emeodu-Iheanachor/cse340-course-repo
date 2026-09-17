@@ -1,38 +1,63 @@
 <%- include('partials/header') %>
 
-<main> <section class="page-hero"> <h1><%= title %></h1>
+<main>
 
-    <p>
-        Our partner organizations work with the CSE 340 Service Network
-        to provide meaningful service opportunities to volunteers.
-    </p>
-</section>
+    <section class="page-intro">
+        <h1><%= title %></h1>
 
-<section class="organizations">
+        <p>
+            Explore our partner organizations and discover
+            meaningful opportunities to serve in the community.
+        </p>
+    </section>
 
-    <% organizations.forEach(organization => { %>
 
-        <article class="organization-card">
-            <img
-                src="/images/<%= organization.logo_filename %>"
-                alt="<%= organization.name %> logo"
-                class="organization-logo"
-            >
+    <section class="organization-list">
 
-            <h2><%= organization.name %></h2>
+        <% organizations.forEach(organization => { %>
 
-            <p>
-                <%= organization.description %>
-            </p>
+            <article class="organization-card">
 
-            <p>
-                Contact: <%= organization.contact_email %>
-            </p>
-        </article>
+                <div class="organization-card-image">
+                    <img
+                        src="/images/<%= organization.logo_filename %>"
+                        alt="<%= organization.name %> logo"
+                    >
+                </div>
 
-    <% }); %>
+                <div class="organization-card-content">
 
-</section>
+                    <h2>
+                        <a href="/organizations/<%= organization.organization_id %>">
+                            <%= organization.name %>
+                        </a>
+                    </h2>
+
+                    <p>
+                        <%= organization.description %>
+                    </p>
+
+                    <p>
+                        <strong>Contact:</strong>
+                        <a href="mailto:<%= organization.contact_email %>">
+                            <%= organization.contact_email %>
+                        </a>
+                    </p>
+
+                    <a
+                        class="project-link"
+                        href="/organizations/<%= organization.organization_id %>"
+                    >
+                        View Organization
+                    </a>
+
+                </div>
+
+            </article>
+
+        <% }) %>
+
+    </section>
 
 </main>
 

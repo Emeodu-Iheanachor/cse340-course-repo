@@ -1,0 +1,87 @@
+<%- include('partials/header') %>
+
+<main>
+
+<!-- Home Page Introduction -->
+<section class="page-hero">
+
+    <h1><%= title %></h1>
+
+    <h2>Welcome to the CSE 340 Service Network!</h2>
+
+    <p>
+        Our mission is to promote service across the world by connecting
+        volunteers with service opportunities in their community.
+    </p>
+
+    <p>
+        Explore our partner organizations and discover service projects
+        where you can make a difference.
+    </p>
+
+</section>
+
+
+<!-- Service Network Logo -->
+<img
+    class="main-logo"
+    src="/images/cse340-service-network.png"
+    alt="CSE 340 Service Network Logo"
+>
+
+
+<!-- Service Opportunities -->
+<section class="home-sections">
+
+    <article class="home-card">
+
+        <h2>Partner Organizations</h2>
+
+        <p>
+            Learn about organizations that provide meaningful
+            opportunities to serve in the community.
+        </p>
+
+        <a href="/organizations" class="page-link">
+            View Organizations
+        </a>
+
+    </article>
+
+
+    <article class="home-card">
+
+        <h2>Service Projects</h2>
+
+        <p>
+            Browse available service projects and learn more about
+            opportunities to participate.
+        </p>
+
+        <a href="/projects" class="page-link">
+            View Service Projects
+        </a>
+
+    </article>
+
+
+    <article class="home-card">
+
+        <h2>Project Categories</h2>
+
+        <p>
+            Explore service projects by category, including community,
+            educational, environmental, and health-related service.
+        </p>
+
+        <a href="/categories" class="page-link">
+            View Categories
+        </a>
+
+    </article>
+
+</section>
+
+</main>
+
+<%- include('partials/footer') %>
