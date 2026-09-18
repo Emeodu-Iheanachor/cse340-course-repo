@@ -15,46 +15,46 @@
 
     <nav class="site-nav" aria-label="Main navigation">
 
-        <ul>
+    <ul>
 
-            <li>
-                <a
-                    href="/"
-                    class="<%= typeof currentPath !== 'undefined' && currentPath === '/' ? 'active' : '' %>"
-                >
-                    Home
-                </a>
-            </li>
+        <li>
+            <a
+                href="/"
+                class="<%= typeof currentPath !== 'undefined' && currentPath === '/' ? 'active' : '' %>"
+            >
+                Home
+            </a>
+        </li>
 
-            <li>
-                <a
-                    href="/organizations"
-                    class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/organizations') ? 'active' : '' %>"
-                >
-                    Our Partner Organizations
-                </a>
-            </li>
+        <li>
+            <a
+                href="/organizations"
+                class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/organization') ? 'active' : '' %>"
+            >
+                Our Partner Organizations
+            </a>
+        </li>
 
-            <li>
-                <a
-                    href="/projects"
-                    class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/projects') ? 'active' : '' %>"
-                >
-                    Service Projects
-                </a>
-            </li>
+        <li>
+            <a
+                href="/projects"
+                class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/project') ? 'active' : '' %>"
+            >
+                Service Projects
+            </a>
+        </li>
 
-            <li>
-                <a
-                    href="/categories"
-                    class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/categories') ? 'active' : '' %>"
-                >
-                    Service Project Categories
-                </a>
-            </li>
+        <li>
+            <a
+                href="/categories"
+                class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/categories') ? 'active' : '' %>"
+            >
+                Service Project Categories
+            </a>
+        </li>
 
-        </ul>
+    </ul>
 
-    </nav>
+</nav>
 
 </header>

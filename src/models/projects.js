@@ -1,6 +1,7 @@
 import db from './db.js'
 
-// Get all service projects
+
+/* Get all service projects */
 const getAllProjects = async () => {
   const query = `
     SELECT
@@ -18,10 +19,60 @@ const getAllProjects = async () => {
   `
 
   const result = await db.query(query)
+
   return result.rows
 }
 
-// Get service projects for a specific organization
+
+/* Get the next five or specified number of upcoming service projects */
+const getUpcomingProjects = async (numberOfProjects) => {
+  const query = `
+    SELECT
+      sp.project_id,
+      sp.title,
+      sp.description,
+      sp.start_date,
+      sp.end_date,
+      sp.organization_id,
+      o.name AS organization_name
+    FROM service_project sp
+    JOIN organization o
+      ON sp.organization_id = o.organization_id
+    WHERE sp.start_date >= CURRENT_DATE
+    ORDER BY sp.start_date ASC
+    LIMIT $1
+  `
+
+  const result = await db.query(query, [numberOfProjects])
+
+  return result.rows
+}
+
+
+/* Get one service project by ID */
+const getProjectDetails = async (projectId) => {
+  const query = `
+    SELECT
+      sp.project_id,
+      sp.title,
+      sp.description,
+      sp.start_date,
+      sp.end_date,
+      sp.organization_id,
+      o.name AS organization_name
+    FROM service_project sp
+    JOIN organization o
+      ON sp.organization_id = o.organization_id
+    WHERE sp.project_id = $1
+  `
+
+  const result = await db.query(query, [projectId])
+
+  return result.rows[0]
+}
+
+
+/* Get service projects for a specific organization */
 const getProjectsByOrganizationId = async (organizationId) => {
   const query = `
     SELECT
@@ -36,14 +87,16 @@ const getProjectsByOrganizationId = async (organizationId) => {
     ORDER BY start_date ASC
   `
 
-  const queryParams = [organizationId]
-  const result = await db.query(query, queryParams)
+  const result = await db.query(query, [organizationId])
 
   return result.rows
 }
 
-// Export the model functions
+
+/* Export model functions */
 export {
   getAllProjects,
+  getUpcomingProjects,
+  getProjectDetails,
   getProjectsByOrganizationId
 }

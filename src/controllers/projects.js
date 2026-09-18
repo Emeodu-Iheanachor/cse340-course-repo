@@ -1,10 +1,47 @@
-import { getAllProjects } from '../models/projects.js';
+import {
+  getAllProjects,
+  getUpcomingProjects,
+  getProjectDetails
+} from '../models/projects.js'
 
+
+const NUMBER_OF_UPCOMING_PROJECTS = 5
+
+
+/* Display upcoming service projects */
 const showProjectsPage = async (req, res) => {
-    const projects = await getAllProjects();
-    const title = 'Service Projects';
+  const projects = await getUpcomingProjects(
+    NUMBER_OF_UPCOMING_PROJECTS
+  )
 
-    res.render('projects', { title, projects });
-};
+  res.render('projects', {
+    title: 'Upcoming Service Projects',
+    projects
+  })
+}
 
-export { showProjectsPage };
+
+/* Display one service project */
+const showProjectDetailsPage = async (req, res) => {
+  const projectId = req.params.id
+
+  const project = await getProjectDetails(projectId)
+
+  if (!project) {
+    return res.status(404).render('error', {
+      title: 'Project Not Found',
+      message: 'The requested service project could not be found.'
+    })
+  }
+
+  res.render('project', {
+    title: project.title,
+    project
+  })
+}
+
+
+export {
+  showProjectsPage,
+  showProjectDetailsPage
+}
