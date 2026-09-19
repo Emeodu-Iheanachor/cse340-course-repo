@@ -3,37 +3,40 @@
 <main class="categories-page">
 
     <section class="page-intro">
+
         <h1><%= title %></h1>
 
         <p>
             Explore service project categories and discover
             opportunities to make a positive difference in the community.
         </p>
+
     </section>
 
-    <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
 
-        <section class="categories-list" aria-label="Service project categories">
+    <% if (categories && categories.length > 0) { %>
+
+        <section
+            class="categories-list"
+            aria-label="Service project categories"
+        >
 
             <% categories.forEach(category => { %>
 
                 <article class="category-card">
 
                     <h2>
-                        <%= category.category_name %>
+                        <a href="/category/<%= category.category_id %>">
+                            <%= category.category_name %>
+                        </a>
                     </h2>
-
-                    <% if (category.description) { %>
-                        <p>
-                            <%= category.description %>
-                        </p>
-                    <% } %>
 
                 </article>
 
-            <% }); %>
+            <% }) %>
 
         </section>
+
 
     <% } else { %>
 

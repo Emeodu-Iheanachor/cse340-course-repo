@@ -13,48 +13,66 @@
 
 <header class="site-header">
 
-    <nav class="site-nav" aria-label="Main navigation">
+    <div class="site-header-inner">
 
-    <ul>
+        <a href="/" class="site-brand">
+            Service Network
+        </a>
 
-        <li>
-            <a
-                href="/"
-                class="<%= typeof currentPath !== 'undefined' && currentPath === '/' ? 'active' : '' %>"
-            >
-                Home
-            </a>
-        </li>
+        <button
+            class="nav-toggle"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="site-navigation"
+        >
+            <span class="nav-toggle-icon"></span>
+        </button>
 
-        <li>
-            <a
-                href="/organizations"
-                class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/organization') ? 'active' : '' %>"
-            >
-                Our Partner Organizations
-            </a>
-        </li>
+    </div>
 
-        <li>
-            <a
-                href="/projects"
-                class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/project') ? 'active' : '' %>"
-            >
-                Service Projects
-            </a>
-        </li>
 
-        <li>
-            <a
-                href="/categories"
-                class="<%= typeof currentPath !== 'undefined' && currentPath.startsWith('/categories') ? 'active' : '' %>"
-            >
-                Service Project Categories
-            </a>
-        </li>
+    <nav id="site-navigation">
 
-    </ul>
+        <ul>
+            <li>
+                <a
+                    href="/"
+                    class="<%= currentPath === '/' ? 'active' : '' %>"
+                >
+                    Home
+                </a>
+            </li>
 
-</nav>
+            <li>
+                <a
+                    href="/organizations"
+                    class="<%= currentPath === '/organizations' ? 'active' : '' %>"
+                >
+                    Our Partner Organizations
+                </a>
+            </li>
+
+            <li>
+                <a
+                    href="/projects"
+                    class="<%= currentPath === '/projects' ? 'active' : '' %>"
+                >
+                    Service Projects
+                </a>
+            </li>
+
+            <li>
+                <a
+                    href="/categories"
+                    class="<%= currentPath === '/categories' ? 'active' : '' %>"
+                >
+                    Service Project Categories
+                </a>
+            </li>
+        </ul>
+
+    </nav>
 
 </header>
+

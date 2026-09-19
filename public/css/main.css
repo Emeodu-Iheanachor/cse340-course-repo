@@ -1,14 +1,32 @@
+/* =========================================================
+   SERVICE NETWORK
+   COMPLETE RESPONSIVE STYLESHEET
+========================================================= */
+
 :root {
     --ink: #17324d;
     --muted: #526577;
+
     --surface: #ffffff;
     --page: #eef5f3;
+    --soft: #f7fbfa;
+
     --accent: #d45d38;
     --accent-dark: #a94327;
+
     --teal: #176b68;
+    --teal-dark: #0f514f;
+
     --line: #d3e2df;
-    --shadow: 0 18px 40px rgba(23, 50, 77, 0.1);
+
+    --shadow: 0 10px 28px rgba(23, 50, 77, 0.08);
+    --shadow-hover: 0 16px 34px rgba(23, 50, 77, 0.14);
 }
+
+
+/* =========================================================
+   RESET
+========================================================= */
 
 * {
     box-sizing: border-box;
@@ -17,717 +35,1508 @@
 html {
     min-height: 100%;
     background: var(--page);
+    scroll-behavior: smooth;
 }
 
 body {
     min-height: 100vh;
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+    margin: 0;
+
     color: var(--ink);
-    background: var(--surface);
+    background: var(--page);
+
     font-family: 'Trebuchet MS', Verdana, sans-serif;
     line-height: 1.6;
-    display: flex;
-    flex-direction: column;
 }
 
-/* ---------- Navigation ---------- */
+
+/* =========================================================
+   MAIN SITE CONTAINER
+========================================================= */
+
+.site-container {
+    width: min(100%, 1280px);
+    min-height: 100vh;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--surface);
+
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+
+    box-shadow: 0 0 35px rgba(23, 50, 77, 0.06);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+
+    background: var(--surface);
+
+    border-bottom: 1px solid var(--line);
+
+    box-shadow: 0 3px 14px rgba(23, 50, 77, 0.05);
+}
+
+
+/* =========================================================
+   HEADER INNER / BRAND
+========================================================= */
+
+.site-header-inner {
+    min-width: 0;
+
+    margin: 0;
+    padding: 1rem 2rem;
+
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.site-brand {
+    display: flex;
+    align-items: center;
+
+    color: var(--ink);
+
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+}
+
+.site-brand:hover,
+.site-brand:focus-visible {
+    color: var(--accent-dark);
+}
+
+
+/* =========================================================
+   HAMBURGER BUTTON
+========================================================= */
+
+.nav-toggle {
+    display: none;
+
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    color: var(--ink);
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.nav-toggle:hover,
+.nav-toggle:focus-visible {
+    color: var(--surface);
+    background: var(--teal);
+    border-color: var(--teal);
+}
+
+.nav-toggle-icon {
+    position: relative;
+
+    display: block;
+
+    width: 22px;
+    height: 16px;
+
+    border-top: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+}
+
+.nav-toggle-icon::before {
+    position: absolute;
+
+    top: 5px;
+    left: 0;
+
+    width: 22px;
+
+    border-top: 2px solid currentColor;
+
+    content: '';
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
 nav {
-    border-bottom: 1px solid var(--line);
-    padding: 1.25rem 0;
+    min-width: 0;
+
+    padding: 0 2rem;
+    background: var(--surface);
 }
 
 nav ul {
     display: flex;
-    flex-wrap: wrap;
+
+    align-items: center;
     justify-content: flex-end;
-    gap: 0.5rem 1.75rem;
+
+    flex-wrap: wrap;
+
+    gap: 0.35rem 1.35rem;
+
+    margin: 0;
+    padding: 0;
+
     list-style: none;
+}
+
+nav li {
     margin: 0;
     padding: 0;
 }
 
 nav a {
+    position: relative;
+
+    display: block;
+
+    padding: 1.35rem 0.15rem;
+
     color: var(--ink);
-    font-size: 0.9rem;
+
+    font-size: 0.95rem;
     font-weight: 700;
+
     text-decoration: none;
+
+    white-space: nowrap;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease;
 }
+
+
+/* =========================================================
+   NAV HOVER
+========================================================= */
 
 nav a:hover,
 nav a:focus-visible {
     color: var(--accent-dark);
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.25rem;
 }
+
+
+/* =========================================================
+   NAV ACTIVE EFFECT
+========================================================= */
 
 nav a.active {
     color: var(--accent);
-    font-weight: 700;
-    border-bottom: 3px solid var(--accent);
 }
 
-/* ---------- Fixed Navigation ---------- */
+nav a.active::after {
+    position: absolute;
 
-nav {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-bottom: 1px solid var(--line);
-    padding: 1.25rem 0;
-    background: var(--surface);
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    height: 3px;
+
+    background: var(--accent);
+
+    border-radius: 3px 3px 0 0;
+
+    content: '';
 }
 
 
-/* ---------- Main Content ---------- */
+/* =========================================================
+   MAIN
+========================================================= */
 
 main {
     flex: 1;
-    padding: clamp(3rem, 8vw, 6rem) clamp(0.25rem, 5vw, 4.5rem);
+
+    width: 100%;
+
+    padding:
+        clamp(3rem, 6vw, 4.5rem)
+        clamp(1.5rem, 5vw, 4.5rem)
+        clamp(4rem, 7vw, 5rem);
 }
 
-/* ---------- Headings ---------- */
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
 
 h1,
-h2 {
-    line-height: 1.15;
+h2,
+h3 {
+    line-height: 1.2;
 }
 
 h1 {
-    max-width: 18ch;
-    margin: 0 0 1.25rem;
+    margin: 0 0 1rem;
+
     color: var(--ink);
+
     font-family: Georgia, 'Times New Roman', serif;
 
-    /* Reduced from the original oversized heading */
     font-size: clamp(2rem, 4vw, 3rem);
 
-    letter-spacing: 0;
+    font-weight: 700;
 }
 
 h2 {
     margin: 0;
+
     color: var(--ink);
+
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(1.4rem, 3vw, 2rem);
+
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+}
+
+h3 {
+    color: var(--ink);
+
+    font-family: Georgia, 'Times New Roman', serif;
 }
 
 p {
     max-width: 65ch;
+
     color: var(--muted);
-    font-size: 1.05rem;
-    line-height: 1.6;
-}
 
-/* ---------- Page Hero ---------- */
-
-.page-hero {
-    max-width: 46rem;
-    margin-bottom: clamp(2.5rem, 6vw, 4rem);
-}
-
-.page-hero p {
-    margin-bottom: 0;
-    font-size: clamp(1.05rem, 2vw, 1.25rem);
-}
-
-/* ---------- Categories ---------- */
-
-.categories {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem;
-}
-
-.category-card {
-    position: relative;
-    min-height: 12rem;
-    padding: 1.75rem;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: 0.5rem;
-    background: #f8fbfa;
-    box-shadow: var(--shadow);
-}
-
-.category-card::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0.4rem;
-    height: 100%;
-    background: var(--accent);
-    content: '';
-}
-
-.category-card h2,
-.category-card p {
-    position: relative;
-    margin-left: 0.5rem;
-}
-
-.category-card p {
-    margin-bottom: 0;
-}
-
-/* ---------- Main Logo ---------- */
-
-.main-logo {
-    display: block;
-    width: min(100%, 26rem);
-    height: auto;
-    margin-top: 2rem;
-}
-
-/* ---------- Category List ---------- */
-
-.category-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    max-width: 45rem;
-    margin: 2rem 0 0;
-    padding: 0;
-    list-style: none;
-}
-
-.category-list li {
-    padding: 1.25rem;
-    border: 1px solid var(--line);
-    border-left: 0.35rem solid var(--accent);
-    background: #f7fbfa;
-    font-weight: 700;
-}
-
-/* ---------- Organizations ---------- */
-
-.organizations {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.25rem;
-}
-
-.organization-card {
-    position: relative;
-    padding: 1.75rem;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: 0.5rem;
-    background: #f8fbfa;
-    box-shadow: var(--shadow);
-}
-
-.organization-card::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0.4rem;
-    height: 100%;
-    background: var(--teal);
-    content: '';
-}
-
-.organization-logo {
-    display: block;
-    width: 120px;
-    height: 120px;
-    object-fit: contain;
-    margin: 0 auto 1.25rem;
-}
-
-.organization-card h2 {
-    margin: 0 0 0.75rem;
-}
-
-.organization-card p {
-    margin-bottom: 0.75rem;
-}
-
-.organization-card p:last-child {
-    margin-bottom: 0;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    line-height: 1.65;
 }
 
 
+/* =========================================================
+   LINKS
+========================================================= */
 
+a {
+    color: var(--teal);
+}
 
-
-/* =========================================
-   PROJECTS PAGE
-========================================= */
-
-.projects-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 4rem;
+a:hover,
+a:focus-visible {
+    color: var(--accent-dark);
 }
 
 
-/* =========================================
-   PAGE INTRODUCTION
-========================================= */
+/* =========================================================
+   PAGE INTRO
+========================================================= */
 
 .page-intro {
     width: 100%;
     max-width: 850px;
+
     margin: 0 auto 3rem;
+
     text-align: center;
 }
 
 .page-intro h1 {
-    margin: 0 0 1rem;
-    text-align: center;
-    font-size: 2rem;
-    line-height: 1.2;
-    color: var(--ink);
+    margin-bottom: 0.9rem;
+
+    color: var(--teal);
+
+    font-size: clamp(2rem, 4vw, 3rem);
 }
 
 .page-intro p {
     max-width: 750px;
+
     margin: 0 auto;
-    text-align: center;
-    font-size: 1.1rem;
-    line-height: 1.7;
+
     color: var(--muted);
+
+    font-size: 1.05rem;
+    line-height: 1.7;
 }
 
 
-/* =========================================
-   PROJECT CARDS - 3 COLUMNS
-========================================= */
+/* =========================================================
+   HOME HERO
+========================================================= */
+
+.page-hero {
+    max-width: 46rem;
+
+    margin-bottom: 3.5rem;
+}
+
+.page-hero p {
+    margin-bottom: 0;
+
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+}
+
+
+/* =========================================================
+   ORGANIZATIONS
+========================================================= */
+
+.organizations {
+    width: 100%;
+    max-width: 1180px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1.75rem;
+}
+
+.organization-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+
+    padding: 1.75rem;
+
+    overflow: hidden;
+
+    background: var(--soft);
+
+    border: 1px solid var(--line);
+    border-radius: 14px;
+
+    box-shadow: var(--shadow);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.organization-card::before {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 0.35rem;
+    height: 100%;
+
+    background: var(--teal);
+
+    content: '';
+}
+
+.organization-card:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--teal);
+
+    box-shadow: var(--shadow-hover);
+}
+
+.organization-logo {
+    display: block;
+
+    width: 120px;
+    height: 120px;
+
+    margin: 0 auto 1.25rem;
+
+    object-fit: contain;
+}
+
+.organization-card h2 {
+    margin: 0 0 0.75rem;
+
+    text-align: center;
+}
+
+.organization-card p {
+    margin: 0 0 0.75rem;
+}
+
+.organization-card p:last-child {
+    margin-bottom: 0;
+
+    font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   PROJECTS PAGE
+========================================================= */
+
+.projects-page {
+    width: 100%;
+    max-width: 1240px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   PROJECT GRID
+========================================================= */
 
 .projects-list {
+    width: 100%;
+    max-width: 1240px;
+
+    margin: 0 auto;
+
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
     gap: 1.5rem;
+
     align-items: stretch;
 }
 
 
-/* =========================================
-   INDIVIDUAL PROJECT CARD
-========================================= */
+/* =========================================================
+   PROJECT CARD
+========================================================= */
 
 .project-card {
     display: flex;
+    flex-direction: column;
+
+    min-width: 0;
     height: 100%;
+
     background: var(--surface);
-    border: 1px solid #dbe5e8;
-    border-radius: 12px;
+
+    border: 1px solid var(--line);
+    border-radius: 14px;
+
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(23, 50, 77, 0.08);
+
+    box-shadow: var(--shadow);
+
     transition:
         transform 0.2s ease,
-        box-shadow 0.2s ease;
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .project-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(23, 50, 77, 0.12);
+    transform: translateY(-4px);
+
+    border-color: var(--teal);
+
+    box-shadow: var(--shadow-hover);
 }
-
-
-/* =========================================
-   CARD CONTENT
-========================================= */
 
 .project-card-content {
     display: flex;
     flex-direction: column;
+
     width: 100%;
+    height: 100%;
+
     padding: 1.5rem;
 }
 
 
-/* =========================================
-   CARD LABEL
-========================================= */
+/* =========================================================
+   PROJECT LABEL
+========================================================= */
 
 .project-label {
-    margin: 0 0 0.6rem;
+    margin: 0 0 0.65rem;
+
     text-align: center;
-    font-size: 0.8rem;
+
+    color: var(--accent);
+
+    font-size: 0.72rem;
     font-weight: 700;
+
     letter-spacing: 0.08em;
+
     text-transform: uppercase;
-    color: var(--muted);
 }
 
 
-/* =========================================
-   CARD HEADING
-========================================= */
+/* =========================================================
+   PROJECT TITLE
+========================================================= */
 
 .project-card h2 {
     margin: 0 0 1rem;
+
     text-align: center;
-    font-size: 1.3rem;
-    line-height: 1.35;
+
     color: var(--ink);
+
+    font-size: 1.25rem;
+    line-height: 1.3;
+}
+
+.project-card h2 a {
+    color: var(--ink);
+
+    text-decoration: none;
+}
+
+.project-card h2 a:hover,
+.project-card h2 a:focus-visible {
+    color: var(--accent-dark);
+
+    text-decoration: underline;
 }
 
 
-/* =========================================
+/* =========================================================
    PROJECT DESCRIPTION
-========================================= */
+========================================================= */
 
 .project-description {
-    margin: 0 0 1.5rem;
-    line-height: 1.65;
+    margin: 0 0 1.25rem;
+
     color: var(--muted);
+
+    font-size: 0.95rem;
+    line-height: 1.55;
 }
 
 
-/* =========================================
+/* =========================================================
    PROJECT DETAILS
-========================================= */
+========================================================= */
 
 .project-details {
     display: grid;
-    gap: 0.9rem;
+
+    gap: 0.8rem;
+
     margin-top: auto;
     padding-top: 1rem;
-    border-top: 1px solid #e1e8ea;
+
+    border-top: 1px solid var(--line);
 }
 
 .project-detail {
     display: flex;
     flex-direction: column;
+
     gap: 0.2rem;
+
+    min-width: 0;
 }
 
 .detail-label {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
     color: var(--muted);
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    letter-spacing: 0.05em;
+
+    text-transform: uppercase;
 }
 
 .detail-value {
+    min-width: 0;
+
     color: var(--ink);
+
+    font-size: 0.92rem;
     font-weight: 600;
-    line-height: 1.4;
+
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.detail-value a {
+    color: var(--teal);
+
+    text-decoration: none;
+}
+
+.detail-value a:hover,
+.detail-value a:focus-visible {
+    color: var(--accent-dark);
+
+    text-decoration: underline;
 }
 
 
-/* =========================================
-   NO PROJECTS
-========================================= */
+/* =========================================================
+   PROJECT ACTION
+========================================================= */
 
-.no-projects {
+.project-card-action {
+    margin-top: 1.25rem;
+
+    padding-top: 0.9rem;
+
+    border-top: 1px solid var(--line);
+}
+
+.project-link {
+    display: inline-block;
+
+    color: var(--teal);
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.project-link:hover,
+.project-link:focus-visible {
+    color: var(--accent-dark);
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   PROJECT DETAILS PAGE
+========================================================= */
+
+.project-page {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto;
+}
+
+.project-page .project-details {
+    display: block;
+
+    margin-top: 0;
+    padding-top: 0;
+
+    border-top: 0;
+}
+
+.project-page .project-card {
+    width: 100%;
+}
+
+.project-page .project-card-content {
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.project-page .project-card h2 {
+    margin-bottom: 1.5rem;
+
+    text-align: left;
+
+    font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.project-detail-section {
+    margin-bottom: 2rem;
+}
+
+.project-detail-section h3 {
+    margin: 0 0 0.6rem;
+
+    font-size: 1.15rem;
+}
+
+.project-detail-section .project-description {
+    margin-bottom: 0;
+}
+
+.project-details-list {
+    display: grid;
+
+    gap: 1rem;
+
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+
+    border-top: 1px solid var(--line);
+}
+
+
+/* =========================================================
+   PROJECT CATEGORIES
+========================================================= */
+
+.project-categories {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+
+    border-top: 1px solid var(--line);
+}
+
+.project-categories h3 {
+    margin: 0 0 0.9rem;
+
+    font-size: 1.15rem;
+}
+
+.category-tags {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.65rem;
+}
+
+.category-tag {
+    display: inline-block;
+
+    padding: 0.45rem 0.8rem;
+
+    color: var(--teal);
+
+    background: #edf7f5;
+
+    border: 1px solid #c7dfdb;
+
+    border-radius: 999px;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.category-tag:hover,
+.category-tag:focus-visible {
+    color: var(--surface);
+
+    background: var(--teal);
+
+    border-color: var(--teal);
+}
+
+
+/* =========================================================
+   CATEGORIES PAGE
+========================================================= */
+
+.categories-page {
+    width: 100%;
+    max-width: 1150px;
+
+    margin: 0 auto;
+}
+
+.categories-list {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 1.5rem;
+}
+
+.category-card {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 150px;
+
+    padding: 1.5rem;
+
+    text-align: center;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: 14px;
+
+    box-shadow: var(--shadow);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.category-card::before {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 0.3rem;
+
+    background: var(--accent);
+
+    content: '';
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--accent);
+
+    box-shadow: var(--shadow-hover);
+}
+
+.category-card h2 {
+    margin: 0;
+
+    font-size: 1.2rem;
+}
+
+.category-card h2 a {
+    color: var(--ink);
+
+    text-decoration: none;
+}
+
+.category-card h2 a:hover,
+.category-card h2 a:focus-visible {
+    color: var(--accent-dark);
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   CATEGORY DETAILS PAGE
+   COMMUNITY SERVICE / EDUCATIONAL /
+   ENVIRONMENTAL / HEALTH AND WELLNESS
+========================================================= */
+
+.category-page {
+    width: 100%;
+    max-width: 1240px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   CATEGORY TITLE / INTRODUCTION
+========================================================= */
+
+.category-page .page-intro {
+    width: 100%;
+    max-width: 850px;
+
+    margin: 0 auto 3rem;
+
+    text-align: center;
+}
+
+.category-page .page-intro h1 {
+    margin-bottom: 0.9rem;
+
+    color: var(--teal);
+
+    font-size: clamp(2rem, 4vw, 2.7rem);
+}
+
+.category-page .page-intro p {
+    max-width: 750px;
+
+    margin: 0 auto;
+
+    color: var(--muted);
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   CATEGORY PROJECT GRID
+========================================================= */
+
+.category-page .projects-list {
+    width: 100%;
+    max-width: 1240px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1.5rem;
+
+    align-items: stretch;
+}
+
+
+/* =========================================================
+   CATEGORY PROJECT CARD
+========================================================= */
+
+.category-page .project-card {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    height: 100%;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.category-page .project-card:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--teal);
+
+    box-shadow: var(--shadow-hover);
+}
+
+
+/* =========================================================
+   CATEGORY CARD INNER CONTENT
+   IMPORTANT ALIGNMENT / PADDING
+========================================================= */
+
+.category-page .project-card-content {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    /*
+       Equal space between the card border
+       and all text/content.
+    */
+    padding: 1.5rem;
+}
+
+
+/* =========================================================
+   CATEGORY PROJECT LABEL
+========================================================= */
+
+.category-page .project-label {
+    margin: 0 0 0.65rem;
+
+    text-align: center;
+
+    color: var(--accent);
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   CATEGORY PROJECT TITLE
+========================================================= */
+
+.category-page .project-card h2 {
+    margin: 0 0 1rem;
+
+    color: var(--ink);
+
+    font-size: 1.25rem;
+    line-height: 1.3;
+
+    text-align: center;
+}
+
+.category-page .project-card h2 a {
+    color: var(--ink);
+
+    text-decoration: none;
+}
+
+.category-page .project-card h2 a:hover,
+.category-page .project-card h2 a:focus-visible {
+    color: var(--accent-dark);
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   CATEGORY PROJECT DESCRIPTION
+========================================================= */
+
+.category-page .project-description {
+    margin: 0 0 1.25rem;
+
+    color: var(--muted);
+
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   CATEGORY PROJECT DETAILS
+========================================================= */
+
+.category-page .project-details {
+    display: grid;
+
+    gap: 0.8rem;
+
+    margin-top: auto;
+
+    padding-top: 1rem;
+
+    border-top: 1px solid var(--line);
+}
+
+.category-page .project-detail {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.2rem;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   CATEGORY DETAIL LABEL
+========================================================= */
+
+.category-page .detail-label {
+    color: var(--muted);
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    letter-spacing: 0.05em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   CATEGORY DETAIL VALUE
+========================================================= */
+
+.category-page .detail-value {
+    min-width: 0;
+
+    color: var(--ink);
+
+    font-size: 0.92rem;
+    font-weight: 600;
+
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+
+/* =========================================================
+   CATEGORY PROJECT ACTION
+========================================================= */
+
+.category-page .project-card-action {
+    margin-top: 1.25rem;
+
+    padding-top: 0.9rem;
+
+    border-top: 1px solid var(--line);
+}
+
+.category-page .project-link {
+    display: inline-block;
+
+    color: var(--teal);
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.category-page .project-link:hover,
+.category-page .project-link:focus-visible {
+    color: var(--accent-dark);
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.no-projects,
+.no-results {
+    width: 100%;
     max-width: 650px;
+
     margin: 3rem auto;
     padding: 2rem;
+
     text-align: center;
+
     background: var(--surface);
-    border: 1px solid #dbe5e8;
+
+    border: 1px solid var(--line);
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(23, 50, 77, 0.08);
+
+    box-shadow: var(--shadow);
 }
 
 .no-projects h2 {
     margin: 0 0 0.75rem;
-    text-align: center;
-    font-size: 1.5rem;
-    color: var(--ink);
+
+    font-size: 1.4rem;
 }
 
-.no-projects p {
-    margin: 0;
-    line-height: 1.6;
-    color: var(--muted);
-}
-
-
-/* =========================================
-   TABLET - 2 COLUMNS
-========================================= */
-
-@media (max-width: 900px) {
-
-    .projects-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
+.no-projects p,
+.no-results {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
-/* =========================================
-   MOBILE - 1 COLUMN
-========================================= */
+/* =========================================================
+   HOME / GENERAL CARDS
+========================================================= */
 
-@media (max-width: 600px) {
+.categories {
+    display: grid;
 
-    .projects-page {
-        padding: 2rem 1rem 3rem;
-    }
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
-    .page-intro {
-        margin-bottom: 2rem;
-    }
-
-    .page-intro h1 {
-        font-size: 1.8rem;
-    }
-
-    .page-intro p {
-        font-size: 1rem;
-    }
-
-    .projects-list {
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
-    }
-
-    .project-card-content {
-        padding: 1.25rem;
-    }
-
+    gap: 1.25rem;
 }
 
+.category-list {
+    display: grid;
 
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
+    gap: 1rem;
 
+    max-width: 45rem;
 
-/* =========================================
-   CATEGORIES PAGE
-========================================= */
+    margin: 2rem 0 0;
+    padding: 0;
 
-.categories-page {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 4rem;
+    list-style: none;
 }
 
+.category-list li {
+    padding: 1.25rem;
 
-/* =========================================
-   PAGE INTRODUCTION
-========================================= */
+    background: var(--soft);
 
-.categories-page .page-intro {
-    width: 100%;
-    max-width: 850px;
-    margin: 0 auto 2.5rem;
-    text-align: center;
-}
+    border: 1px solid var(--line);
+    border-left: 0.35rem solid var(--accent);
 
-.categories-page .page-intro h1 {
-    margin: 0 0 0.75rem;
-    font-size: 2rem;
-    line-height: 1.2;
     font-weight: 700;
 }
 
-.categories-page .page-intro p {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.7;
-}
 
+/* =========================================================
+   LOGO
+========================================================= */
 
-/* =========================================
-   CATEGORIES GRID
-========================================= */
+.main-logo {
+    display: block;
 
-.categories-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    width: 100%;
-}
+    width: min(100%, 26rem);
 
+    height: auto;
 
-/* =========================================
-   CATEGORY CARD
-========================================= */
-
-.category-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 170px;
-    padding: 1.5rem;
-
-    background: var(--surface);
-    border: 1px solid rgba(23, 50, 77, 0.12);
-    border-radius: 12px;
-
-    text-align: center;
-
-    box-shadow: 0 4px 12px rgba(23, 50, 77, 0.08);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-/* =========================================
-   CARD HOVER
-========================================= */
-
-.category-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(23, 50, 77, 0.14);
-}
-
-
-/* =========================================
-   CATEGORY TITLE
-========================================= */
-
-.category-card h2 {
-    margin: 0;
-    font-size: 1.2rem;
-    line-height: 1.4;
-    font-weight: 600;
-}
-
-
-/* =========================================
-   EMPTY STATE
-========================================= */
-
-.categories-page > p {
-    max-width: 600px;
     margin: 2rem auto;
-    padding: 1.25rem;
-
-    text-align: center;
-
-    background: var(--surface);
-    border: 1px solid rgba(23, 50, 77, 0.1);
-    border-radius: 10px;
 }
 
 
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 900px) {
-
-    .categories-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 600px) {
-
-    .categories-page {
-        padding: 2rem 1rem 3rem;
-    }
-
-    .categories-page .page-intro {
-        margin-bottom: 2rem;
-    }
-
-    .categories-page .page-intro h1 {
-        font-size: 1.7rem;
-    }
-
-    .categories-page .page-intro p {
-        font-size: 0.95rem;
-    }
-
-    .categories-list {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .category-card {
-        min-height: 130px;
-        padding: 1.25rem;
-    }
-
-    .category-card h2 {
-        font-size: 1.1rem;
-    }
-
-}
-
-
-
-
-
-/* ---------- Footer ---------- */
+/* =========================================================
+   FOOTER
+========================================================= */
 
 footer {
     width: 100%;
+
     margin-top: auto;
-    padding: 1.5rem 0 2rem;
-    border-top: 1px solid var(--line);
+    padding: 1.75rem 1rem 2rem;
+
     color: var(--muted);
+
+    background: var(--surface);
+
+    border-top: 1px solid var(--line);
+
     font-size: 0.85rem;
 
     display: flex;
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
+
     text-align: center;
 }
 
 footer p {
     width: 100%;
     max-width: none;
+
     margin: 0.25rem 0;
+
+    color: inherit;
+
     font-size: inherit;
+
     text-align: center;
 }
 
 footer img {
     display: block;
+
     margin: 1rem auto;
 }
 
-/* ---------- Tablet ---------- */
 
-@media (max-width: 900px) {
-    .organizations {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1050px) {
+
+    .site-header {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
     }
-}
 
-/* ---------- Mobile ---------- */
+    .site-header-inner {
+        width: 100%;
 
-@media (max-width: 640px) {
-    body {
-        padding: 0 1rem;
+        padding: 0.85rem 1.5rem;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    nav {
+        display: none;
+
+        width: 100%;
+
+        padding: 0;
+
+        border-top: 1px solid var(--line);
+    }
+
+    nav.nav-open {
+        display: block;
     }
 
     nav ul {
-        justify-content: flex-start;
-        gap: 0.5rem 1rem;
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 0;
+
+        padding: 0.5rem 1.25rem 1rem;
+    }
+
+    nav li {
+        width: 100%;
+    }
+
+    nav a {
+        padding: 0.8rem 0.9rem;
+
+        border-radius: 6px;
+    }
+
+    nav a:hover,
+    nav a:focus-visible {
+        background: #f3f8f7;
+
+        text-decoration: none;
+    }
+
+    nav a.active {
+        color: var(--surface);
+
+        background: var(--accent);
+    }
+
+    nav a.active::after {
+        display: none;
+    }
+
+
+    /* Two-column tablet layout */
+    .organizations,
+    .projects-list,
+    .category-page .projects-list {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 1.25rem;
+    }
+
+    .categories-list {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 
     main {
-        padding-top: 3.25rem;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
     }
 
+
+    /* Keep category cards comfortable on tablets */
+    .category-page .project-card-content {
+        padding: 1.4rem;
+    }
+}
+
+
+/* =========================================================
+   MOBILE / ANDROID
+========================================================= */
+
+@media (max-width: 640px) {
+
+    .site-container {
+        width: 100%;
+
+        border-left: 0;
+        border-right: 0;
+
+        box-shadow: none;
+    }
+
+    .site-header-inner {
+        padding: 0.75rem 1rem;
+    }
+
+    .site-brand {
+        font-size: 1.2rem;
+    }
+
+    .nav-toggle {
+        width: 42px;
+        height: 42px;
+    }
+
+    nav ul {
+        padding:
+            0.5rem 1rem
+            1rem;
+    }
+
+    main {
+        padding:
+            2.75rem 1.25rem
+            3.5rem;
+    }
+
+    h1 {
+        font-size: 1.9rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .page-intro {
+        margin-bottom: 2.25rem;
+    }
+
+    .page-intro h1 {
+        font-size: 2rem;
+    }
+
+    .page-intro p {
+        font-size: 1rem;
+    }
+
+
+    /* Single-column mobile layout */
+    .organizations,
+    .projects-list,
+    .category-page .projects-list,
+    .categories-list,
     .categories,
-    .category-list,
-    .organizations {
+    .category-list {
         grid-template-columns: 1fr;
     }
 
-    .category-card {
-        min-height: auto;
-    }
-
     .organization-card {
-        padding: 1.25rem;
+        padding: 1.4rem;
     }
 
     .organization-logo {
@@ -735,11 +1544,128 @@ footer img {
         height: 100px;
     }
 
-    h1 {
-        font-size: 1.75rem;
+
+    /* Project cards */
+    .project-card-content,
+    .category-page .project-card-content {
+        padding: 1.25rem;
     }
 
-    h2 {
-        font-size: 1.3rem;
+    .project-card h2,
+    .category-page .project-card h2 {
+        font-size: 1.2rem;
+
+        line-height: 1.3;
+    }
+
+    .project-description,
+    .category-page .project-description {
+        font-size: 0.95rem;
+
+        line-height: 1.55;
+    }
+
+    .detail-value,
+    .category-page .detail-value {
+        font-size: 0.92rem;
+
+        line-height: 1.45;
+    }
+
+
+    /* Project details page */
+    .project-page .project-card-content {
+        padding: 1.4rem;
+    }
+
+    .project-page .project-card h2 {
+        font-size: 1.5rem;
+    }
+
+
+    /* Category cards */
+    .category-card {
+        min-height: 130px;
+
+        padding: 1.25rem;
+    }
+
+    .category-card h2 {
+        font-size: 1.1rem;
+    }
+
+
+    /* Category page introduction */
+    .category-page .page-intro h1 {
+        font-size: 2rem;
+    }
+
+    .category-page .page-intro p {
+        font-size: 1rem;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .site-header-inner {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    main {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .project-card-content,
+    .category-page .project-card-content {
+        padding: 1.15rem;
+    }
+
+    .page-intro h1 {
+        font-size: 1.8rem;
+    }
+
+    .project-card h2,
+    .category-page .project-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .detail-value,
+    .category-page .detail-value {
+        font-size: 0.9rem;
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+:focus-visible {
+    outline: 3px solid rgba(212, 93, 56, 0.45);
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
     }
 }

@@ -1,7 +1,8 @@
 import {
   getAllProjects,
   getUpcomingProjects,
-  getProjectDetails
+  getProjectDetails,
+  getCategoriesByProjectId
 } from '../models/projects.js'
 
 
@@ -34,9 +35,12 @@ const showProjectDetailsPage = async (req, res) => {
     })
   }
 
+  const categories = await getCategoriesByProjectId(projectId)
+
   res.render('project', {
     title: project.title,
-    project
+    project,
+    categories
   })
 }
 

@@ -99,6 +99,42 @@
                 </div>
 
 
+                <!-- Service project categories -->
+                <section
+                    class="project-categories"
+                    aria-label="Service project categories"
+                >
+
+                    <h3>Service Categories</h3>
+
+                    <% if (categories && categories.length > 0) { %>
+
+                        <div class="category-tags">
+
+                            <% categories.forEach(category => { %>
+
+                                <a
+                                    class="category-tag"
+                                    href="/category/<%= category.category_id %>"
+                                >
+                                    <%= category.category_name %>
+                                </a>
+
+                            <% }) %>
+
+                        </div>
+
+                    <% } else { %>
+
+                        <p class="no-results">
+                            No categories are currently assigned to this project.
+                        </p>
+
+                    <% } %>
+
+                </section>
+
+
                 <div class="project-card-action">
 
                     <a

@@ -11,7 +11,8 @@ import {
 } from './controllers/projects.js'
 
 import {
-  showCategoriesPage
+  showCategoriesPage,
+  showCategoryDetailsPage
 } from './controllers/categories.js'
 
 
@@ -65,6 +66,13 @@ router.get(
 router.get(
   '/categories',
   showCategoriesPage
+)
+
+
+/* Service project category details */
+router.get(
+  '/category/:id',
+  showCategoryDetailsPage
 )
 
 

@@ -93,10 +93,30 @@ const getProjectsByOrganizationId = async (organizationId) => {
 }
 
 
+/* Get all categories assigned to a service project */
+const getCategoriesByProjectId = async (projectId) => {
+  const query = `
+    SELECT
+      c.category_id,
+      c.category_name
+    FROM public.category AS c
+    JOIN public.project_category AS pc
+      ON c.category_id = pc.category_id
+    WHERE pc.project_id = $1
+    ORDER BY c.category_name ASC
+  `
+
+  const result = await db.query(query, [projectId])
+
+  return result.rows
+}
+
+
 /* Export model functions */
 export {
   getAllProjects,
   getUpcomingProjects,
   getProjectDetails,
-  getProjectsByOrganizationId
+  getProjectsByOrganizationId,
+  getCategoriesByProjectId
 }
