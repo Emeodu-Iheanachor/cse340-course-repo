@@ -2,62 +2,62 @@
 
 <main>
 
-    <section class="page-intro">
-        <h1><%= title %></h1>
+<section class="page-intro">
+    <h1><%= title %></h1>
 
-        <p>
-            Explore our partner organizations and discover
-            meaningful opportunities to serve in the community.
-        </p>
-    </section>
+    <p>
+        Explore our partner organizations and discover
+        meaningful opportunities to serve in the community.
+    </p>
+</section>
 
 
-    <section class="organization-list">
+<section class="organization-list">
 
-        <% organizations.forEach(organization => { %>
+    <% organizations.forEach(organization => { %>
 
-            <article class="organization-card">
+        <article class="organization-card">
 
-                <div class="organization-card-image">
-                    <img
-                        src="/images/<%= organization.logo_filename %>"
-                        alt="<%= organization.name %> logo"
-                    >
-                </div>
+            <div class="organization-card-image">
+                <img
+                    src="/images/<%= organization.logo_filename %>"
+                    alt="<%= organization.name %> logo"
+                >
+            </div>
 
-                <div class="organization-card-content">
+            <div class="organization-card-content">
 
-                    <h2>
-                        <a href="/organizations/<%= organization.organization_id %>">
-                            <%= organization.name %>
-                        </a>
-                    </h2>
-
-                    <p>
-                        <%= organization.description %>
-                    </p>
-
-                    <p>
-                        <strong>Contact:</strong>
-                        <a href="mailto:<%= organization.contact_email %>">
-                            <%= organization.contact_email %>
-                        </a>
-                    </p>
-
-                    <a
-                        class="project-link"
-                        href="/organizations/<%= organization.organization_id %>"
-                    >
-                        View Organization
+                <h2>
+                    <a href="/organization/<%= organization.organization_id %>">
+                        <%= organization.name %>
                     </a>
+                </h2>
 
-                </div>
+                <p>
+                    <%= organization.description %>
+                </p>
 
-            </article>
+                <p>
+                    <strong>Contact:</strong>
+                    <a href="mailto:<%= organization.contact_email %>">
+                        <%= organization.contact_email %>
+                    </a>
+                </p>
 
-        <% }) %>
+                <a
+                    class="project-link"
+                    href="/organization/<%= organization.organization_id %>"
+                >
+                    View Organization
+                </a>
 
-    </section>
+            </div>
+
+        </article>
+
+    <% }) %>
+
+</section>
 
 </main>
 
