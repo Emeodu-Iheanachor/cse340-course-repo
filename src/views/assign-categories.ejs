@@ -1,0 +1,104 @@
+<%- include('partials/header') %>
+
+<main class="assign-categories-page">
+
+  <section class="page-intro">
+
+    <h1><%= title %></h1>
+
+    <p>
+      Select the categories that best describe this service project.
+    </p>
+
+  </section>
+
+
+  <section class="assign-categories-card">
+
+    <h2>
+      <%= projectDetails.title %>
+    </h2>
+
+    <form
+      action="/assign-categories/<%= projectId %>"
+      method="POST"
+      class="category-assignment-form"
+    >
+
+      <fieldset>
+
+        <legend>
+          Project Categories
+        </legend>
+
+        <% if (categories && categories.length > 0) { %>
+
+          <div class="category-checkboxes">
+
+            <% categories.forEach(category => { %>
+
+              <div class="category-checkbox">
+
+                <input
+                  type="checkbox"
+                  id="category-<%= category.category_id %>"
+                  name="categoryIds"
+                  value="<%= category.category_id %>"
+                  <%= assignedCategories.some(
+                    assigned =>
+                      Number(assigned.category_id) ===
+                      Number(category.category_id)
+                  )
+                    ? 'checked'
+                    : ''
+                  %>
+                >
+
+                <label
+                  for="category-<%= category.category_id %>"
+                >
+                  <%= category.category_name %>
+                </label>
+
+              </div>
+
+            <% }) %>
+
+          </div>
+
+        <% } else { %>
+
+          <p>
+            No categories are currently available.
+          </p>
+
+        <% } %>
+
+      </fieldset>
+
+
+      <div class="form-actions">
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+        >
+          Update Categories
+        </button>
+
+        <a
+          href="/project/<%= projectId %>"
+          class="btn btn-secondary"
+        >
+          Cancel
+        </a>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>

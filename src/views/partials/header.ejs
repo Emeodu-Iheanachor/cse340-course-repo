@@ -31,7 +31,6 @@
 
     </div>
 
-
     <nav id="site-navigation">
 
         <ul>
@@ -76,3 +75,22 @@
 
 </header>
 
+
+<!-- Flash Messages -->
+<% const messages = flash(); %>
+
+<% Object.keys(messages).forEach(type => { %>
+
+    <% if (messages[type].length > 0) { %>
+
+        <div class="alert <%= type %>" role="alert">
+
+            <% messages[type].forEach(msg => { %>
+                <%= msg %>
+            <% }); %>
+
+        </div>
+
+    <% } %>
+
+<% }); %>

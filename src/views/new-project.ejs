@@ -1,0 +1,152 @@
+<%- include('partials/header') %>
+
+<main>
+
+  <section class="page-intro">
+
+    <h1><%= title %></h1>
+
+    <p>
+      Add a new service project to the Service Network.
+    </p>
+
+  </section>
+
+
+  <section class="organization-form-page">
+
+    <form
+      class="organization-form"
+      action="/new-project"
+      method="POST"
+    >
+
+      <!-- Project Title -->
+      <div class="form-group">
+
+        <label for="title">
+          Project Title
+        </label>
+
+        <input
+          type="text"
+          id="title"
+          name="title"
+          maxlength="200"
+          minlength="3"
+          required
+        >
+
+      </div>
+
+
+      <!-- Description -->
+      <div class="form-group">
+
+        <label for="description">
+          Description
+        </label>
+
+        <textarea
+          id="description"
+          name="description"
+          maxlength="1000"
+          required
+        ></textarea>
+
+      </div>
+
+
+      <!-- Location -->
+      <div class="form-group">
+
+        <label for="location">
+          Location
+        </label>
+
+        <input
+          type="text"
+          id="location"
+          name="location"
+          maxlength="200"
+          required
+        >
+
+      </div>
+
+
+      <!-- Date -->
+      <div class="form-group">
+
+        <label for="startDate">
+          Project Date
+        </label>
+
+        <input
+          type="date"
+          id="startDate"
+          name="startDate"
+          required
+        >
+
+      </div>
+
+
+      <!-- Organization -->
+      <div class="form-group">
+
+        <label for="organizationId">
+          Partner Organization
+        </label>
+
+        <select
+          id="organizationId"
+          name="organizationId"
+          required
+        >
+
+          <option value="">
+            Select an organization
+          </option>
+
+          <% organizations.forEach(org => { %>
+
+            <option
+              value="<%= org.organization_id %>"
+            >
+              <%= org.name %>
+            </option>
+
+          <% }) %>
+
+        </select>
+
+      </div>
+
+
+      <!-- Buttons -->
+      <div class="form-actions">
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+        >
+          Create Service Project
+        </button>
+
+        <a
+          href="/projects"
+          class="btn btn-secondary"
+        >
+          Cancel
+        </a>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>

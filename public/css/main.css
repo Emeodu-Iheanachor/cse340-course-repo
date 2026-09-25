@@ -247,20 +247,10 @@ nav a {
         background-color 0.2s ease;
 }
 
-
-/* =========================================================
-   NAV HOVER
-========================================================= */
-
 nav a:hover,
 nav a:focus-visible {
     color: var(--accent-dark);
 }
-
-
-/* =========================================================
-   NAV ACTIVE EFFECT
-========================================================= */
 
 nav a.active {
     color: var(--accent);
@@ -412,10 +402,10 @@ a:focus-visible {
 
 
 /* =========================================================
-   ORGANIZATIONS
+   ORGANIZATION LIST
 ========================================================= */
 
-.organizations {
+.organization-list {
     width: 100%;
     max-width: 1180px;
 
@@ -428,6 +418,11 @@ a:focus-visible {
 
     gap: 1.75rem;
 }
+
+
+/* =========================================================
+   ORGANIZATION CARD
+========================================================= */
 
 .organization-card {
     position: relative;
@@ -476,15 +471,41 @@ a:focus-visible {
     box-shadow: var(--shadow-hover);
 }
 
-.organization-logo {
+
+/* =========================================================
+   ORGANIZATION CARD IMAGE
+========================================================= */
+
+.organization-card-image {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 120px;
+
+    margin-bottom: 1.25rem;
+}
+
+.organization-card-image img {
     display: block;
 
     width: 120px;
     height: 120px;
 
-    margin: 0 auto 1.25rem;
-
     object-fit: contain;
+}
+
+
+/* =========================================================
+   ORGANIZATION CARD CONTENT
+========================================================= */
+
+.organization-card-content {
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
 }
 
 .organization-card h2 {
@@ -493,14 +514,170 @@ a:focus-visible {
     text-align: center;
 }
 
+.organization-card h2 a {
+    color: var(--ink);
+
+    text-decoration: none;
+}
+
+.organization-card h2 a:hover,
+.organization-card h2 a:focus-visible {
+    color: var(--accent-dark);
+
+    text-decoration: underline;
+}
+
 .organization-card p {
     margin: 0 0 0.75rem;
 }
 
-.organization-card p:last-child {
-    margin-bottom: 0;
-
+.organization-card p:last-of-type {
     font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   ORGANIZATION LIST ACTION
+========================================================= */
+
+.organization-list + p {
+    width: 100%;
+    max-width: 1180px;
+
+    margin: 2rem auto 0;
+
+    text-align: center;
+}
+
+.organization-list + p a {
+    display: inline-block;
+
+    padding: 0.75rem 1.25rem;
+
+    color: var(--surface);
+    background: var(--teal);
+
+    border-radius: 7px;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.organization-list + p a:hover,
+.organization-list + p a:focus-visible {
+    color: var(--surface);
+
+    background: var(--teal-dark);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 14px rgba(23, 107, 104, 0.2);
+}
+
+
+/* =========================================================
+   ORGANIZATION DETAILS PAGE
+========================================================= */
+
+.organization-details-card {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 2rem auto;
+
+    padding: 2rem;
+
+    display: grid;
+
+    grid-template-columns: 220px minmax(0, 1fr);
+
+    gap: 2rem;
+
+    align-items: center;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: 14px;
+
+    box-shadow: var(--shadow);
+}
+
+.organization-details-logo {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.organization-details-logo img {
+    display: block;
+
+    width: 180px;
+    height: 180px;
+
+    padding: 0.75rem;
+
+    object-fit: contain;
+
+    background: var(--soft);
+
+    border: 1px solid var(--line);
+    border-radius: 10px;
+}
+
+.organization-information h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+
+    color: var(--ink);
+}
+
+.organization-information p {
+    line-height: 1.7;
+}
+
+.contact-email a {
+    color: var(--teal);
+
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   ORGANIZATION PROJECTS
+========================================================= */
+
+.organization-projects {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 2.5rem auto;
+}
+
+.organization-projects > h2 {
+    margin-bottom: 1.5rem;
+
+    color: var(--ink);
+
+    text-align: center;
+}
+
+.organization-projects .project-list {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1.5rem;
 }
 
 
@@ -514,11 +691,6 @@ a:focus-visible {
 
     margin: 0 auto;
 }
-
-
-/* =========================================================
-   PROJECT GRID
-========================================================= */
 
 .projects-list {
     width: 100%;
@@ -581,33 +753,13 @@ a:focus-visible {
     padding: 1.5rem;
 }
 
-
-/* =========================================================
-   PROJECT LABEL
-========================================================= */
-
-.project-label {
-    margin: 0 0 0.65rem;
-
-    text-align: center;
-
-    color: var(--accent);
-
-    font-size: 0.72rem;
-    font-weight: 700;
-
-    letter-spacing: 0.08em;
-
-    text-transform: uppercase;
+.project-card h2,
+.project-card h3 {
+    margin-top: 0;
 }
 
-
-/* =========================================================
-   PROJECT TITLE
-========================================================= */
-
 .project-card h2 {
-    margin: 0 0 1rem;
+    margin-bottom: 1rem;
 
     text-align: center;
 
@@ -617,23 +769,25 @@ a:focus-visible {
     line-height: 1.3;
 }
 
-.project-card h2 a {
+.project-card h2 a,
+.project-card h3 a {
     color: var(--ink);
 
     text-decoration: none;
 }
 
 .project-card h2 a:hover,
-.project-card h2 a:focus-visible {
+.project-card h2 a:focus-visible,
+.project-card h3 a:hover,
+.project-card h3 a:focus-visible {
     color: var(--accent-dark);
 
     text-decoration: underline;
 }
 
-
-/* =========================================================
-   PROJECT DESCRIPTION
-========================================================= */
+.project-card h3 {
+    margin-bottom: 0.75rem;
+}
 
 .project-description {
     margin: 0 0 1.25rem;
@@ -641,13 +795,9 @@ a:focus-visible {
     color: var(--muted);
 
     font-size: 0.95rem;
+
     line-height: 1.55;
 }
-
-
-/* =========================================================
-   PROJECT DETAILS
-========================================================= */
 
 .project-details {
     display: grid;
@@ -655,6 +805,7 @@ a:focus-visible {
     gap: 0.8rem;
 
     margin-top: auto;
+
     padding-top: 1rem;
 
     border-top: 1px solid var(--line);
@@ -691,26 +842,7 @@ a:focus-visible {
     line-height: 1.45;
 
     overflow-wrap: anywhere;
-    word-break: normal;
 }
-
-.detail-value a {
-    color: var(--teal);
-
-    text-decoration: none;
-}
-
-.detail-value a:hover,
-.detail-value a:focus-visible {
-    color: var(--accent-dark);
-
-    text-decoration: underline;
-}
-
-
-/* =========================================================
-   PROJECT ACTION
-========================================================= */
 
 .project-card-action {
     margin-top: 1.25rem;
@@ -842,11 +974,6 @@ a:focus-visible {
     font-weight: 700;
 
     text-decoration: none;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease;
 }
 
 .category-tag:hover,
@@ -899,11 +1026,6 @@ a:focus-visible {
     border-radius: 14px;
 
     box-shadow: var(--shadow);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
 }
 
 .category-card::before {
@@ -949,9 +1071,7 @@ a:focus-visible {
 
 
 /* =========================================================
-   CATEGORY DETAILS PAGE
-   COMMUNITY SERVICE / EDUCATIONAL /
-   ENVIRONMENTAL / HEALTH AND WELLNESS
+   CATEGORY DETAILS
 ========================================================= */
 
 .category-page {
@@ -960,11 +1080,6 @@ a:focus-visible {
 
     margin: 0 auto;
 }
-
-
-/* =========================================================
-   CATEGORY TITLE / INTRODUCTION
-========================================================= */
 
 .category-page .page-intro {
     width: 100%;
@@ -988,15 +1103,8 @@ a:focus-visible {
 
     margin: 0 auto;
 
-    color: var(--muted);
-
     text-align: center;
 }
-
-
-/* =========================================================
-   CATEGORY PROJECT GRID
-========================================================= */
 
 .category-page .projects-list {
     width: 100%;
@@ -1014,199 +1122,157 @@ a:focus-visible {
     align-items: stretch;
 }
 
+.category-page .project-card-content {
+    padding: 1.5rem;
+}
+
 
 /* =========================================================
-   CATEGORY PROJECT CARD
+   NEW ORGANIZATION FORM
 ========================================================= */
 
-.category-page .project-card {
-    display: flex;
-    flex-direction: column;
+.organization-form-page {
+    width: 100%;
+    max-width: 800px;
 
-    min-width: 0;
-    height: 100%;
+    margin: 0 auto;
+}
+
+.organization-form {
+    width: 100%;
+
+    margin: 2rem auto;
+    padding: clamp(1.25rem, 4vw, 2rem);
 
     background: var(--surface);
 
     border: 1px solid var(--line);
     border-radius: 14px;
 
-    overflow: hidden;
-
     box-shadow: var(--shadow);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
 }
 
-.category-page .project-card:hover {
-    transform: translateY(-4px);
-
-    border-color: var(--teal);
-
-    box-shadow: var(--shadow-hover);
+.organization-form .form-group {
+    margin-bottom: 1.25rem;
 }
 
+.organization-form label {
+    display: block;
 
-/* =========================================================
-   CATEGORY CARD INNER CONTENT
-   IMPORTANT ALIGNMENT / PADDING
-========================================================= */
+    margin-bottom: 0.4rem;
 
-.category-page .project-card-content {
-    display: flex;
-    flex-direction: column;
+    color: var(--ink);
+
+    font-weight: 700;
+}
+
+.organization-form input,
+.organization-form textarea {
+    display: block;
 
     width: 100%;
-    height: 100%;
 
-    /*
-       Equal space between the card border
-       and all text/content.
-    */
-    padding: 1.5rem;
+    padding: 0.75rem 0.85rem;
+
+    color: var(--ink);
+    background: var(--surface);
+
+    border: 1px solid #b9cbc8;
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
+.organization-form textarea {
+    min-height: 140px;
 
-/* =========================================================
-   CATEGORY PROJECT LABEL
-========================================================= */
+    resize: vertical;
+}
 
-.category-page .project-label {
-    margin: 0 0 0.65rem;
+.organization-form input::placeholder,
+.organization-form textarea::placeholder {
+    color: #71818d;
+}
 
-    text-align: center;
+.organization-form input:focus,
+.organization-form textarea:focus {
+    outline: 3px solid rgba(23, 107, 104, 0.18);
 
-    color: var(--accent);
+    border-color: var(--teal);
+}
 
-    font-size: 0.72rem;
+.organization-form .form-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+
+    margin-top: 1.5rem;
+}
+
+.organization-form button,
+.organization-form .cancel-link {
+    display: inline-block;
+
+    padding: 0.75rem 1.25rem;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 1rem;
     font-weight: 700;
-
-    letter-spacing: 0.08em;
-
-    text-transform: uppercase;
-}
-
-
-/* =========================================================
-   CATEGORY PROJECT TITLE
-========================================================= */
-
-.category-page .project-card h2 {
-    margin: 0 0 1rem;
-
-    color: var(--ink);
-
-    font-size: 1.25rem;
-    line-height: 1.3;
-
-    text-align: center;
-}
-
-.category-page .project-card h2 a {
-    color: var(--ink);
 
     text-decoration: none;
+
+    cursor: pointer;
 }
 
-.category-page .project-card h2 a:hover,
-.category-page .project-card h2 a:focus-visible {
-    color: var(--accent-dark);
+.organization-form button {
+    color: var(--surface);
+    background: var(--teal);
 
-    text-decoration: underline;
+    border: 1px solid var(--teal);
 }
 
+.organization-form button:hover,
+.organization-form button:focus-visible {
+    background: var(--teal-dark);
 
-/* =========================================================
-   CATEGORY PROJECT DESCRIPTION
-========================================================= */
-
-.category-page .project-description {
-    margin: 0 0 1.25rem;
-
-    color: var(--muted);
-
-    font-size: 0.95rem;
-    line-height: 1.55;
+    border-color: var(--teal-dark);
 }
 
+.organization-form .cancel-link {
+    color: var(--ink);
+    background: var(--soft);
 
-/* =========================================================
-   CATEGORY PROJECT DETAILS
-========================================================= */
-
-.category-page .project-details {
-    display: grid;
-
-    gap: 0.8rem;
-
-    margin-top: auto;
-
-    padding-top: 1rem;
-
-    border-top: 1px solid var(--line);
+    border: 1px solid var(--line);
 }
 
-.category-page .project-detail {
-    display: flex;
-    flex-direction: column;
-
-    gap: 0.2rem;
-
-    min-width: 0;
-}
-
-
-/* =========================================================
-   CATEGORY DETAIL LABEL
-========================================================= */
-
-.category-page .detail-label {
-    color: var(--muted);
-
-    font-size: 0.72rem;
-    font-weight: 700;
-
-    letter-spacing: 0.05em;
-
-    text-transform: uppercase;
-}
-
-
-/* =========================================================
-   CATEGORY DETAIL VALUE
-========================================================= */
-
-.category-page .detail-value {
-    min-width: 0;
-
+.organization-form .cancel-link:hover,
+.organization-form .cancel-link:focus-visible {
     color: var(--ink);
 
-    font-size: 0.92rem;
-    font-weight: 600;
-
-    line-height: 1.45;
-
-    overflow-wrap: anywhere;
-    word-break: normal;
+    background: #e4efed;
 }
 
 
 /* =========================================================
-   CATEGORY PROJECT ACTION
+   PAGE ACTIONS
 ========================================================= */
 
-.category-page .project-card-action {
-    margin-top: 1.25rem;
+.page-actions {
+    display: flex;
 
-    padding-top: 0.9rem;
+    align-items: center;
+    justify-content: center;
 
-    border-top: 1px solid var(--line);
+    margin: 2rem 0;
 }
 
-.category-page .project-link {
+.page-link {
     display: inline-block;
 
     color: var(--teal);
@@ -1216,8 +1282,8 @@ a:focus-visible {
     text-decoration: none;
 }
 
-.category-page .project-link:hover,
-.category-page .project-link:focus-visible {
+.page-link:hover,
+.page-link:focus-visible {
     color: var(--accent-dark);
 
     text-decoration: underline;
@@ -1252,8 +1318,7 @@ a:focus-visible {
     font-size: 1.4rem;
 }
 
-.no-projects p,
-.no-results {
+.no-projects p {
     margin-left: auto;
     margin-right: auto;
 }
@@ -1313,6 +1378,67 @@ a:focus-visible {
 
     margin: 2rem auto;
 }
+
+
+
+
+
+/* =========================================================
+   FLASH MESSAGES
+========================================================= */
+
+.alert {
+    width: min(100% - 2rem, 1100px);
+
+    margin: 1rem auto;
+    padding: 0.9rem 1.1rem;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    font-weight: 600;
+    line-height: 1.5;
+
+    box-sizing: border-box;
+}
+
+/* Success message */
+.alert.success {
+    color: #155724;
+
+    background-color: #d4edda;
+
+    border-color: #c3e6cb;
+}
+
+/* Error message */
+.alert.error {
+    color: #721c24;
+
+    background-color: #f8d7da;
+
+    border-color: #f5c6cb;
+}
+
+/* Warning message */
+.alert.warning {
+    color: #856404;
+
+    background-color: #fff3cd;
+
+    border-color: #ffeeba;
+}
+
+/* Information message */
+.alert.info {
+    color: #0c5460;
+
+    background-color: #d1ecf1;
+
+    border-color: #bee5eb;
+}
+
+
 
 
 /* =========================================================
@@ -1436,8 +1562,7 @@ footer img {
     }
 
 
-    /* Two-column tablet layout */
-    .organizations,
+    .organization-list,
     .projects-list,
     .category-page .projects-list {
         grid-template-columns:
@@ -1454,12 +1579,6 @@ footer img {
     main {
         padding-left: 2.5rem;
         padding-right: 2.5rem;
-    }
-
-
-    /* Keep category cards comfortable on tablets */
-    .category-page .project-card-content {
-        padding: 1.4rem;
     }
 }
 
@@ -1525,27 +1644,75 @@ footer img {
     }
 
 
-    /* Single-column mobile layout */
-    .organizations,
+    /* Single-column layouts */
+
+    .organization-list,
     .projects-list,
     .category-page .projects-list,
     .categories-list,
     .categories,
-    .category-list {
+    .category-list,
+    .organization-projects .project-list {
         grid-template-columns: 1fr;
     }
+
+
+    /* Organization cards */
 
     .organization-card {
         padding: 1.4rem;
     }
 
-    .organization-logo {
+    .organization-card-image img {
         width: 100px;
         height: 100px;
     }
 
 
+    /* Organization detail */
+
+    .organization-details-card {
+        grid-template-columns: 1fr;
+
+        padding: 1.4rem;
+
+        text-align: center;
+    }
+
+    .organization-details-logo img {
+        width: 150px;
+        height: 150px;
+    }
+
+
+    /* New organization form */
+
+    .organization-form-page {
+        width: 100%;
+    }
+
+    .organization-form {
+        margin: 1.5rem auto;
+
+        padding: 1.25rem;
+    }
+
+    .organization-form .form-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .organization-form button,
+    .organization-form .cancel-link {
+        width: 100%;
+
+        text-align: center;
+    }
+
+
     /* Project cards */
+
     .project-card-content,
     .category-page .project-card-content {
         padding: 1.25rem;
@@ -1574,6 +1741,7 @@ footer img {
 
 
     /* Project details page */
+
     .project-page .project-card-content {
         padding: 1.4rem;
     }
@@ -1584,6 +1752,7 @@ footer img {
 
 
     /* Category cards */
+
     .category-card {
         min-height: 130px;
 
@@ -1595,13 +1764,36 @@ footer img {
     }
 
 
-    /* Category page introduction */
+    /* Category introduction */
+
     .category-page .page-intro h1 {
         font-size: 2rem;
     }
 
     .category-page .page-intro p {
         font-size: 1rem;
+    }
+
+
+    /* Organization list action */
+
+    .organization-list + p {
+        margin-top: 1.5rem;
+    }
+
+    .organization-list + p a {
+        width: 100%;
+
+        text-align: center;
+    }
+
+
+    /* Organization project details */
+
+    .organization-projects .project-detail {
+        flex-direction: column;
+
+        gap: 0.2rem;
     }
 }
 
@@ -1640,6 +1832,11 @@ footer img {
     .category-page .detail-value {
         font-size: 0.9rem;
     }
+
+    .organization-details-logo img {
+        width: 120px;
+        height: 120px;
+    }
 }
 
 
@@ -1649,6 +1846,7 @@ footer img {
 
 :focus-visible {
     outline: 3px solid rgba(212, 93, 56, 0.45);
+
     outline-offset: 3px;
 }
 

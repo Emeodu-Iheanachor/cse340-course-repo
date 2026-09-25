@@ -2,155 +2,193 @@
 
 <main class="project-page">
 
-    <section class="page-intro">
-        <h1><%= title %></h1>
+<section class="page-intro">
 
-        <p>
-            Learn more about this service project and the
-            organization supporting this opportunity.
-        </p>
-    </section>
+    <h1><%= title %></h1>
 
+    <p>
+        Learn more about this service project and the
+        organization supporting this opportunity.
+    </p>
 
-    <section class="project-details" aria-label="Service project details">
-
-        <article class="project-card">
-
-            <div class="project-card-content">
-
-                <p class="project-label">Service Project</p>
-
-                <h2><%= project.title %></h2>
+</section>
 
 
-                <div class="project-detail-section">
+<section
+    class="project-details"
+    aria-label="Service project details"
+>
 
-                    <h3>Description</h3>
+    <article class="project-card">
 
-                    <p class="project-description">
-                        <%= project.description %>
-                    </p>
+        <div class="project-card-content">
+
+            <p class="project-label">
+                Service Project
+            </p>
+
+            <h2><%= project.title %></h2>
+
+
+            <div class="project-detail-section">
+
+                <h3>Description</h3>
+
+                <p class="project-description">
+                    <%= project.description %>
+                </p>
+
+            </div>
+
+
+            <div class="project-details-list">
+
+                <div class="project-detail">
+
+                    <span class="detail-label">
+                        Partner Organization
+                    </span>
+
+                    <span class="detail-value">
+
+                        <a
+                            href="/organization/<%= project.organization_id %>"
+                        >
+                            <%= project.organization_name %>
+                        </a>
+
+                    </span>
 
                 </div>
 
 
-                <div class="project-details-list">
+                <div class="project-detail">
 
-                    <div class="project-detail">
+                    <span class="detail-label">
+                        Start Date
+                    </span>
 
-                        <span class="detail-label">
-                            Partner Organization
-                        </span>
+                    <span class="detail-value">
 
-                        <span class="detail-value">
-
-                            <a href="/organization/<%= project.organization_id %>">
-                                <%= project.organization_name %>
-                            </a>
-
-                        </span>
-
-                    </div>
-
-
-                    <div class="project-detail">
-
-                        <span class="detail-label">
-                            Start Date
-                        </span>
-
-                        <span class="detail-value">
-
-                            <%= new Date(project.start_date).toLocaleDateString('en-US', {
+                        <%= new Date(project.start_date).toLocaleDateString(
+                            'en-US',
+                            {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
                                 timeZone: 'UTC'
-                            }) %>
+                            }
+                        ) %>
+
+                    </span>
+
+                </div>
+
+
+                <% if (project.end_date) { %>
+
+                    <div class="project-detail">
+
+                        <span class="detail-label">
+                            End Date
+                        </span>
+
+                        <span class="detail-value">
+
+                            <%= new Date(project.end_date).toLocaleDateString(
+                                'en-US',
+                                {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    timeZone: 'UTC'
+                                }
+                            ) %>
 
                         </span>
 
                     </div>
 
-
-                    <% if (project.end_date) { %>
-
-                        <div class="project-detail">
-
-                            <span class="detail-label">
-                                End Date
-                            </span>
-
-                            <span class="detail-value">
-
-                                <%= new Date(project.end_date).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    timeZone: 'UTC'
-                                }) %>
-
-                            </span>
-
-                        </div>
-
-                    <% } %>
-
-                </div>
-
-
-                <!-- Service project categories -->
-                <section
-                    class="project-categories"
-                    aria-label="Service project categories"
-                >
-
-                    <h3>Service Categories</h3>
-
-                    <% if (categories && categories.length > 0) { %>
-
-                        <div class="category-tags">
-
-                            <% categories.forEach(category => { %>
-
-                                <a
-                                    class="category-tag"
-                                    href="/category/<%= category.category_id %>"
-                                >
-                                    <%= category.category_name %>
-                                </a>
-
-                            <% }) %>
-
-                        </div>
-
-                    <% } else { %>
-
-                        <p class="no-results">
-                            No categories are currently assigned to this project.
-                        </p>
-
-                    <% } %>
-
-                </section>
-
-
-                <div class="project-card-action">
-
-                    <a
-                        href="/projects"
-                        class="project-link"
-                    >
-                        Back to Service Projects
-                    </a>
-
-                </div>
+                <% } %>
 
             </div>
 
-        </article>
 
-    </section>
+            <!-- Currently assigned service categories -->
+
+            <section
+                class="project-categories"
+                aria-label="Currently assigned service categories"
+            >
+
+                <h3>
+                    Service Categories
+                </h3>
+
+
+                <% if (categories && categories.length > 0) { %>
+
+                    <div class="category-tags">
+
+                        <% categories.forEach(category => { %>
+
+                            <a
+                                class="category-tag"
+                                href="/category/<%= category.category_id %>"
+                            >
+                                <%= category.category_name %>
+                            </a>
+
+                        <% }) %>
+
+                    </div>
+
+                <% } else { %>
+
+                    <p class="no-results">
+                        No categories have been assigned to this project yet.
+                    </p>
+
+                <% } %>
+
+            </section>
+
+
+            <!-- Project actions -->
+
+            <div class="project-actions">
+
+                <a
+                    href="/edit-project/<%= project.project_id %>"
+                    class="btn btn-primary"
+                >
+                    Edit Project
+                </a>
+
+
+                <a
+                    href="/assign-categories/<%= project.project_id %>"
+                    class="btn btn-primary"
+                >
+                    Edit Categories
+                </a>
+
+
+                <a
+                    href="/projects"
+                    class="project-link"
+                >
+                    Back to Service Projects
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </article>
+
+</section>
 
 </main>
 

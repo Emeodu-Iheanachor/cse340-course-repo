@@ -1,7 +1,9 @@
 import db from './db.js'
 
 
-/* Get all service projects */
+/* =========================================================
+   GET ALL SERVICE PROJECTS
+========================================================= */
 const getAllProjects = async () => {
   const query = `
     SELECT
@@ -12,8 +14,8 @@ const getAllProjects = async () => {
       sp.end_date,
       sp.organization_id,
       o.name AS organization_name
-    FROM service_project sp
-    JOIN organization o
+    FROM service_project AS sp
+    JOIN organization AS o
       ON sp.organization_id = o.organization_id
     ORDER BY sp.start_date ASC
   `
@@ -24,7 +26,10 @@ const getAllProjects = async () => {
 }
 
 
-/* Get the next five or specified number of upcoming service projects */
+/* =========================================================
+   GET UPCOMING SERVICE PROJECTS
+   Returns the next specified number of projects
+========================================================= */
 const getUpcomingProjects = async (numberOfProjects) => {
   const query = `
     SELECT
@@ -35,8 +40,8 @@ const getUpcomingProjects = async (numberOfProjects) => {
       sp.end_date,
       sp.organization_id,
       o.name AS organization_name
-    FROM service_project sp
-    JOIN organization o
+    FROM service_project AS sp
+    JOIN organization AS o
       ON sp.organization_id = o.organization_id
     WHERE sp.start_date >= CURRENT_DATE
     ORDER BY sp.start_date ASC
@@ -49,7 +54,9 @@ const getUpcomingProjects = async (numberOfProjects) => {
 }
 
 
-/* Get one service project by ID */
+/* =========================================================
+   GET ONE SERVICE PROJECT BY ID
+========================================================= */
 const getProjectDetails = async (projectId) => {
   const query = `
     SELECT
@@ -60,8 +67,8 @@ const getProjectDetails = async (projectId) => {
       sp.end_date,
       sp.organization_id,
       o.name AS organization_name
-    FROM service_project sp
-    JOIN organization o
+    FROM service_project AS sp
+    JOIN organization AS o
       ON sp.organization_id = o.organization_id
     WHERE sp.project_id = $1
   `
@@ -72,7 +79,9 @@ const getProjectDetails = async (projectId) => {
 }
 
 
-/* Get service projects for a specific organization */
+/* =========================================================
+   GET SERVICE PROJECTS FOR AN ORGANIZATION
+========================================================= */
 const getProjectsByOrganizationId = async (organizationId) => {
   const query = `
     SELECT
@@ -93,7 +102,9 @@ const getProjectsByOrganizationId = async (organizationId) => {
 }
 
 
-/* Get all categories assigned to a service project */
+/* =========================================================
+   GET CATEGORIES ASSIGNED TO A SERVICE PROJECT
+========================================================= */
 const getCategoriesByProjectId = async (projectId) => {
   const query = `
     SELECT
@@ -112,11 +123,117 @@ const getCategoriesByProjectId = async (projectId) => {
 }
 
 
-/* Export model functions */
+/* =========================================================
+   CREATE A NEW SERVICE PROJECT
+========================================================= */
+const createProject = async (
+  title,
+  description,
+  startDate,
+  endDate,
+  organizationId
+) => {
+  const query = `
+    INSERT INTO service_project (
+      title,
+      description,
+      start_date,
+      end_date,
+      organization_id
+    )
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING project_id
+  `
+
+  const queryParams = [
+    title,
+    description,
+    startDate,
+    endDate,
+    organizationId
+  ]
+
+  const result = await db.query(query, queryParams)
+
+  if (result.rows.length === 0) {
+    throw new Error('Failed to create service project')
+  }
+
+  if (process.env.ENABLE_SQL_LOGGING === 'true') {
+    console.log(
+      'Created new service project with ID:',
+      result.rows[0].project_id
+    )
+  }
+
+  return result.rows[0].project_id
+}
+
+
+/* =========================================================
+   UPDATE AN EXISTING SERVICE PROJECT
+========================================================= */
+const updateProject = async (
+  projectId,
+  title,
+  description,
+  startDate,
+  endDate,
+  organizationId
+) => {
+  const query = `
+    UPDATE service_project
+    SET
+      title = $1,
+      description = $2,
+      start_date = $3,
+      end_date = $4,
+      organization_id = $5
+    WHERE project_id = $6
+    RETURNING
+      project_id,
+      title,
+      description,
+      start_date,
+      end_date,
+      organization_id
+  `
+
+  const queryParams = [
+    title,
+    description,
+    startDate,
+    endDate,
+    organizationId,
+    projectId
+  ]
+
+  const result = await db.query(query, queryParams)
+
+  if (result.rows.length === 0) {
+    throw new Error('Failed to update service project')
+  }
+
+  if (process.env.ENABLE_SQL_LOGGING === 'true') {
+    console.log(
+      'Updated service project with ID:',
+      result.rows[0].project_id
+    )
+  }
+
+  return result.rows[0]
+}
+
+
+/* =========================================================
+   EXPORT MODEL FUNCTIONS
+========================================================= */
 export {
   getAllProjects,
   getUpcomingProjects,
   getProjectDetails,
   getProjectsByOrganizationId,
-  getCategoriesByProjectId
+  getCategoriesByProjectId,
+  createProject,
+  updateProject
 }

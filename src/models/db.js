@@ -1,12 +1,12 @@
 import { Pool } from 'pg';
 
+
 /**
  * Connection pool for PostgreSQL database.
  *
  * Uses the database connection string stored in the DB_URL
  * environment variable.
  */
-
 const pool = new Pool({
     connectionString: process.env.DB_URL,
     ssl: {
@@ -21,11 +21,15 @@ const pool = new Pool({
  */
 let db = null;
 
+
 if (
     process.env.NODE_ENV === 'development' &&
     process.env.ENABLE_SQL_LOGGING === 'true'
 ) {
     db = {
+        /**
+         * Execute a SQL query.
+         */
         async query(text, params) {
             try {
                 const start = Date.now();
@@ -51,6 +55,19 @@ if (
             }
         },
 
+        /**
+         * Get a PostgreSQL client from the connection pool.
+         *
+         * Required for transactions such as:
+         * BEGIN, COMMIT, and ROLLBACK.
+         */
+        async connect() {
+            return pool.connect();
+        },
+
+        /**
+         * Close the PostgreSQL connection pool.
+         */
         async close() {
             await pool.end();
         }
@@ -66,7 +83,7 @@ if (
 const testConnection = async () => {
     try {
         const result = await db.query(
-            'SELECT NOW() as current_time'
+            'SELECT NOW() AS current_time'
         );
 
         console.log(
