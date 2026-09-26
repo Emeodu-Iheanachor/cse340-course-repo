@@ -11,6 +11,17 @@
             opportunities to make a positive difference in the community.
         </p>
 
+        <div class="page-actions">
+
+            <a
+                href="/new-category"
+                class="btn-primary"
+            >
+                Create New Category
+            </a>
+
+        </div>
+
     </section>
 
 
@@ -26,10 +37,31 @@
                 <article class="category-card">
 
                     <h2>
-                        <a href="/category/<%= category.category_id %>">
+                        <a
+                            href="/category/<%= category.category_id %>"
+                        >
                             <%= category.category_name %>
                         </a>
                     </h2>
+
+
+                    <div class="card-actions">
+
+                        <a
+                            href="/category/<%= category.category_id %>"
+                            class="btn-secondary"
+                        >
+                            View
+                        </a>
+
+                        <a
+                            href="/edit-category/<%= category.category_id %>"
+                            class="btn-secondary"
+                        >
+                            Edit
+                        </a>
+
+                    </div>
 
                 </article>
 
@@ -41,7 +73,7 @@
     <% } else { %>
 
         <p class="no-results">
-            No categories are currently available.
+            No service project categories are currently available.
         </p>
 
     <% } %>

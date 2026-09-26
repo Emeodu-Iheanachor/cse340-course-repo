@@ -1867,3 +1867,974 @@ footer img {
         transition: none !important;
     }
 }
+
+
+
+
+
+/* =========================================================
+   CATEGORY CRUD PAGES
+   Service Network
+========================================================= */
+
+
+/* =========================================================
+   CATEGORY PAGE CONTAINERS
+========================================================= */
+
+.categories-page,
+.category-page,
+.category-detail-page,
+.category-form-page {
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+/*
+   Category listing page
+*/
+.categories-page {
+    max-width: 1150px;
+}
+
+
+/*
+   Category detail page
+*/
+.category-page,
+.category-detail-page {
+    max-width: 1240px;
+}
+
+
+/*
+   Category create/edit page
+*/
+.category-form-page {
+    max-width: 800px;
+}
+
+
+/* =========================================================
+   CATEGORY PAGE INTRO
+========================================================= */
+
+.categories-page .page-intro,
+.category-page .page-intro,
+.category-detail-page .page-intro {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto 3rem;
+    text-align: center;
+}
+
+
+.categories-page .page-intro h1,
+.category-page .page-intro h1,
+.category-detail-page .page-intro h1 {
+    margin: 0 0 0.9rem;
+    color: var(--teal);
+    font-size: clamp(2rem, 4vw, 2.7rem);
+}
+
+
+.categories-page .page-intro p,
+.category-page .page-intro p,
+.category-detail-page .page-intro p {
+    max-width: 750px;
+    margin: 0 auto;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+
+/* Optional inner content container */
+.categories-page .page-intro-content,
+.category-page .page-intro-content,
+.category-detail-page .page-intro-content {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   CATEGORY PAGE ACTIONS
+========================================================= */
+
+.categories-page .page-actions,
+.category-page .page-actions,
+.category-detail-page .page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0 0;
+}
+
+
+/* =========================================================
+   CATEGORY LIST
+========================================================= */
+
+.categories-page .categories-list {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1.5rem;
+
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   CATEGORY CARD
+========================================================= */
+
+.categories-page .category-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-width: 0;
+    min-height: 170px;
+
+    padding: 1.5rem;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: 14px;
+
+    box-shadow: var(--shadow);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+/*
+   Accent bar
+*/
+.categories-page .category-card::before {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 0.3rem;
+
+    background: var(--accent);
+
+    content: '';
+}
+
+
+/*
+   Hover effect
+*/
+.categories-page .category-card:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--accent);
+
+    box-shadow: var(--shadow-hover);
+}
+
+
+/* =========================================================
+   CATEGORY CARD CONTENT
+========================================================= */
+
+.categories-page .category-card-content {
+    flex: 1;
+}
+
+
+.categories-page .category-card h2 {
+    margin: 0;
+
+    color: var(--ink);
+
+    font-size: 1.25rem;
+    line-height: 1.4;
+}
+
+
+.categories-page .category-card h2 a {
+    color: var(--ink);
+
+    text-decoration: none;
+}
+
+
+.categories-page .category-card h2 a:hover,
+.categories-page .category-card h2 a:focus-visible {
+    color: var(--accent-dark);
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   CATEGORY CARD ACTIONS
+========================================================= */
+
+.categories-page .card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    gap: 0.65rem;
+
+    margin-top: 1.5rem;
+}
+
+
+/* =========================================================
+   CATEGORY BUTTONS
+========================================================= */
+
+.categories-page .btn-primary,
+.categories-page .btn-secondary,
+.category-page .btn-primary,
+.category-page .btn-secondary,
+.category-detail-page .btn-primary,
+.category-detail-page .btn-secondary,
+.category-form-page .btn-primary,
+.category-form-page .btn-secondary {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+
+    padding: 0.7rem 1.1rem;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.2;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
+
+.categories-page .btn-primary,
+.category-page .btn-primary,
+.category-detail-page .btn-primary,
+.category-form-page .btn-primary {
+
+    color: var(--surface);
+
+    background: var(--accent);
+
+    border: 1px solid var(--accent-dark);
+}
+
+
+.categories-page .btn-primary:hover,
+.categories-page .btn-primary:focus-visible,
+.category-page .btn-primary:hover,
+.category-page .btn-primary:focus-visible,
+.category-detail-page .btn-primary:hover,
+.category-detail-page .btn-primary:focus-visible,
+.category-form-page .btn-primary:hover,
+.category-form-page .btn-primary:focus-visible {
+
+    color: var(--surface);
+
+    background: var(--accent-dark);
+
+    border-color: var(--accent-dark);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   SECONDARY BUTTON
+========================================================= */
+
+.categories-page .btn-secondary,
+.category-page .btn-secondary,
+.category-detail-page .btn-secondary,
+.category-form-page .btn-secondary {
+
+    color: var(--teal);
+
+    background: var(--surface);
+
+    border: 1px solid var(--teal);
+}
+
+
+.categories-page .btn-secondary:hover,
+.categories-page .btn-secondary:focus-visible,
+.category-page .btn-secondary:hover,
+.category-page .btn-secondary:focus-visible,
+.category-detail-page .btn-secondary:hover,
+.category-detail-page .btn-secondary:focus-visible,
+.category-form-page .btn-secondary:hover,
+.category-form-page .btn-secondary:focus-visible {
+
+    color: var(--surface);
+
+    background: var(--teal);
+
+    border-color: var(--teal);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   CATEGORY BUTTON FOCUS
+========================================================= */
+
+.categories-page .btn-primary:focus-visible,
+.categories-page .btn-secondary:focus-visible,
+.category-page .btn-primary:focus-visible,
+.category-page .btn-secondary:focus-visible,
+.category-detail-page .btn-primary:focus-visible,
+.category-detail-page .btn-secondary:focus-visible,
+.category-form-page .btn-primary:focus-visible,
+.category-form-page .btn-secondary:focus-visible {
+
+    outline: 3px solid rgba(23, 107, 104, 0.25);
+
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   CATEGORY DETAILS
+========================================================= */
+
+.category-page .eyebrow,
+.category-detail-page .eyebrow {
+
+    margin: 0 0 0.5rem;
+
+    color: var(--teal);
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   CATEGORY PROJECT SECTION
+========================================================= */
+
+.category-page .category-projects,
+.category-detail-page .category-projects {
+
+    width: 100%;
+
+    margin: 2.5rem auto 0;
+}
+
+
+.category-page .section-header,
+.category-detail-page .section-header {
+
+    margin-bottom: 1.5rem;
+
+    text-align: center;
+}
+
+
+.category-page .section-header h2,
+.category-detail-page .section-header h2 {
+
+    margin: 0 0 0.5rem;
+}
+
+
+.category-page .section-header p,
+.category-detail-page .section-header p {
+
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   PROJECTS WITHIN CATEGORY
+========================================================= */
+
+/*
+   The main stylesheet already defines .projects-list
+   as a 3-column responsive grid.
+
+   Do not redefine .project-card here.
+
+   This prevents Category pages from breaking the
+   existing Project cards.
+*/
+
+.category-page .projects-list,
+.category-detail-page .projects-list {
+
+    width: 100%;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1.5rem;
+
+    align-items: stretch;
+}
+
+
+/* =========================================================
+   CATEGORY EMPTY STATE
+========================================================= */
+
+.category-page .empty-state,
+.category-detail-page .empty-state {
+
+    width: 100%;
+    max-width: 700px;
+
+    margin: 2rem auto;
+
+    padding: 2rem;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: 12px;
+
+    box-shadow: var(--shadow);
+
+    text-align: center;
+}
+
+
+.category-page .empty-state h2,
+.category-detail-page .empty-state h2 {
+
+    margin: 0 0 0.75rem;
+}
+
+
+.category-page .empty-state p,
+.category-detail-page .empty-state p {
+
+    margin: 0 0 1.5rem;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CATEGORY FORM PAGE
+========================================================= */
+
+.category-form-page {
+    display: flex;
+
+    justify-content: center;
+}
+
+
+/* =========================================================
+   CATEGORY FORM CONTAINER
+========================================================= */
+
+.category-form-page .form-container {
+
+    width: 100%;
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    padding: clamp(1.5rem, 4vw, 2rem);
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: 14px;
+
+    box-shadow: var(--shadow);
+}
+
+
+/* =========================================================
+   CATEGORY FORM HEADER
+========================================================= */
+
+.category-form-page .form-header {
+
+    margin-bottom: 1.75rem;
+
+    text-align: center;
+}
+
+
+.category-form-page .form-header h1 {
+
+    margin: 0 0 0.75rem;
+
+    color: var(--teal);
+}
+
+
+.category-form-page .form-header p {
+
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    color: var(--muted);
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CATEGORY FORM
+========================================================= */
+
+.category-form-page .category-form {
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   CATEGORY FORM GROUP
+========================================================= */
+
+.category-form-page .form-group {
+
+    margin-bottom: 1.5rem;
+}
+
+
+.category-form-page .form-group label {
+
+    display: block;
+
+    margin-bottom: 0.5rem;
+
+    color: var(--ink);
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   CATEGORY FORM INPUT
+========================================================= */
+
+.category-form-page .form-group input {
+
+    display: block;
+
+    width: 100%;
+    min-height: 46px;
+
+    padding: 0.7rem 0.85rem;
+
+    color: var(--ink);
+
+    background: var(--surface);
+
+    border: 1px solid #9db5b3;
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.category-form-page .form-group input::placeholder {
+
+    color: #71818d;
+}
+
+
+.category-form-page .form-group input:focus {
+
+    outline: 3px solid rgba(23, 107, 104, 0.18);
+
+    outline-offset: 1px;
+
+    border-color: var(--teal);
+}
+
+
+/* =========================================================
+   FORM HELP TEXT
+========================================================= */
+
+.category-form-page .form-help {
+
+    margin: 0.55rem 0 0;
+
+    color: var(--muted);
+
+    font-size: 0.9rem;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM ERRORS
+========================================================= */
+
+.category-form-page .form-errors {
+
+    margin-bottom: 1.5rem;
+
+    padding: 1rem 1.15rem;
+
+    color: #721c24;
+
+    background: #fff7f4;
+
+    border: 1px solid var(--accent-dark);
+
+    border-left: 5px solid var(--accent-dark);
+
+    border-radius: 7px;
+}
+
+
+.category-form-page .form-errors h2 {
+
+    margin: 0 0 0.65rem;
+
+    color: #721c24;
+
+    font-size: 1rem;
+}
+
+
+.category-form-page .form-errors ul {
+
+    margin: 0;
+
+    padding-left: 1.25rem;
+}
+
+
+.category-form-page .form-errors li + li {
+
+    margin-top: 0.35rem;
+}
+
+
+/* =========================================================
+   CATEGORY FORM ACTIONS
+========================================================= */
+
+.category-form-page .form-actions {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 0.75rem;
+
+    margin-top: 1.5rem;
+}
+
+
+/* =========================================================
+   CATEGORY FORM DELETE / SECONDARY ACTION
+========================================================= */
+
+.category-form-page .form-actions .delete-link {
+
+    color: #721c24;
+
+    background: #fff7f4;
+
+    border: 1px solid #d8a4a8;
+}
+
+
+.category-form-page .form-actions .delete-link:hover,
+.category-form-page .form-actions .delete-link:focus-visible {
+
+    color: var(--surface);
+
+    background: #721c24;
+
+    border-color: #721c24;
+}
+
+
+/* =========================================================
+   CATEGORY PAGE ACTION LINKS
+========================================================= */
+
+.category-page .page-actions a,
+.category-detail-page .page-actions a {
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CATEGORY RESPONSIVE LAYOUT
+========================================================= */
+
+@media (max-width: 1050px) {
+
+    /*
+       Three columns become two columns on tablet.
+    */
+
+    .categories-page .categories-list,
+    .category-page .projects-list,
+    .category-detail-page .projects-list {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 1.25rem;
+    }
+}
+
+
+/* =========================================================
+   CATEGORY MOBILE
+========================================================= */
+
+@media (max-width: 640px) {
+
+    .categories-page,
+    .category-page,
+    .category-detail-page,
+    .category-form-page {
+
+        width: 100%;
+    }
+
+
+    .categories-page .page-intro,
+    .category-page .page-intro,
+    .category-detail-page .page-intro {
+
+        margin-bottom: 2.25rem;
+    }
+
+
+    .categories-page .page-intro h1,
+    .category-page .page-intro h1,
+    .category-detail-page .page-intro h1 {
+
+        font-size: 2rem;
+    }
+
+
+    /*
+       One-column category cards.
+    */
+
+    .categories-page .categories-list,
+    .category-page .projects-list,
+    .category-detail-page .projects-list {
+
+        grid-template-columns: 1fr;
+
+        gap: 1rem;
+    }
+
+
+    /*
+       Category cards.
+    */
+
+    .categories-page .category-card {
+
+        min-height: 150px;
+
+        padding: 1.25rem;
+    }
+
+
+    /*
+       Category card buttons.
+    */
+
+    .categories-page .card-actions {
+
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .categories-page .card-actions a {
+
+        width: 100%;
+
+        box-sizing: border-box;
+
+        text-align: center;
+    }
+
+
+    /*
+       Page actions.
+    */
+
+    .categories-page .page-actions,
+    .category-page .page-actions,
+    .category-detail-page .page-actions {
+
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .categories-page .page-actions a,
+    .category-page .page-actions a,
+    .category-detail-page .page-actions a {
+
+        width: 100%;
+
+        box-sizing: border-box;
+
+        text-align: center;
+    }
+
+
+    /*
+       Category form.
+    */
+
+    .category-form-page .form-container {
+
+        padding: 1.25rem;
+    }
+
+
+    /*
+       Form actions.
+    */
+
+    .category-form-page .form-actions {
+
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .category-form-page .form-actions a,
+    .category-form-page .form-actions button {
+
+        width: 100%;
+
+        box-sizing: border-box;
+
+        text-align: center;
+    }
+
+
+    /*
+       Category section header.
+    */
+
+    .category-page .section-header,
+    .category-detail-page .section-header {
+
+        text-align: center;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .categories-page .category-card {
+
+        padding: 1.1rem;
+    }
+
+
+    .categories-page .category-card h2 {
+
+        font-size: 1.15rem;
+    }
+
+
+    .category-form-page .form-container {
+
+        padding: 1.1rem;
+    }
+
+
+    .category-form-page .form-header h1 {
+
+        font-size: 1.8rem;
+    }
+}
+
+

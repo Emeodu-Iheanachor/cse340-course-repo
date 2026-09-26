@@ -38,6 +38,10 @@ import {
 import {
   showCategoriesPage,
   showCategoryDetailsPage,
+  showNewCategoryForm,
+  processNewCategoryForm,
+  showEditCategoryForm,
+  processEditCategoryForm,
   showAssignCategoriesForm,
   processAssignCategoriesForm
 } from './controllers/categories.js'
@@ -178,6 +182,34 @@ router.get(
 router.get(
   '/category/:id',
   showCategoryDetailsPage
+)
+
+
+// Display new category form
+router.get(
+  '/new-category',
+  showNewCategoryForm
+)
+
+
+// Process new category form
+router.post(
+  '/new-category',
+  processNewCategoryForm
+)
+
+
+// Display edit category form
+router.get(
+  '/edit-category/:id',
+  showEditCategoryForm
+)
+
+
+// Process edit category form
+router.post(
+  '/edit-category/:id',
+  processEditCategoryForm
 )
 
 

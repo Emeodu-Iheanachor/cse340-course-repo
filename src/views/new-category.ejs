@@ -1,0 +1,87 @@
+<%- include('partials/header') %>
+
+<main class="form-page">
+
+    <section class="page-intro">
+        <h1><%= title %></h1>
+
+        <p>
+            Add a new service project category.
+        </p>
+    </section>
+
+
+    <% if (errors && errors.length > 0) { %>
+
+        <div class="form-errors" role="alert">
+
+            <h2>Please correct the following:</h2>
+
+            <ul>
+                <% errors.forEach(error => { %>
+                    <li><%= error %></li>
+                <% }) %>
+            </ul>
+
+        </div>
+
+    <% } %>
+
+
+    <form
+        action="/new-category"
+        method="POST"
+        class="category-form"
+        id="category-form"
+        novalidate
+    >
+
+        <div class="form-group">
+
+            <label for="category_name">
+                Category Name
+            </label>
+
+            <input
+                type="text"
+                id="category_name"
+                name="category_name"
+                value="<%= categoryName || '' %>"
+                maxlength="100"
+                required
+                aria-describedby="category-name-help"
+            >
+
+            <p id="category-name-help" class="form-help">
+                Enter a category name between 1 and 100 characters.
+            </p>
+
+            <p
+                id="category-name-error"
+                class="field-error"
+                role="alert"
+                aria-live="polite"
+            ></p>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button type="submit" class="btn-primary">
+                Create Category
+            </button>
+
+            <a href="/categories" class="btn-secondary">
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</main>
+
+<script src="/js/category-validation.js" defer></script>
+
+<%- include('partials/footer') %>
