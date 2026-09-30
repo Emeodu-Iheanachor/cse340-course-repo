@@ -1,0 +1,57 @@
+<% 
+    const noticeMessages = flash('notice')
+    const successMessages = flash('success')
+    const errorMessages = flash('error')
+    const warningMessages = flash('warning')
+    const infoMessages = flash('info')
+%>
+
+<% if (noticeMessages.length > 0) { %>
+    <div
+        class="flash-message flash-notice"
+        role="status"
+        aria-live="polite"
+    >
+        <%= noticeMessages[0] %>
+    </div>
+<% } %>
+
+<% if (successMessages.length > 0) { %>
+    <div
+        class="flash-message flash-success"
+        role="status"
+        aria-live="polite"
+    >
+        <%= successMessages[0] %>
+    </div>
+<% } %>
+
+<% if (errorMessages.length > 0) { %>
+    <div
+        class="flash-message flash-error"
+        role="alert"
+        aria-live="assertive"
+    >
+        <%= errorMessages[0] %>
+    </div>
+<% } %>
+
+<% if (warningMessages.length > 0) { %>
+    <div
+        class="flash-message flash-warning"
+        role="status"
+        aria-live="polite"
+    >
+        <%= warningMessages[0] %>
+    </div>
+<% } %>
+
+<% if (infoMessages.length > 0) { %>
+    <div
+        class="flash-message flash-info"
+        role="status"
+        aria-live="polite"
+    >
+        <%= infoMessages[0] %>
+    </div>
+<% } %>

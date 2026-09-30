@@ -11,22 +11,22 @@ import db from './db.js'
  * @returns {Promise<Array>} List of categories
  */
 const getAllCategories = async () => {
-    const query = `
+    const sql = `
         SELECT
             category_id,
             category_name
         FROM public.category
-        ORDER BY category_name ASC;
+        ORDER BY category_name ASC
     `
 
-    const result = await db.query(query)
+    const result = await db.query(sql)
 
     return result.rows
 }
 
 
 /* =========================================================
-   GET ONE CATEGORY BY ID
+   GET CATEGORY BY ID
 ========================================================= */
 
 /**
@@ -36,15 +36,18 @@ const getAllCategories = async () => {
  * @returns {Promise<Object|undefined>} The category
  */
 const getCategoryById = async (categoryId) => {
-    const query = `
+    const sql = `
         SELECT
             category_id,
             category_name
         FROM public.category
-        WHERE category_id = $1;
+        WHERE category_id = $1
     `
 
-    const result = await db.query(query, [categoryId])
+    const result = await db.query(
+        sql,
+        [categoryId]
+    )
 
     return result.rows[0]
 }
@@ -55,20 +58,20 @@ const getCategoryById = async (categoryId) => {
 ========================================================= */
 
 /**
- * Get all service projects for a category.
+ * Get all service projects assigned to a category.
  *
  * @param {number} categoryId - The category ID
  * @returns {Promise<Array>} List of service projects
  */
 const getProjectsByCategoryId = async (categoryId) => {
-    const query = `
+    const sql = `
         SELECT
             sp.project_id,
             sp.title,
             sp.description,
             sp.start_date,
             sp.end_date,
-            sp.organization_id,
+            o.organization_id,
             o.name AS organization_name
         FROM public.service_project AS sp
         INNER JOIN public.project_category AS pc
@@ -76,10 +79,15 @@ const getProjectsByCategoryId = async (categoryId) => {
         INNER JOIN public.organization AS o
             ON sp.organization_id = o.organization_id
         WHERE pc.category_id = $1
-        ORDER BY sp.start_date ASC;
+        ORDER BY
+            sp.start_date ASC,
+            sp.title ASC
     `
 
-    const result = await db.query(query, [categoryId])
+    const result = await db.query(
+        sql,
+        [categoryId]
+    )
 
     return result.rows
 }
@@ -96,17 +104,20 @@ const getProjectsByCategoryId = async (categoryId) => {
  * @returns {Promise<Object|undefined>} The newly created category
  */
 const createCategory = async (categoryName) => {
-    const query = `
+    const sql = `
         INSERT INTO public.category (
             category_name
         )
         VALUES ($1)
         RETURNING
             category_id,
-            category_name;
+            category_name
     `
 
-    const result = await db.query(query, [categoryName])
+    const result = await db.query(
+        sql,
+        [categoryName]
+    )
 
     return result.rows[0]
 }
@@ -127,17 +138,17 @@ const updateCategory = async (
     categoryId,
     categoryName
 ) => {
-    const query = `
+    const sql = `
         UPDATE public.category
         SET category_name = $1
         WHERE category_id = $2
         RETURNING
             category_id,
-            category_name;
+            category_name
     `
 
     const result = await db.query(
-        query,
+        sql,
         [
             categoryName,
             categoryId
@@ -155,11 +166,13 @@ const updateCategory = async (
 /**
  * Get all categories currently assigned to a service project.
  *
- * @param {number} projectId - The service project ID
+ * @param {number} projectId - The project ID
  * @returns {Promise<Array>} List of assigned categories
  */
-const getCategoriesByServiceProjectId = async (projectId) => {
-    const query = `
+const getCategoriesByServiceProjectId = async (
+    projectId
+) => {
+    const sql = `
         SELECT
             c.category_id,
             c.category_name
@@ -167,10 +180,13 @@ const getCategoriesByServiceProjectId = async (projectId) => {
         INNER JOIN public.project_category AS pc
             ON c.category_id = pc.category_id
         WHERE pc.project_id = $1
-        ORDER BY c.category_name ASC;
+        ORDER BY c.category_name ASC
     `
 
-    const result = await db.query(query, [projectId])
+    const result = await db.query(
+        sql,
+        [projectId]
+    )
 
     return result.rows
 }
@@ -183,10 +199,7 @@ const getCategoriesByServiceProjectId = async (projectId) => {
 /**
  * Assign one category to a service project.
  *
- * This function is intentionally not exported because
- * it is only used internally by updateCategoryAssignments().
- *
- * @param {number} projectId - The service project ID
+ * @param {number} projectId - The project ID
  * @param {number} categoryId - The category ID
  * @param {Object} client - PostgreSQL database client
  * @returns {Promise<void>}
@@ -194,18 +207,18 @@ const getCategoriesByServiceProjectId = async (projectId) => {
 const assignCategoryToProject = async (
     projectId,
     categoryId,
-    client = db
+    client
 ) => {
-    const query = `
+    const sql = `
         INSERT INTO public.project_category (
             project_id,
             category_id
         )
-        VALUES ($1, $2);
+        VALUES ($1, $2)
     `
 
     await client.query(
-        query,
+        sql,
         [
             projectId,
             categoryId
@@ -219,15 +232,14 @@ const assignCategoryToProject = async (
 ========================================================= */
 
 /**
- * Update all category assignments for a service project.
+ * Replace all category assignments for a service project.
  *
- * Existing assignments are removed first. The selected
- * categories are then inserted into project_category.
+ * Existing assignments are deleted first, then the
+ * selected categories are inserted.
  *
- * A transaction is used so that either all changes succeed
- * or none of the changes are saved.
+ * A transaction ensures that all changes succeed together.
  *
- * @param {number} projectId - The service project ID
+ * @param {number} projectId - The project ID
  * @param {Array<number>} categoryIds - Selected category IDs
  * @returns {Promise<void>}
  */
@@ -240,18 +252,18 @@ const updateCategoryAssignments = async (
     try {
         await client.query('BEGIN')
 
-        /* Remove existing category assignments. */
-        const deleteQuery = `
+        // Remove existing category assignments.
+        const deleteSql = `
             DELETE FROM public.project_category
-            WHERE project_id = $1;
+            WHERE project_id = $1
         `
 
         await client.query(
-            deleteQuery,
+            deleteSql,
             [projectId]
         )
 
-        /* Add the newly selected categories. */
+        // Add newly selected categories.
         for (const categoryId of categoryIds) {
             await assignCategoryToProject(
                 projectId,

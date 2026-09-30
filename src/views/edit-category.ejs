@@ -3,27 +3,39 @@
 <main class="form-page">
 
     <section class="page-intro">
+
         <h1><%= title %></h1>
 
         <p>
-            Update the name of this service project category.
+            Update the category information below.
         </p>
+
     </section>
 
 
     <% if (errors && errors.length > 0) { %>
 
-        <div class="form-errors" role="alert">
+        <section
+            class="form-errors"
+            aria-labelledby="error-heading"
+            role="alert"
+        >
 
-            <h2>Please correct the following:</h2>
+            <h2 id="error-heading">
+                Please correct the following:
+            </h2>
 
             <ul>
                 <% errors.forEach(error => { %>
-                    <li><%= error %></li>
+
+                    <li>
+                        <%= error.msg %>
+                    </li>
+
                 <% }) %>
             </ul>
 
-        </div>
+        </section>
 
     <% } %>
 
@@ -31,9 +43,7 @@
     <form
         action="/edit-category/<%= category.category_id %>"
         method="POST"
-        class="category-form"
-        id="category-form"
-        novalidate
+        class="data-form"
     >
 
         <div class="form-group">
@@ -47,34 +57,35 @@
                 id="category_name"
                 name="category_name"
                 value="<%= category.category_name %>"
-                maxlength="100"
                 required
+                maxlength="100"
+                autocomplete="off"
                 aria-describedby="category-name-help"
             >
 
-            <p id="category-name-help" class="form-help">
-                Enter a category name between 1 and 100 characters.
-            </p>
-
             <p
-                id="category-name-error"
-                class="field-error"
-                role="alert"
-                aria-live="polite"
-            ></p>
+                id="category-name-help"
+                class="form-help"
+            >
+                Enter a category name between 3 and 100
+                characters.
+            </p>
 
         </div>
 
 
         <div class="form-actions">
 
-            <button type="submit" class="btn-primary">
-                Update Category
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Save Changes
             </button>
 
             <a
                 href="/category/<%= category.category_id %>"
-                class="btn-secondary"
+                class="btn btn-secondary"
             >
                 Cancel
             </a>
@@ -84,7 +95,5 @@
     </form>
 
 </main>
-
-<script src="/js/category-validation.js" defer></script>
 
 <%- include('partials/footer') %>

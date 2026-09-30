@@ -1,6 +1,12 @@
 /* =========================================================
    SERVICE NETWORK
    COMPLETE RESPONSIVE STYLESHEET
+   CSE 340
+========================================================= */
+
+
+/* =========================================================
+   ROOT VARIABLES
 ========================================================= */
 
 :root {
@@ -19,8 +25,14 @@
 
     --line: #d3e2df;
 
+    --danger: #721c24;
+    --success: #155724;
+
     --shadow: 0 10px 28px rgba(23, 50, 77, 0.08);
     --shadow-hover: 0 16px 34px rgba(23, 50, 77, 0.14);
+
+    --radius: 14px;
+    --small-radius: 8px;
 }
 
 
@@ -28,7 +40,9 @@
    RESET
 ========================================================= */
 
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
@@ -42,16 +56,49 @@ body {
     min-height: 100vh;
     margin: 0;
 
+    display: flex;
+    flex-direction: column;
+
     color: var(--ink);
     background: var(--page);
 
-    font-family: 'Trebuchet MS', Verdana, sans-serif;
+    font-family: "Trebuchet MS", Verdana, sans-serif;
     line-height: 1.6;
 }
 
 
 /* =========================================================
-   MAIN SITE CONTAINER
+   GENERAL ELEMENTS
+========================================================= */
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: var(--teal);
+}
+
+a:hover,
+a:focus-visible {
+    color: var(--accent-dark);
+}
+
+
+/* =========================================================
+   SITE CONTAINER
 ========================================================= */
 
 .site-container {
@@ -83,41 +130,45 @@ body {
 
     width: 100%;
 
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-
     background: var(--surface);
 
     border-bottom: 1px solid var(--line);
 
-    box-shadow: 0 3px 14px rgba(23, 50, 77, 0.05);
+    box-shadow: 0 3px 14px rgba(23, 50, 77, 0.06);
 }
 
 
 /* =========================================================
-   HEADER INNER / BRAND
+   HEADER INNER
 ========================================================= */
 
 .site-header-inner {
-    min-width: 0;
+    width: min(94%, 1280px);
 
-    margin: 0;
-    padding: 1rem 2rem;
+    min-height: 72px;
+
+    margin: 0 auto;
+    padding: 0.75rem 0;
 
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     gap: 1rem;
 }
 
+
+/* =========================================================
+   BRAND
+========================================================= */
+
 .site-brand {
-    display: flex;
+    display: inline-flex;
     align-items: center;
 
     color: var(--ink);
 
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: Georgia, "Times New Roman", serif;
     font-size: 1.45rem;
     font-weight: 700;
 
@@ -133,143 +184,107 @@ body {
 
 
 /* =========================================================
-   HAMBURGER BUTTON
-========================================================= */
-
-.nav-toggle {
-    display: none;
-
-    width: 44px;
-    height: 44px;
-
-    padding: 0;
-
-    align-items: center;
-    justify-content: center;
-
-    color: var(--ink);
-    background: var(--surface);
-
-    border: 1px solid var(--line);
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    transition:
-        color 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease;
-}
-
-.nav-toggle:hover,
-.nav-toggle:focus-visible {
-    color: var(--surface);
-    background: var(--teal);
-    border-color: var(--teal);
-}
-
-.nav-toggle-icon {
-    position: relative;
-
-    display: block;
-
-    width: 22px;
-    height: 16px;
-
-    border-top: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-}
-
-.nav-toggle-icon::before {
-    position: absolute;
-
-    top: 5px;
-    left: 0;
-
-    width: 22px;
-
-    border-top: 2px solid currentColor;
-
-    content: '';
-}
-
-
-/* =========================================================
    NAVIGATION
 ========================================================= */
 
-nav {
-    min-width: 0;
+.site-header nav {
+    width: 100%;
 
-    padding: 0 2rem;
-    background: var(--surface);
+    padding: 0;
+
+    background: var(--ink);
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-nav ul {
-    display: flex;
+.site-header nav ul {
+    width: min(94%, 1280px);
 
+    min-height: 52px;
+
+    margin: 0 auto;
+    padding: 0.35rem 0;
+
+    display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
 
     flex-wrap: wrap;
 
-    gap: 0.35rem 1.35rem;
-
-    margin: 0;
-    padding: 0;
+    gap: 0.4rem;
 
     list-style: none;
 }
 
-nav li {
+.site-header nav li {
     margin: 0;
     padding: 0;
 }
 
-nav a {
-    position: relative;
+.site-header nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-    display: block;
+    min-height: 42px;
 
-    padding: 1.35rem 0.15rem;
+    padding: 0.6rem 1rem;
 
-    color: var(--ink);
+    color: #ffffff;
+    background: transparent;
 
-    font-size: 0.95rem;
+    border: 1px solid transparent;
+    border-radius: 7px;
+
+    font-size: 0.94rem;
     font-weight: 700;
 
     text-decoration: none;
 
-    white-space: nowrap;
-
     transition:
         color 0.2s ease,
-        background-color 0.2s ease;
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
-nav a:hover,
-nav a:focus-visible {
-    color: var(--accent-dark);
+.site-header nav a:hover,
+.site-header nav a:focus-visible {
+    color: #ffffff;
+    background: var(--teal);
+
+    border-color: rgba(255, 255, 255, 0.22);
+
+    transform: translateY(-1px);
 }
 
-nav a.active {
-    color: var(--accent);
-}
-
-nav a.active::after {
-    position: absolute;
-
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    height: 3px;
-
+.site-header nav a.active {
+    color: #ffffff;
     background: var(--accent);
 
-    border-radius: 3px 3px 0 0;
+    border-color: var(--accent);
+}
 
-    content: '';
+.site-header nav a.active::after {
+    display: none;
+}
+
+
+/* =========================================================
+   NAV TOGGLE
+========================================================= */
+
+/*
+   The supplied header contains a nav-toggle button,
+   but no JavaScript was provided to open/close the nav.
+
+   Therefore the navigation remains visible and the
+   toggle is hidden. This prevents the navigation from
+   disappearing on mobile.
+*/
+
+.nav-toggle {
+    display: none;
 }
 
 
@@ -283,9 +298,9 @@ main {
     width: 100%;
 
     padding:
-        clamp(3rem, 6vw, 4.5rem)
-        clamp(1.5rem, 5vw, 4.5rem)
-        clamp(4rem, 7vw, 5rem);
+        clamp(2.75rem, 5vw, 4rem)
+        clamp(1.25rem, 4vw, 3.5rem)
+        clamp(3.5rem, 6vw, 5rem);
 }
 
 
@@ -299,32 +314,30 @@ h3 {
     line-height: 1.2;
 }
 
+h1,
+h2,
+h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--ink);
+}
+
 h1 {
     margin: 0 0 1rem;
 
-    color: var(--ink);
-
-    font-family: Georgia, 'Times New Roman', serif;
-
     font-size: clamp(2rem, 4vw, 3rem);
-
     font-weight: 700;
 }
 
 h2 {
     margin: 0;
 
-    color: var(--ink);
-
-    font-family: Georgia, 'Times New Roman', serif;
-
     font-size: clamp(1.3rem, 2.5vw, 1.7rem);
 }
 
 h3 {
-    color: var(--ink);
+    margin-top: 0;
 
-    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.2rem;
 }
 
 p {
@@ -332,22 +345,7 @@ p {
 
     color: var(--muted);
 
-    font-size: 1rem;
     line-height: 1.65;
-}
-
-
-/* =========================================================
-   LINKS
-========================================================= */
-
-a {
-    color: var(--teal);
-}
-
-a:hover,
-a:focus-visible {
-    color: var(--accent-dark);
 }
 
 
@@ -365,17 +363,202 @@ a:focus-visible {
 }
 
 .page-intro h1 {
-    margin-bottom: 0.9rem;
+    margin-bottom: 0.85rem;
 
     color: var(--teal);
 
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(2rem, 4vw, 2.8rem);
 }
 
 .page-intro p {
     max-width: 750px;
 
     margin: 0 auto;
+
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   GENERAL BUTTONS
+========================================================= */
+
+.button,
+.btn-primary,
+.btn-secondary,
+button[type="submit"] {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+
+    padding: 0.7rem 1.15rem;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.2;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.button,
+.btn-primary,
+button[type="submit"] {
+    color: #ffffff;
+
+    background: var(--teal);
+
+    border: 1px solid var(--teal);
+}
+
+.button:hover,
+.button:focus-visible,
+.btn-primary:hover,
+.btn-primary:focus-visible,
+button[type="submit"]:hover,
+button[type="submit"]:focus-visible {
+    color: #ffffff;
+
+    background: var(--teal-dark);
+
+    border-color: var(--teal-dark);
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 14px rgba(23, 107, 104, 0.18);
+}
+
+.btn-secondary {
+    color: var(--teal);
+
+    background: var(--surface);
+
+    border: 1px solid var(--teal);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus-visible {
+    color: #ffffff;
+
+    background: var(--teal);
+
+    border-color: var(--teal);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   PAGE ACTIONS
+========================================================= */
+
+.page-actions {
+    width: 100%;
+
+    margin: 2rem auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 0.75rem;
+}
+
+.page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+
+    padding: 0.7rem 1.1rem;
+
+    color: #ffffff;
+    background: var(--teal);
+
+    border: 1px solid var(--teal);
+    border-radius: 7px;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.page-link:hover,
+.page-link:focus-visible {
+    color: #ffffff;
+
+    background: var(--teal-dark);
+
+    border-color: var(--teal-dark);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   HOME PAGE HERO
+========================================================= */
+
+.page-hero {
+    width: 100%;
+    max-width: 1000px;
+
+    margin: 0 auto 3rem;
+    padding: clamp(2rem, 5vw, 2.75rem);
+
+    text-align: center;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow);
+}
+
+.page-hero h1 {
+    margin: 0 0 0.75rem;
+
+    color: var(--ink);
+
+    font-size: clamp(1.9rem, 4vw, 2.4rem);
+}
+
+.page-hero h2 {
+    margin: 0 0 1rem;
+
+    color: var(--teal);
+
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+}
+
+.page-hero p {
+    max-width: 800px;
+
+    margin: 0.65rem auto;
 
     color: var(--muted);
 
@@ -385,19 +568,100 @@ a:focus-visible {
 
 
 /* =========================================================
-   HOME HERO
+   MAIN LOGO
 ========================================================= */
 
-.page-hero {
-    max-width: 46rem;
+.main-logo {
+    display: block;
 
-    margin-bottom: 3.5rem;
+    width: min(300px, 70%);
+
+    height: auto;
+
+    margin: 2rem auto 2.5rem;
+
+    object-fit: contain;
+
+    filter: drop-shadow(0 5px 8px rgba(23, 50, 77, 0.12));
+
+    transition: transform 0.25s ease;
 }
 
-.page-hero p {
-    margin-bottom: 0;
+.main-logo:hover {
+    transform: translateY(-3px);
+}
 
-    font-size: clamp(1.05rem, 2vw, 1.2rem);
+
+/* =========================================================
+   HOME SERVICE SECTIONS
+========================================================= */
+
+.home-sections {
+    width: min(1100px, 100%);
+
+    margin: 0 auto 3rem;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 1.5rem;
+}
+
+
+/* =========================================================
+   HOME CARDS
+========================================================= */
+
+.home-card {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    min-height: 280px;
+
+    padding: 1.75rem;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.home-card:hover {
+    transform: translateY(-5px);
+
+    border-color: var(--teal);
+
+    box-shadow: var(--shadow-hover);
+}
+
+.home-card h2 {
+    margin: 0 0 1rem;
+
+    color: var(--ink);
+
+    font-size: 1.35rem;
+}
+
+.home-card p {
+    margin: 0 0 1.5rem;
+
+    font-size: 1rem;
+}
+
+.home-card .page-link {
+    width: fit-content;
+
+    margin-top: auto;
 }
 
 
@@ -416,7 +680,7 @@ a:focus-visible {
     grid-template-columns:
         repeat(3, minmax(0, 1fr));
 
-    gap: 1.75rem;
+    gap: 1.5rem;
 }
 
 
@@ -430,6 +694,7 @@ a:focus-visible {
     display: flex;
     flex-direction: column;
 
+    min-width: 0;
     height: 100%;
 
     padding: 1.75rem;
@@ -439,7 +704,7 @@ a:focus-visible {
     background: var(--soft);
 
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: var(--radius);
 
     box-shadow: var(--shadow);
 
@@ -460,7 +725,7 @@ a:focus-visible {
 
     background: var(--teal);
 
-    content: '';
+    content: "";
 }
 
 .organization-card:hover {
@@ -473,7 +738,7 @@ a:focus-visible {
 
 
 /* =========================================================
-   ORGANIZATION CARD IMAGE
+   ORGANIZATION IMAGE
 ========================================================= */
 
 .organization-card-image {
@@ -498,7 +763,7 @@ a:focus-visible {
 
 
 /* =========================================================
-   ORGANIZATION CARD CONTENT
+   ORGANIZATION CONTENT
 ========================================================= */
 
 .organization-card-content {
@@ -550,11 +815,16 @@ a:focus-visible {
 }
 
 .organization-list + p a {
-    display: inline-block;
+    display: inline-flex;
 
-    padding: 0.75rem 1.25rem;
+    align-items: center;
+    justify-content: center;
 
-    color: var(--surface);
+    min-height: 44px;
+
+    padding: 0.7rem 1.15rem;
+
+    color: #ffffff;
     background: var(--teal);
 
     border-radius: 7px;
@@ -562,27 +832,20 @@ a:focus-visible {
     font-weight: 700;
 
     text-decoration: none;
-
-    transition:
-        background-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
 }
 
 .organization-list + p a:hover,
 .organization-list + p a:focus-visible {
-    color: var(--surface);
+    color: #ffffff;
 
     background: var(--teal-dark);
 
-    transform: translateY(-2px);
-
-    box-shadow: 0 5px 14px rgba(23, 107, 104, 0.2);
+    transform: translateY(-1px);
 }
 
 
 /* =========================================================
-   ORGANIZATION DETAILS PAGE
+   ORGANIZATION DETAILS
 ========================================================= */
 
 .organization-details-card {
@@ -604,7 +867,7 @@ a:focus-visible {
     background: var(--surface);
 
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: var(--radius);
 
     box-shadow: var(--shadow);
 }
@@ -635,8 +898,6 @@ a:focus-visible {
 .organization-information h2 {
     margin-top: 0;
     margin-bottom: 1rem;
-
-    color: var(--ink);
 }
 
 .organization-information p {
@@ -665,8 +926,6 @@ a:focus-visible {
 
 .organization-projects > h2 {
     margin-bottom: 1.5rem;
-
-    color: var(--ink);
 
     text-align: center;
 }
@@ -723,7 +982,7 @@ a:focus-visible {
     background: var(--surface);
 
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: var(--radius);
 
     overflow: hidden;
 
@@ -763,10 +1022,7 @@ a:focus-visible {
 
     text-align: center;
 
-    color: var(--ink);
-
     font-size: 1.25rem;
-    line-height: 1.3;
 }
 
 .project-card h2 a,
@@ -853,9 +1109,19 @@ a:focus-visible {
 }
 
 .project-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-    color: var(--teal);
+    min-height: 42px;
+
+    padding: 0.6rem 1rem;
+
+    color: #ffffff;
+    background: var(--teal);
+
+    border: 1px solid var(--teal);
+    border-radius: 7px;
 
     font-weight: 700;
 
@@ -864,9 +1130,73 @@ a:focus-visible {
 
 .project-link:hover,
 .project-link:focus-visible {
-    color: var(--accent-dark);
+    color: #ffffff;
 
-    text-decoration: underline;
+    background: var(--teal-dark);
+
+    border-color: var(--teal-dark);
+}
+
+
+/* =========================================================
+   CATEGORY DETAIL PROJECT CARD COMPATIBILITY
+========================================================= */
+
+/*
+   Your category-detail.ejs uses:
+
+   .project-card
+   .project-details
+   .card-actions
+   .button
+
+   These rules make those elements align correctly
+   even when .project-card-content is not present.
+*/
+
+.project-card > h2,
+.project-card > h3,
+.project-card > p,
+.project-card > .project-details,
+.project-card > .card-actions {
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+
+.project-card > h2,
+.project-card > h3 {
+    margin-top: 1.5rem;
+}
+
+.project-card > .project-details {
+    margin-top: auto;
+    padding-top: 1rem;
+
+    border-top: 1px solid var(--line);
+}
+
+.project-card > .card-actions {
+    margin-top: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+
+/* =========================================================
+   CARD ACTIONS
+========================================================= */
+
+.card-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.7rem;
+
+    flex-wrap: wrap;
+}
+
+.card-actions .button {
+    min-width: 130px;
 }
 
 
@@ -879,15 +1209,6 @@ a:focus-visible {
     max-width: 900px;
 
     margin: 0 auto;
-}
-
-.project-page .project-details {
-    display: block;
-
-    margin-top: 0;
-    padding-top: 0;
-
-    border-top: 0;
 }
 
 .project-page .project-card {
@@ -906,14 +1227,22 @@ a:focus-visible {
     font-size: clamp(1.45rem, 3vw, 2rem);
 }
 
+.project-page .project-details {
+    display: block;
+
+    margin-top: 0;
+
+    padding-top: 0;
+
+    border-top: 0;
+}
+
 .project-detail-section {
     margin-bottom: 2rem;
 }
 
 .project-detail-section h3 {
     margin: 0 0 0.6rem;
-
-    font-size: 1.15rem;
 }
 
 .project-detail-section .project-description {
@@ -945,8 +1274,6 @@ a:focus-visible {
 
 .project-categories h3 {
     margin: 0 0 0.9rem;
-
-    font-size: 1.15rem;
 }
 
 .category-tags {
@@ -963,11 +1290,9 @@ a:focus-visible {
     padding: 0.45rem 0.8rem;
 
     color: var(--teal);
-
     background: #edf7f5;
 
     border: 1px solid #c7dfdb;
-
     border-radius: 999px;
 
     font-size: 0.85rem;
@@ -978,7 +1303,7 @@ a:focus-visible {
 
 .category-tag:hover,
 .category-tag:focus-visible {
-    color: var(--surface);
+    color: #ffffff;
 
     background: var(--teal);
 
@@ -998,10 +1323,12 @@ a:focus-visible {
 }
 
 .categories-list {
+    width: 100%;
+
     display: grid;
 
     grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+        repeat(3, minmax(0, 1fr));
 
     gap: 1.5rem;
 }
@@ -1010,22 +1337,26 @@ a:focus-visible {
     position: relative;
 
     display: flex;
+    flex-direction: column;
 
-    align-items: center;
-    justify-content: center;
-
-    min-height: 150px;
+    min-width: 0;
+    min-height: 170px;
 
     padding: 1.5rem;
-
-    text-align: center;
 
     background: var(--surface);
 
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: var(--radius);
 
     box-shadow: var(--shadow);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .category-card::before {
@@ -1039,7 +1370,7 @@ a:focus-visible {
 
     background: var(--accent);
 
-    content: '';
+    content: "";
 }
 
 .category-card:hover {
@@ -1052,8 +1383,6 @@ a:focus-visible {
 
 .category-card h2 {
     margin: 0;
-
-    font-size: 1.2rem;
 }
 
 .category-card h2 a {
@@ -1069,19 +1398,29 @@ a:focus-visible {
     text-decoration: underline;
 }
 
+.category-card-content {
+    flex: 1;
+}
+
+.categories-page .card-actions {
+    margin-top: auto;
+}
+
 
 /* =========================================================
-   CATEGORY DETAILS
+   CATEGORY DETAIL PAGE
 ========================================================= */
 
-.category-page {
+.category-page,
+.category-detail-page {
     width: 100%;
     max-width: 1240px;
 
     margin: 0 auto;
 }
 
-.category-page .page-intro {
+.category-page .page-intro,
+.category-detail-page .page-intro {
     width: 100%;
     max-width: 850px;
 
@@ -1090,7 +1429,8 @@ a:focus-visible {
     text-align: center;
 }
 
-.category-page .page-intro h1 {
+.category-page .page-intro h1,
+.category-detail-page .page-intro h1 {
     margin-bottom: 0.9rem;
 
     color: var(--teal);
@@ -1098,17 +1438,21 @@ a:focus-visible {
     font-size: clamp(2rem, 4vw, 2.7rem);
 }
 
-.category-page .page-intro p {
+.category-page .page-intro p,
+.category-detail-page .page-intro p {
     max-width: 750px;
 
     margin: 0 auto;
-
-    text-align: center;
 }
 
-.category-page .projects-list {
+
+/* =========================================================
+   CATEGORY PROJECT GRID
+========================================================= */
+
+.category-page .projects-list,
+.category-detail-page .projects-list {
     width: 100%;
-    max-width: 1240px;
 
     margin: 0 auto;
 
@@ -1122,13 +1466,156 @@ a:focus-visible {
     align-items: stretch;
 }
 
-.category-page .project-card-content {
-    padding: 1.5rem;
+
+/* =========================================================
+   CATEGORY SECTION HEADER
+========================================================= */
+
+.category-page .section-header,
+.category-detail-page .section-header {
+    margin-bottom: 1.5rem;
+
+    text-align: center;
+}
+
+.category-page .section-header h2,
+.category-detail-page .section-header h2 {
+    margin: 0 0 0.5rem;
+}
+
+.category-page .section-header p,
+.category-detail-page .section-header p {
+    max-width: 700px;
+
+    margin: 0 auto;
 }
 
 
 /* =========================================================
-   NEW ORGANIZATION FORM
+   CATEGORY EMPTY STATE
+========================================================= */
+
+.empty-state,
+.category-page .empty-state,
+.category-detail-page .empty-state {
+    width: 100%;
+    max-width: 700px;
+
+    margin: 2rem auto;
+
+    padding: 2rem;
+
+    text-align: center;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: 12px;
+
+    box-shadow: var(--shadow);
+}
+
+.empty-state h2 {
+    margin: 0 0 0.75rem;
+}
+
+.empty-state p {
+    margin: 0 auto 1.5rem;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.eyebrow {
+    margin: 0 0 0.5rem;
+
+    color: var(--teal);
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   CATEGORY CRUD FORM
+========================================================= */
+
+.category-form-page {
+    width: 100%;
+    max-width: 800px;
+
+    margin: 0 auto;
+}
+
+.category-form-page .form-container {
+    width: 100%;
+    max-width: 700px;
+
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+.category-form-page .form-header {
+    margin-bottom: 1.75rem;
+
+    text-align: center;
+}
+
+.category-form-page .form-header h1 {
+    margin: 0 0 0.75rem;
+
+    color: var(--teal);
+}
+
+.category-form-page .form-header p {
+    max-width: 650px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   UNIVERSAL FORM CONTAINER
+========================================================= */
+
+.form-page {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 800px;
+
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+
+/* =========================================================
+   ORGANIZATION FORM
 ========================================================= */
 
 .organization-form-page {
@@ -1140,158 +1627,376 @@ a:focus-visible {
 
 .organization-form {
     width: 100%;
+    max-width: 800px;
 
-    margin: 2rem auto;
-    padding: clamp(1.25rem, 4vw, 2rem);
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 2.25rem);
 
     background: var(--surface);
 
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: var(--radius);
 
     box-shadow: var(--shadow);
 }
 
-.organization-form .form-group {
-    margin-bottom: 1.25rem;
+
+/* =========================================================
+   ALL FORM ELEMENTS
+========================================================= */
+
+.organization-form,
+.category-form,
+.form-container form {
+    width: 100%;
 }
 
-.organization-form label {
+.form-group,
+.organization-form .form-group,
+.category-form-page .form-group {
+    width: 100%;
+
+    margin-bottom: 1.3rem;
+}
+
+.form-group label,
+.organization-form label,
+.category-form-page .form-group label {
     display: block;
 
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.45rem;
 
     color: var(--ink);
 
     font-weight: 700;
 }
 
+.form-group input,
+.form-group select,
+.form-group textarea,
 .organization-form input,
-.organization-form textarea {
+.organization-form select,
+.organization-form textarea,
+.category-form-page input,
+.category-form-page select,
+.category-form-page textarea {
     display: block;
 
     width: 100%;
+    min-height: 46px;
 
-    padding: 0.75rem 0.85rem;
+    padding: 0.7rem 0.85rem;
 
     color: var(--ink);
     background: var(--surface);
 
-    border: 1px solid #b9cbc8;
+    border: 1px solid #9db5b3;
     border-radius: 7px;
 
     font-family: inherit;
     font-size: 1rem;
     line-height: 1.5;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
 }
 
+.form-group textarea,
 .organization-form textarea {
     min-height: 140px;
 
     resize: vertical;
 }
 
+.form-group input::placeholder,
+.form-group textarea::placeholder,
 .organization-form input::placeholder,
 .organization-form textarea::placeholder {
     color: #71818d;
 }
 
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
 .organization-form input:focus,
+.organization-form select:focus,
 .organization-form textarea:focus {
-    outline: 3px solid rgba(23, 107, 104, 0.18);
+    outline: 3px solid rgba(23, 107, 104, 0.16);
+    outline-offset: 1px;
 
     border-color: var(--teal);
 }
 
-.organization-form .form-actions {
-    display: flex;
 
-    align-items: center;
+/* =========================================================
+   FORM ROW
+========================================================= */
 
-    gap: 1rem;
+.form-row {
+    width: 100%;
 
-    margin-top: 1.5rem;
-}
+    display: grid;
 
-.organization-form button,
-.organization-form .cancel-link {
-    display: inline-block;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
-    padding: 0.75rem 1.25rem;
-
-    border-radius: 7px;
-
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 700;
-
-    text-decoration: none;
-
-    cursor: pointer;
-}
-
-.organization-form button {
-    color: var(--surface);
-    background: var(--teal);
-
-    border: 1px solid var(--teal);
-}
-
-.organization-form button:hover,
-.organization-form button:focus-visible {
-    background: var(--teal-dark);
-
-    border-color: var(--teal-dark);
-}
-
-.organization-form .cancel-link {
-    color: var(--ink);
-    background: var(--soft);
-
-    border: 1px solid var(--line);
-}
-
-.organization-form .cancel-link:hover,
-.organization-form .cancel-link:focus-visible {
-    color: var(--ink);
-
-    background: #e4efed;
+    gap: 1.25rem;
 }
 
 
 /* =========================================================
-   PAGE ACTIONS
+   FORM HELP
 ========================================================= */
 
-.page-actions {
+.form-help {
+    margin: 0.5rem 0 0;
+
+    color: var(--muted);
+
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM ERRORS
+========================================================= */
+
+.form-errors {
+    width: 100%;
+
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.15rem;
+
+    color: var(--danger);
+    background: #fff7f4;
+
+    border: 1px solid #d8a4a8;
+    border-left: 5px solid var(--accent-dark);
+
+    border-radius: 7px;
+}
+
+.form-errors h2 {
+    margin: 0 0 0.65rem;
+
+    color: var(--danger);
+
+    font-size: 1rem;
+}
+
+.form-errors ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.form-actions {
+    width: 100%;
+
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+
     display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 0.75rem;
+
+    border-top: 1px solid var(--line);
+}
+
+.form-actions button,
+.form-actions a {
+    min-height: 44px;
+}
+
+
+/* =========================================================
+   CANCEL LINK
+========================================================= */
+
+.cancel-link {
+    display: inline-flex;
 
     align-items: center;
     justify-content: center;
 
-    margin: 2rem 0;
-}
+    min-height: 44px;
 
-.page-link {
-    display: inline-block;
+    padding: 0.7rem 1.15rem;
 
-    color: var(--teal);
+    color: var(--ink);
+    background: var(--soft);
+
+    border: 1px solid var(--line);
+    border-radius: 7px;
 
     font-weight: 700;
 
     text-decoration: none;
 }
 
-.page-link:hover,
-.page-link:focus-visible {
-    color: var(--accent-dark);
+.cancel-link:hover,
+.cancel-link:focus-visible {
+    color: var(--ink);
 
-    text-decoration: underline;
+    background: #e4efed;
+
+    border-color: #b8ceca;
 }
 
 
 /* =========================================================
-   EMPTY STATES
+   DELETE LINK
+========================================================= */
+
+.delete-link {
+    color: var(--danger);
+
+    background: #fff7f4;
+
+    border: 1px solid #d8a4a8;
+}
+
+.delete-link:hover,
+.delete-link:focus-visible {
+    color: #ffffff;
+
+    background: var(--danger);
+
+    border-color: var(--danger);
+}
+
+
+/* =========================================================
+   CATEGORY ASSIGNMENT / CHECKBOXES
+========================================================= */
+
+.checkbox-group {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 0.75rem;
+
+    margin-top: 0.75rem;
+}
+
+.checkbox-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.65rem;
+
+    min-width: 0;
+
+    padding: 0.8rem;
+
+    background: var(--soft);
+
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.checkbox-item:hover {
+    border-color: var(--teal);
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 18px;
+    min-width: 18px;
+    height: 18px;
+
+    margin: 0;
+
+    accent-color: var(--teal);
+}
+
+.checkbox-item label {
+    margin: 0;
+
+    color: var(--ink);
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   CATEGORY CRUD BUTTONS
+========================================================= */
+
+.category-form-page .btn-primary,
+.category-form-page .btn-secondary {
+    min-height: 44px;
+}
+
+
+/* =========================================================
+   FLASH MESSAGES
+========================================================= */
+
+.alert {
+    width: min(1100px, calc(100% - 2rem));
+
+    margin: 1rem auto;
+    padding: 0.9rem 1.1rem;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+}
+
+.alert.success {
+    color: var(--success);
+
+    background: #d4edda;
+
+    border-color: #c3e6cb;
+}
+
+.alert.error {
+    color: var(--danger);
+
+    background: #f8d7da;
+
+    border-color: #f5c6cb;
+}
+
+.alert.warning {
+    color: #856404;
+
+    background: #fff3cd;
+
+    border-color: #ffeeba;
+}
+
+.alert.info {
+    color: #0c5460;
+
+    background: #d1ecf1;
+
+    border-color: #bee5eb;
+}
+
+
+/* =========================================================
+   EMPTY / NO RESULTS
 ========================================================= */
 
 .no-projects,
@@ -1312,20 +2017,20 @@ a:focus-visible {
     box-shadow: var(--shadow);
 }
 
-.no-projects h2 {
+.no-projects h2,
+.no-results h2 {
     margin: 0 0 0.75rem;
-
-    font-size: 1.4rem;
 }
 
-.no-projects p {
+.no-projects p,
+.no-results p {
     margin-left: auto;
     margin-right: auto;
 }
 
 
 /* =========================================================
-   HOME / GENERAL CARDS
+   GENERAL CATEGORY LIST
 ========================================================= */
 
 .categories {
@@ -1347,7 +2052,7 @@ a:focus-visible {
 
     max-width: 45rem;
 
-    margin: 2rem 0 0;
+    margin: 2rem auto 0;
     padding: 0;
 
     list-style: none;
@@ -1366,109 +2071,28 @@ a:focus-visible {
 
 
 /* =========================================================
-   LOGO
-========================================================= */
-
-.main-logo {
-    display: block;
-
-    width: min(100%, 26rem);
-
-    height: auto;
-
-    margin: 2rem auto;
-}
-
-
-
-
-
-/* =========================================================
-   FLASH MESSAGES
-========================================================= */
-
-.alert {
-    width: min(100% - 2rem, 1100px);
-
-    margin: 1rem auto;
-    padding: 0.9rem 1.1rem;
-
-    border: 1px solid transparent;
-    border-radius: 8px;
-
-    font-weight: 600;
-    line-height: 1.5;
-
-    box-sizing: border-box;
-}
-
-/* Success message */
-.alert.success {
-    color: #155724;
-
-    background-color: #d4edda;
-
-    border-color: #c3e6cb;
-}
-
-/* Error message */
-.alert.error {
-    color: #721c24;
-
-    background-color: #f8d7da;
-
-    border-color: #f5c6cb;
-}
-
-/* Warning message */
-.alert.warning {
-    color: #856404;
-
-    background-color: #fff3cd;
-
-    border-color: #ffeeba;
-}
-
-/* Information message */
-.alert.info {
-    color: #0c5460;
-
-    background-color: #d1ecf1;
-
-    border-color: #bee5eb;
-}
-
-
-
-
-/* =========================================================
    FOOTER
 ========================================================= */
 
-footer {
+footer,
+.site-footer {
     width: 100%;
 
     margin-top: auto;
+
     padding: 1.75rem 1rem 2rem;
 
-    color: var(--muted);
+    color: rgba(255, 255, 255, 0.9);
 
-    background: var(--surface);
+    background: var(--ink);
 
     border-top: 1px solid var(--line);
-
-    font-size: 0.85rem;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
 
     text-align: center;
 }
 
-footer p {
+footer p,
+.site-footer p {
     width: 100%;
     max-width: none;
 
@@ -1476,12 +2100,15 @@ footer p {
 
     color: inherit;
 
-    font-size: inherit;
+    font-size: 0.88rem;
+
+    line-height: 1.5;
 
     text-align: center;
 }
 
-footer img {
+footer img,
+.site-footer img {
     display: block;
 
     margin: 1rem auto;
@@ -1494,77 +2121,15 @@ footer img {
 
 @media (max-width: 1050px) {
 
-    .site-header {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
+    main {
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
-
-    .site-header-inner {
-        width: 100%;
-
-        padding: 0.85rem 1.5rem;
-    }
-
-    .nav-toggle {
-        display: flex;
-    }
-
-    nav {
-        display: none;
-
-        width: 100%;
-
-        padding: 0;
-
-        border-top: 1px solid var(--line);
-    }
-
-    nav.nav-open {
-        display: block;
-    }
-
-    nav ul {
-        flex-direction: column;
-
-        align-items: stretch;
-
-        gap: 0;
-
-        padding: 0.5rem 1.25rem 1rem;
-    }
-
-    nav li {
-        width: 100%;
-    }
-
-    nav a {
-        padding: 0.8rem 0.9rem;
-
-        border-radius: 6px;
-    }
-
-    nav a:hover,
-    nav a:focus-visible {
-        background: #f3f8f7;
-
-        text-decoration: none;
-    }
-
-    nav a.active {
-        color: var(--surface);
-
-        background: var(--accent);
-    }
-
-    nav a.active::after {
-        display: none;
-    }
-
 
     .organization-list,
     .projects-list,
-    .category-page .projects-list {
+    .category-page .projects-list,
+    .category-detail-page .projects-list {
         grid-template-columns:
             repeat(2, minmax(0, 1fr));
 
@@ -1576,18 +2141,62 @@ footer img {
             repeat(2, minmax(0, 1fr));
     }
 
-    main {
-        padding-left: 2.5rem;
-        padding-right: 2.5rem;
+    .home-sections {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .organization-details-card {
+        max-width: 850px;
     }
 }
 
 
 /* =========================================================
-   MOBILE / ANDROID
+   TABLET / SMALL LAPTOP NAVIGATION
+========================================================= */
+
+@media (max-width: 850px) {
+
+    .site-header-inner {
+        min-height: 66px;
+    }
+
+    .site-header nav ul {
+        justify-content: stretch;
+    }
+
+    .site-header nav li {
+        flex: 1 1 auto;
+    }
+
+    .site-header nav a {
+        width: 100%;
+
+        text-align: center;
+    }
+
+    .home-sections {
+        grid-template-columns: 1fr;
+
+        max-width: 700px;
+    }
+
+    .page-hero {
+        max-width: 900px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
 ========================================================= */
 
 @media (max-width: 640px) {
+
+    body {
+        background: var(--surface);
+    }
 
     .site-container {
         width: 100%;
@@ -1599,6 +2208,8 @@ footer img {
     }
 
     .site-header-inner {
+        width: 100%;
+
         padding: 0.75rem 1rem;
     }
 
@@ -1606,20 +2217,37 @@ footer img {
         font-size: 1.2rem;
     }
 
-    .nav-toggle {
-        width: 42px;
-        height: 42px;
+    /*
+       Keep navigation visible because no nav JavaScript
+       is currently supplied.
+    */
+
+    .site-header nav ul {
+        width: 100%;
+
+        padding: 0.55rem 1rem 0.85rem;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 0.4rem;
     }
 
-    nav ul {
-        padding:
-            0.5rem 1rem
-            1rem;
+    .site-header nav li,
+    .site-header nav a {
+        width: 100%;
+    }
+
+    .site-header nav a {
+        min-height: 44px;
+
+        padding: 0.7rem 0.9rem;
     }
 
     main {
         padding:
-            2.75rem 1.25rem
+            2.25rem 1rem
             3.5rem;
     }
 
@@ -1644,11 +2272,14 @@ footer img {
     }
 
 
-    /* Single-column layouts */
+    /* =====================================================
+       SINGLE COLUMN
+    ===================================================== */
 
     .organization-list,
     .projects-list,
     .category-page .projects-list,
+    .category-detail-page .projects-list,
     .categories-list,
     .categories,
     .category-list,
@@ -1657,7 +2288,69 @@ footer img {
     }
 
 
-    /* Organization cards */
+    /* =====================================================
+       HOME
+    ===================================================== */
+
+    .page-hero {
+        width: 100%;
+
+        margin: 0 auto 2rem;
+
+        padding: 1.5rem 1.1rem;
+
+        border-radius: 12px;
+    }
+
+    .page-hero h1 {
+        font-size: 1.55rem;
+    }
+
+    .page-hero h2 {
+        font-size: 1.2rem;
+    }
+
+    .page-hero p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .main-logo {
+        width: min(240px, 65%);
+
+        margin: 1.5rem auto 2rem;
+    }
+
+    .home-sections {
+        width: 100%;
+
+        margin-bottom: 2rem;
+    }
+
+    .home-card {
+        min-height: auto;
+
+        padding: 1.4rem;
+    }
+
+    .home-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .home-card p {
+        font-size: 0.95rem;
+    }
+
+    .home-card .page-link {
+        width: 100%;
+
+        text-align: center;
+    }
+
+
+    /* =====================================================
+       ORGANIZATIONS
+    ===================================================== */
 
     .organization-card {
         padding: 1.4rem;
@@ -1667,9 +2360,6 @@ footer img {
         width: 100px;
         height: 100px;
     }
-
-
-    /* Organization detail */
 
     .organization-details-card {
         grid-template-columns: 1fr;
@@ -1685,76 +2375,101 @@ footer img {
     }
 
 
-    /* New organization form */
+    /* =====================================================
+       PROJECTS
+    ===================================================== */
 
-    .organization-form-page {
-        width: 100%;
-    }
-
-    .organization-form {
-        margin: 1.5rem auto;
-
+    .project-card-content {
         padding: 1.25rem;
     }
 
-    .organization-form .form-actions {
-        flex-direction: column;
-
-        align-items: stretch;
+    .project-card h2 {
+        font-size: 1.2rem;
     }
 
-    .organization-form button,
-    .organization-form .cancel-link {
+    .project-description {
+        font-size: 0.95rem;
+    }
+
+    .project-card-action {
+        width: 100%;
+    }
+
+    .project-link {
         width: 100%;
 
         text-align: center;
     }
 
 
-    /* Project cards */
+    /* =====================================================
+       CATEGORY DETAIL
+    ===================================================== */
 
-    .project-card-content,
-    .category-page .project-card-content {
+    .category-page .page-intro h1,
+    .category-detail-page .page-intro h1 {
+        font-size: 2rem;
+    }
+
+    .category-page .page-intro p,
+    .category-detail-page .page-intro p {
+        font-size: 1rem;
+    }
+
+    .category-page .project-card,
+    .category-detail-page .project-card {
+        width: 100%;
+    }
+
+    .category-page .project-card-content,
+    .category-detail-page .project-card-content {
         padding: 1.25rem;
     }
 
-    .project-card h2,
-    .category-page .project-card h2 {
-        font-size: 1.2rem;
+    .category-page .card-actions,
+    .category-detail-page .card-actions {
+        width: 100%;
 
-        line-height: 1.3;
+        flex-direction: column;
+
+        align-items: stretch;
     }
 
-    .project-description,
-    .category-page .project-description {
-        font-size: 0.95rem;
-
-        line-height: 1.55;
-    }
-
-    .detail-value,
-    .category-page .detail-value {
-        font-size: 0.92rem;
-
-        line-height: 1.45;
+    .category-page .card-actions .button,
+    .category-detail-page .card-actions .button {
+        width: 100%;
     }
 
 
-    /* Project details page */
+    /*
+       Direct-child category detail cards
+    */
 
-    .project-page .project-card-content {
-        padding: 1.4rem;
+    .project-card > h2,
+    .project-card > h3,
+    .project-card > p,
+    .project-card > .project-details,
+    .project-card > .card-actions {
+        margin-left: 1.25rem;
+        margin-right: 1.25rem;
     }
 
-    .project-page .project-card h2 {
-        font-size: 1.5rem;
+    .project-card > h2,
+    .project-card > h3 {
+        margin-top: 1.25rem;
+    }
+
+    .project-card > .card-actions {
+        margin-bottom: 1.25rem;
     }
 
 
-    /* Category cards */
+    /* =====================================================
+       CATEGORY CARDS
+    ===================================================== */
 
     .category-card {
-        min-height: 130px;
+        min-height: 150px;
 
         padding: 1.25rem;
     }
@@ -1764,36 +2479,95 @@ footer img {
     }
 
 
-    /* Category introduction */
+    /* =====================================================
+       FORMS
+    ===================================================== */
 
-    .category-page .page-intro h1 {
-        font-size: 2rem;
+    .form-container,
+    .organization-form,
+    .category-form-page .form-container {
+        padding: 1.25rem;
     }
 
-    .category-page .page-intro p {
-        font-size: 1rem;
+    .form-row {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+    .form-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .form-actions button,
+    .form-actions a,
+    .organization-form button,
+    .organization-form .cancel-link,
+    .category-form-page .form-actions button,
+    .category-form-page .form-actions a {
+        width: 100%;
+
+        text-align: center;
+    }
+
+    .checkbox-group {
+        grid-template-columns: 1fr;
     }
 
 
-    /* Organization list action */
+    /* =====================================================
+       ORGANIZATION FORM
+    ===================================================== */
 
-    .organization-list + p {
-        margin-top: 1.5rem;
+    .organization-form-page {
+        width: 100%;
     }
 
-    .organization-list + p a {
+    .organization-form {
+        margin: 1.5rem auto;
+    }
+
+
+    /* =====================================================
+       PAGE ACTIONS
+    ===================================================== */
+
+    .page-actions {
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .page-actions a,
+    .page-actions button {
         width: 100%;
 
         text-align: center;
     }
 
 
-    /* Organization project details */
+    /* =====================================================
+       EMPTY STATES
+    ===================================================== */
 
-    .organization-projects .project-detail {
-        flex-direction: column;
+    .empty-state,
+    .no-projects,
+    .no-results {
+        padding: 1.5rem;
+    }
 
-        gap: 0.2rem;
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer,
+    .site-footer {
+        padding: 1.5rem 1rem;
     }
 }
 
@@ -1810,32 +2584,49 @@ footer img {
     }
 
     main {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 0.85rem;
+        padding-right: 0.85rem;
     }
 
-    .project-card-content,
-    .category-page .project-card-content {
-        padding: 1.15rem;
+    .site-header nav ul {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
     }
 
     .page-intro h1 {
         font-size: 1.8rem;
     }
 
-    .project-card h2,
-    .category-page .project-card h2 {
-        font-size: 1.2rem;
+    .project-card-content {
+        padding: 1.1rem;
     }
 
-    .detail-value,
-    .category-page .detail-value {
+    .project-card > h2,
+    .project-card > h3,
+    .project-card > p,
+    .project-card > .project-details,
+    .project-card > .card-actions {
+        margin-left: 1.1rem;
+        margin-right: 1.1rem;
+    }
+
+    .project-card h2 {
+        font-size: 1.15rem;
+    }
+
+    .detail-value {
         font-size: 0.9rem;
     }
 
     .organization-details-logo img {
         width: 120px;
         height: 120px;
+    }
+
+    .form-container,
+    .organization-form,
+    .category-form-page .form-container {
+        padding: 1rem;
     }
 }
 
@@ -1865,6 +2656,7 @@ footer img {
     *::before,
     *::after {
         transition: none !important;
+        animation: none !important;
     }
 }
 
@@ -1872,451 +2664,374 @@ footer img {
 
 
 
-/* =========================================================
-   CATEGORY CRUD PAGES
-   Service Network
-========================================================= */
-
 
 /* =========================================================
-   CATEGORY PAGE CONTAINERS
+   HEADER AND NAVIGATION
 ========================================================= */
 
-.categories-page,
-.category-page,
-.category-detail-page,
-.category-form-page {
+.site-header {
     width: 100%;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 8px rgba(23, 50, 77, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-inner {
+    width: min(1200px, 92%);
+    min-height: 78px;
     margin: 0 auto;
-}
 
-
-/*
-   Category listing page
-*/
-.categories-page {
-    max-width: 1150px;
-}
-
-
-/*
-   Category detail page
-*/
-.category-page,
-.category-detail-page {
-    max-width: 1240px;
-}
-
-
-/*
-   Category create/edit page
-*/
-.category-form-page {
-    max-width: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
 }
 
 
 /* =========================================================
-   CATEGORY PAGE INTRO
+   BRAND
 ========================================================= */
 
-.categories-page .page-intro,
-.category-page .page-intro,
-.category-detail-page .page-intro {
+.site-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    color: var(--ink);
+    text-decoration: none;
+
+    flex-shrink: 0;
+}
+
+.site-logo {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    display: block;
+}
+
+.site-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DESKTOP NAVIGATION
+========================================================= */
+
+.site-navigation {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 0.35rem;
+}
+
+.site-navigation a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 42px;
+    padding: 0.65rem 0.9rem;
+
+    color: var(--ink);
+    text-decoration: none;
+
+    font-size: 0.92rem;
+    font-weight: 600;
+
+    border-radius: 6px;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.site-navigation a:hover,
+.site-navigation a:focus-visible {
+    background: var(--soft);
+    color: var(--accent-dark);
+}
+
+.site-navigation a.active {
+    background: var(--teal);
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   HAMBURGER BUTTON
+========================================================= */
+
+.nav-toggle {
+    display: none;
+
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+    margin: 0;
+
+    border: 1px solid var(--line);
+    border-radius: 6px;
+
+    background: var(--surface);
+    color: var(--ink);
+
+    font-size: 1.8rem;
+    line-height: 1;
+
+    cursor: pointer;
+
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.nav-toggle:hover,
+.nav-toggle:focus-visible {
+    background: var(--soft);
+    border-color: var(--teal);
+    color: var(--teal);
+}
+
+
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .header-inner {
+        min-height: 70px;
+        position: relative;
+    }
+
+    .site-title {
+        font-size: 1.2rem;
+    }
+
+    .nav-toggle {
+        display: flex;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    .site-navigation {
+        position: absolute;
+
+        top: calc(100% + 1px);
+        left: 0;
+        right: 0;
+
+        width: 100%;
+
+        margin: 0;
+        padding: 0.75rem;
+
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        background: var(--surface);
+
+        border: 1px solid var(--line);
+        border-top: none;
+
+        box-shadow: 0 8px 18px rgba(23, 50, 77, 0.10);
+    }
+
+    .site-navigation.nav-open {
+        display: flex;
+    }
+
+    .site-navigation a {
+        width: 100%;
+        min-height: 46px;
+
+        justify-content: flex-start;
+
+        padding: 0.75rem 1rem;
+
+        border-radius: 5px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .header-inner {
+        width: 94%;
+        min-height: 64px;
+        gap: 1rem;
+    }
+
+    .site-logo {
+        width: 44px;
+        height: 44px;
+    }
+
+    .site-title {
+        font-size: 1.05rem;
+    }
+
+    .nav-toggle {
+        width: 42px;
+        height: 42px;
+        font-size: 1.7rem;
+    }
+
+    .site-navigation {
+        padding: 0.65rem;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .site-title {
+        font-size: 0.95rem;
+    }
+
+    .site-logo {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+
+
+
+/* =========================================================
+   SERVICE NETWORK
+   CATEGORY DETAIL PAGE
+   Specifically for category.ejs
+========================================================= */
+
+/* ---------------------------------------------------------
+   CATEGORY PAGE CONTAINER
+--------------------------------------------------------- */
+
+.category-page {
+    width: min(100%, 1240px);
+    margin: 0 auto;
+    padding: 2.5rem clamp(1rem, 3vw, 2rem) 4rem;
+}
+
+
+/* ---------------------------------------------------------
+   CATEGORY INTRODUCTION
+--------------------------------------------------------- */
+
+.category-page .page-intro {
     width: 100%;
     max-width: 850px;
+
     margin: 0 auto 3rem;
+    padding: 0;
+
     text-align: center;
 }
 
+.category-page .page-intro h1 {
+    margin: 0 0 0.85rem;
 
-.categories-page .page-intro h1,
-.category-page .page-intro h1,
-.category-detail-page .page-intro h1 {
-    margin: 0 0 0.9rem;
     color: var(--teal);
+
+    font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.2;
 }
 
-
-.categories-page .page-intro p,
-.category-page .page-intro p,
-.category-detail-page .page-intro p {
+.category-page .page-intro p {
     max-width: 750px;
+
     margin: 0 auto;
+
     color: var(--muted);
+
+    font-size: 1.05rem;
     line-height: 1.7;
 }
 
 
-/* Optional inner content container */
-.categories-page .page-intro-content,
-.category-page .page-intro-content,
-.category-detail-page .page-intro-content {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-
-/* =========================================================
-   CATEGORY PAGE ACTIONS
-========================================================= */
-
-.categories-page .page-actions,
-.category-page .page-actions,
-.category-detail-page .page-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    margin: 1.5rem 0 0;
-}
-
-
-/* =========================================================
-   CATEGORY LIST
-========================================================= */
-
-.categories-page .categories-list {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
-    gap: 1.5rem;
-
-    width: 100%;
-    margin: 0 auto;
-}
-
-
-/* =========================================================
-   CATEGORY CARD
-========================================================= */
-
-.categories-page .category-card {
-    position: relative;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    min-width: 0;
-    min-height: 170px;
-
-    padding: 1.5rem;
-
-    background: var(--surface);
-
-    border: 1px solid var(--line);
-    border-radius: 14px;
-
-    box-shadow: var(--shadow);
-
-    overflow: hidden;
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
-}
-
+/* ---------------------------------------------------------
+   SERVICE PROJECTS SECTION
+--------------------------------------------------------- */
 
 /*
-   Accent bar
-*/
-.categories-page .category-card::before {
-    position: absolute;
+   IMPORTANT:
+   .projects-list is the SECTION.
+   It must NOT be a grid.
 
-    top: 0;
-    left: 0;
+   The heading appears first.
+   The .projects-grid below it creates the
+   three-column layout.
+*/
+
+.category-page .projects-list {
+    width: 100%;
+    max-width: 1180px;
+
+    margin: 0 auto;
+
+    display: block;
+}
+
+
+/* ---------------------------------------------------------
+   SERVICE PROJECTS HEADING
+--------------------------------------------------------- */
+
+.category-page .projects-list > h2 {
+    display: block;
 
     width: 100%;
-    height: 0.3rem;
 
-    background: var(--accent);
-
-    content: '';
-}
-
-
-/*
-   Hover effect
-*/
-.categories-page .category-card:hover {
-    transform: translateY(-4px);
-
-    border-color: var(--accent);
-
-    box-shadow: var(--shadow-hover);
-}
-
-
-/* =========================================================
-   CATEGORY CARD CONTENT
-========================================================= */
-
-.categories-page .category-card-content {
-    flex: 1;
-}
-
-
-.categories-page .category-card h2 {
-    margin: 0;
+    margin: 0 0 1.75rem;
 
     color: var(--ink);
 
-    font-size: 1.25rem;
-    line-height: 1.4;
-}
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.45rem, 2.5vw, 1.8rem);
 
-
-.categories-page .category-card h2 a {
-    color: var(--ink);
-
-    text-decoration: none;
-}
-
-
-.categories-page .category-card h2 a:hover,
-.categories-page .category-card h2 a:focus-visible {
-    color: var(--accent-dark);
-
-    text-decoration: underline;
-}
-
-
-/* =========================================================
-   CATEGORY CARD ACTIONS
-========================================================= */
-
-.categories-page .card-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-
-    gap: 0.65rem;
-
-    margin-top: 1.5rem;
-}
-
-
-/* =========================================================
-   CATEGORY BUTTONS
-========================================================= */
-
-.categories-page .btn-primary,
-.categories-page .btn-secondary,
-.category-page .btn-primary,
-.category-page .btn-secondary,
-.category-detail-page .btn-primary,
-.category-detail-page .btn-secondary,
-.category-form-page .btn-primary,
-.category-form-page .btn-secondary {
-
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    min-height: 44px;
-
-    padding: 0.7rem 1.1rem;
-
-    border-radius: 7px;
-
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 700;
-    line-height: 1.2;
-
-    text-decoration: none;
-
-    cursor: pointer;
-
-    transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-
-/* =========================================================
-   PRIMARY BUTTON
-========================================================= */
-
-.categories-page .btn-primary,
-.category-page .btn-primary,
-.category-detail-page .btn-primary,
-.category-form-page .btn-primary {
-
-    color: var(--surface);
-
-    background: var(--accent);
-
-    border: 1px solid var(--accent-dark);
-}
-
-
-.categories-page .btn-primary:hover,
-.categories-page .btn-primary:focus-visible,
-.category-page .btn-primary:hover,
-.category-page .btn-primary:focus-visible,
-.category-detail-page .btn-primary:hover,
-.category-detail-page .btn-primary:focus-visible,
-.category-form-page .btn-primary:hover,
-.category-form-page .btn-primary:focus-visible {
-
-    color: var(--surface);
-
-    background: var(--accent-dark);
-
-    border-color: var(--accent-dark);
-
-    transform: translateY(-1px);
-}
-
-
-/* =========================================================
-   SECONDARY BUTTON
-========================================================= */
-
-.categories-page .btn-secondary,
-.category-page .btn-secondary,
-.category-detail-page .btn-secondary,
-.category-form-page .btn-secondary {
-
-    color: var(--teal);
-
-    background: var(--surface);
-
-    border: 1px solid var(--teal);
-}
-
-
-.categories-page .btn-secondary:hover,
-.categories-page .btn-secondary:focus-visible,
-.category-page .btn-secondary:hover,
-.category-page .btn-secondary:focus-visible,
-.category-detail-page .btn-secondary:hover,
-.category-detail-page .btn-secondary:focus-visible,
-.category-form-page .btn-secondary:hover,
-.category-form-page .btn-secondary:focus-visible {
-
-    color: var(--surface);
-
-    background: var(--teal);
-
-    border-color: var(--teal);
-
-    transform: translateY(-1px);
-}
-
-
-/* =========================================================
-   CATEGORY BUTTON FOCUS
-========================================================= */
-
-.categories-page .btn-primary:focus-visible,
-.categories-page .btn-secondary:focus-visible,
-.category-page .btn-primary:focus-visible,
-.category-page .btn-secondary:focus-visible,
-.category-detail-page .btn-primary:focus-visible,
-.category-detail-page .btn-secondary:focus-visible,
-.category-form-page .btn-primary:focus-visible,
-.category-form-page .btn-secondary:focus-visible {
-
-    outline: 3px solid rgba(23, 107, 104, 0.25);
-
-    outline-offset: 3px;
-}
-
-
-/* =========================================================
-   CATEGORY DETAILS
-========================================================= */
-
-.category-page .eyebrow,
-.category-detail-page .eyebrow {
-
-    margin: 0 0 0.5rem;
-
-    color: var(--teal);
-
-    font-size: 0.85rem;
-    font-weight: 700;
-
-    letter-spacing: 0.06em;
-
-    text-transform: uppercase;
-}
-
-
-/* =========================================================
-   CATEGORY PROJECT SECTION
-========================================================= */
-
-.category-page .category-projects,
-.category-detail-page .category-projects {
-
-    width: 100%;
-
-    margin: 2.5rem auto 0;
-}
-
-
-.category-page .section-header,
-.category-detail-page .section-header {
-
-    margin-bottom: 1.5rem;
+    line-height: 1.25;
 
     text-align: center;
 }
 
 
-.category-page .section-header h2,
-.category-detail-page .section-header h2 {
+/* ---------------------------------------------------------
+   THREE-COLUMN PROJECT GRID
+--------------------------------------------------------- */
 
-    margin: 0 0 0.5rem;
-}
-
-
-.category-page .section-header p,
-.category-detail-page .section-header p {
-
-    max-width: 700px;
-
-    margin: 0 auto;
-
-    line-height: 1.6;
-}
-
-
-/* =========================================================
-   PROJECTS WITHIN CATEGORY
-========================================================= */
-
-/*
-   The main stylesheet already defines .projects-list
-   as a 3-column responsive grid.
-
-   Do not redefine .project-card here.
-
-   This prevents Category pages from breaking the
-   existing Project cards.
-*/
-
-.category-page .projects-list,
-.category-detail-page .projects-list {
-
+.category-page .projects-grid {
     width: 100%;
 
-    margin: 0 auto;
-
-    display: grid;
+    display: grid !important;
 
     grid-template-columns:
         repeat(3, minmax(0, 1fr));
@@ -2327,322 +3042,225 @@ footer img {
 }
 
 
-/* =========================================================
-   CATEGORY EMPTY STATE
-========================================================= */
+/* ---------------------------------------------------------
+   CATEGORY PROJECT CARD
+--------------------------------------------------------- */
 
-.category-page .empty-state,
-.category-detail-page .empty-state {
-
+.category-page .project-card {
     width: 100%;
-    max-width: 700px;
+    min-width: 0;
+    height: 100%;
 
-    margin: 2rem auto;
+    display: flex !important;
+    flex-direction: column;
 
-    padding: 2rem;
+    margin: 0;
+    padding: 1.5rem;
 
     background: var(--surface);
 
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: var(--radius);
+
+    overflow: hidden;
 
     box-shadow: var(--shadow);
 
-    text-align: center;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
 }
 
 
-.category-page .empty-state h2,
-.category-detail-page .empty-state h2 {
+/* ---------------------------------------------------------
+   CARD HOVER
+--------------------------------------------------------- */
 
-    margin: 0 0 0.75rem;
+.category-page .project-card:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--teal);
+
+    box-shadow: var(--shadow-hover);
 }
 
 
-.category-page .empty-state p,
-.category-detail-page .empty-state p {
+/* ---------------------------------------------------------
+   PROJECT TITLE
+--------------------------------------------------------- */
 
-    margin: 0 0 1.5rem;
+.category-page .project-card h3 {
+    margin: 0 0 0.8rem;
 
-    line-height: 1.7;
+    color: var(--ink);
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.2rem;
+
+    line-height: 1.3;
 }
 
 
-/* =========================================================
-   CATEGORY FORM PAGE
-========================================================= */
+/* ---------------------------------------------------------
+   PROJECT DESCRIPTION
+--------------------------------------------------------- */
 
-.category-form-page {
-    display: flex;
-
-    justify-content: center;
-}
-
-
-/* =========================================================
-   CATEGORY FORM CONTAINER
-========================================================= */
-
-.category-form-page .form-container {
-
-    width: 100%;
-    max-width: 700px;
-
-    margin: 0 auto;
-
-    padding: clamp(1.5rem, 4vw, 2rem);
-
-    background: var(--surface);
-
-    border: 1px solid var(--line);
-    border-radius: 14px;
-
-    box-shadow: var(--shadow);
-}
-
-
-/* =========================================================
-   CATEGORY FORM HEADER
-========================================================= */
-
-.category-form-page .form-header {
-
-    margin-bottom: 1.75rem;
-
-    text-align: center;
-}
-
-
-.category-form-page .form-header h1 {
-
-    margin: 0 0 0.75rem;
-
-    color: var(--teal);
-}
-
-
-.category-form-page .form-header p {
-
-    max-width: 650px;
-
-    margin: 0 auto;
+.category-page .project-card > p {
+    margin: 0 0 1.25rem;
 
     color: var(--muted);
 
-    line-height: 1.7;
+    font-size: 0.95rem;
+
+    line-height: 1.6;
 }
 
 
-/* =========================================================
-   CATEGORY FORM
-========================================================= */
+/* ---------------------------------------------------------
+   PROJECT DETAILS
+--------------------------------------------------------- */
 
-.category-form-page .category-form {
-
+.category-page .project-details {
     width: 100%;
+
+    display: grid;
+
+    gap: 0.65rem;
+
+    margin-top: auto;
+    padding-top: 1rem;
+
+    border-top: 1px solid var(--line);
 }
 
+.category-page .project-details p {
+    margin: 0;
 
-/* =========================================================
-   CATEGORY FORM GROUP
-========================================================= */
+    color: var(--muted);
 
-.category-form-page .form-group {
+    font-size: 0.9rem;
+    line-height: 1.5;
 
-    margin-bottom: 1.5rem;
+    overflow-wrap: anywhere;
 }
 
-
-.category-form-page .form-group label {
-
-    display: block;
-
-    margin-bottom: 0.5rem;
-
+.category-page .project-details strong {
     color: var(--ink);
 
     font-weight: 700;
 }
 
 
-/* =========================================================
-   CATEGORY FORM INPUT
-========================================================= */
+/* ---------------------------------------------------------
+   CARD ACTIONS
+--------------------------------------------------------- */
 
-.category-form-page .form-group input {
-
-    display: block;
-
+.category-page .card-actions {
     width: 100%;
-    min-height: 46px;
 
-    padding: 0.7rem 0.85rem;
+    margin-top: 1.25rem;
+    padding-top: 0;
 
-    color: var(--ink);
+    display: flex;
+    align-items: stretch;
+}
 
-    background: var(--surface);
 
-    border: 1px solid #9db5b3;
+/* ---------------------------------------------------------
+   VIEW PROJECT BUTTON
+--------------------------------------------------------- */
+
+.category-page .card-actions .button {
+    width: 100%;
+
+    min-height: 44px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.7rem 1rem;
+
+    color: #ffffff;
+    background: var(--teal);
+
+    border: 1px solid var(--teal);
     border-radius: 7px;
 
-    font-family: inherit;
-    font-size: 1rem;
-    line-height: 1.5;
-
-    box-sizing: border-box;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
 
     transition:
+        background-color 0.2s ease,
         border-color 0.2s ease,
+        transform 0.2s ease,
         box-shadow 0.2s ease;
 }
 
+.category-page .card-actions .button:hover,
+.category-page .card-actions .button:focus-visible {
+    color: #ffffff;
 
-.category-form-page .form-group input::placeholder {
+    background: var(--teal-dark);
 
-    color: #71818d;
+    border-color: var(--teal-dark);
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 14px rgba(23, 107, 104, 0.18);
 }
 
 
-.category-form-page .form-group input:focus {
+/* ---------------------------------------------------------
+   EMPTY STATE
+--------------------------------------------------------- */
 
-    outline: 3px solid rgba(23, 107, 104, 0.18);
+.category-page .empty-state {
+    width: 100%;
+    max-width: 700px;
 
-    outline-offset: 1px;
+    margin: 2rem auto;
+    padding: 2rem;
 
-    border-color: var(--teal);
+    text-align: center;
+
+    background: var(--surface);
+
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
 }
 
-
-/* =========================================================
-   FORM HELP TEXT
-========================================================= */
-
-.category-form-page .form-help {
-
-    margin: 0.55rem 0 0;
-
-    color: var(--muted);
-
-    font-size: 0.9rem;
-
-    line-height: 1.5;
+.category-page .empty-state h2 {
+    margin: 0 0 0.75rem;
 }
 
-
-/* =========================================================
-   FORM ERRORS
-========================================================= */
-
-.category-form-page .form-errors {
-
-    margin-bottom: 1.5rem;
-
-    padding: 1rem 1.15rem;
-
-    color: #721c24;
-
-    background: #fff7f4;
-
-    border: 1px solid var(--accent-dark);
-
-    border-left: 5px solid var(--accent-dark);
-
-    border-radius: 7px;
-}
-
-
-.category-form-page .form-errors h2 {
-
-    margin: 0 0 0.65rem;
-
-    color: #721c24;
-
-    font-size: 1rem;
-}
-
-
-.category-form-page .form-errors ul {
-
-    margin: 0;
-
-    padding-left: 1.25rem;
-}
-
-
-.category-form-page .form-errors li + li {
-
-    margin-top: 0.35rem;
+.category-page .empty-state p {
+    margin: 0 auto 1.5rem;
 }
 
 
 /* =========================================================
-   CATEGORY FORM ACTIONS
+   CATEGORY DETAIL RESPONSIVE LAYOUT
 ========================================================= */
 
-.category-form-page .form-actions {
-
-    display: flex;
-
-    flex-wrap: wrap;
-
-    align-items: center;
-
-    gap: 0.75rem;
-
-    margin-top: 1.5rem;
-}
-
-
-/* =========================================================
-   CATEGORY FORM DELETE / SECONDARY ACTION
-========================================================= */
-
-.category-form-page .form-actions .delete-link {
-
-    color: #721c24;
-
-    background: #fff7f4;
-
-    border: 1px solid #d8a4a8;
-}
-
-
-.category-form-page .form-actions .delete-link:hover,
-.category-form-page .form-actions .delete-link:focus-visible {
-
-    color: var(--surface);
-
-    background: #721c24;
-
-    border-color: #721c24;
-}
-
-
-/* =========================================================
-   CATEGORY PAGE ACTION LINKS
-========================================================= */
-
-.category-page .page-actions a,
-.category-detail-page .page-actions a {
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   CATEGORY RESPONSIVE LAYOUT
-========================================================= */
+/* ---------------------------------------------------------
+   TABLET
+--------------------------------------------------------- */
 
 @media (max-width: 1050px) {
 
-    /*
-       Three columns become two columns on tablet.
-    */
+    .category-page {
+        width: 100%;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
 
-    .categories-page .categories-list,
-    .category-page .projects-list,
-    .category-detail-page .projects-list {
-
+    .category-page .projects-grid {
         grid-template-columns:
             repeat(2, minmax(0, 1fr));
 
@@ -2651,190 +3269,76 @@ footer img {
 }
 
 
-/* =========================================================
-   CATEGORY MOBILE
-========================================================= */
+/* ---------------------------------------------------------
+   MOBILE
+--------------------------------------------------------- */
 
 @media (max-width: 640px) {
 
-    .categories-page,
-    .category-page,
-    .category-detail-page,
-    .category-form-page {
-
-        width: 100%;
+    .category-page {
+        padding:
+            2rem 1rem
+            3rem;
     }
 
-
-    .categories-page .page-intro,
-    .category-page .page-intro,
-    .category-detail-page .page-intro {
-
+    .category-page .page-intro {
         margin-bottom: 2.25rem;
     }
 
-
-    .categories-page .page-intro h1,
-    .category-page .page-intro h1,
-    .category-detail-page .page-intro h1 {
-
+    .category-page .page-intro h1 {
         font-size: 2rem;
     }
 
+    .category-page .page-intro p {
+        font-size: 1rem;
+    }
 
-    /*
-       One-column category cards.
-    */
+    .category-page .projects-list > h2 {
+        margin-bottom: 1.25rem;
 
-    .categories-page .categories-list,
-    .category-page .projects-list,
-    .category-detail-page .projects-list {
+        font-size: 1.4rem;
+    }
 
+    .category-page .projects-grid {
         grid-template-columns: 1fr;
 
         gap: 1rem;
     }
 
-
-    /*
-       Category cards.
-    */
-
-    .categories-page .category-card {
-
-        min-height: 150px;
-
+    .category-page .project-card {
         padding: 1.25rem;
     }
 
-
-    /*
-       Category card buttons.
-    */
-
-    .categories-page .card-actions {
-
-        width: 100%;
-
-        flex-direction: column;
-
-        align-items: stretch;
-    }
-
-
-    .categories-page .card-actions a {
-
-        width: 100%;
-
-        box-sizing: border-box;
-
-        text-align: center;
-    }
-
-
-    /*
-       Page actions.
-    */
-
-    .categories-page .page-actions,
-    .category-page .page-actions,
-    .category-detail-page .page-actions {
-
-        width: 100%;
-
-        flex-direction: column;
-
-        align-items: stretch;
-    }
-
-
-    .categories-page .page-actions a,
-    .category-page .page-actions a,
-    .category-detail-page .page-actions a {
-
-        width: 100%;
-
-        box-sizing: border-box;
-
-        text-align: center;
-    }
-
-
-    /*
-       Category form.
-    */
-
-    .category-form-page .form-container {
-
-        padding: 1.25rem;
-    }
-
-
-    /*
-       Form actions.
-    */
-
-    .category-form-page .form-actions {
-
-        width: 100%;
-
-        flex-direction: column;
-
-        align-items: stretch;
-    }
-
-
-    .category-form-page .form-actions a,
-    .category-form-page .form-actions button {
-
-        width: 100%;
-
-        box-sizing: border-box;
-
-        text-align: center;
-    }
-
-
-    /*
-       Category section header.
-    */
-
-    .category-page .section-header,
-    .category-detail-page .section-header {
-
-        text-align: center;
-    }
-}
-
-
-/* =========================================================
-   VERY SMALL PHONES
-========================================================= */
-
-@media (max-width: 380px) {
-
-    .categories-page .category-card {
-
-        padding: 1.1rem;
-    }
-
-
-    .categories-page .category-card h2 {
-
+    .category-page .project-card h3 {
         font-size: 1.15rem;
     }
 
+    .category-page .project-card > p {
+        font-size: 0.95rem;
+    }
+}
 
-    .category-form-page .form-container {
 
+/* ---------------------------------------------------------
+   VERY SMALL PHONES
+--------------------------------------------------------- */
+
+@media (max-width: 380px) {
+
+    .category-page {
+        padding-left: 0.85rem;
+        padding-right: 0.85rem;
+    }
+
+    .category-page .project-card {
         padding: 1.1rem;
     }
 
-
-    .category-form-page .form-header h1 {
-
+    .category-page .page-intro h1 {
         font-size: 1.8rem;
     }
 }
+
+
 
 

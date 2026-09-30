@@ -43,9 +43,14 @@ import {
   showEditCategoryForm,
   processEditCategoryForm,
   showAssignCategoriesForm,
-  processAssignCategoriesForm
+  processAssignCategoriesForm,
+  categoryValidation
 } from './controllers/categories.js'
 
+
+/* =========================================================
+   CREATE ROUTER
+========================================================= */
 
 const router = express.Router()
 
@@ -55,7 +60,9 @@ const router = express.Router()
 ========================================================= */
 
 router.use((req, res, next) => {
+
   res.locals.currentPath = req.path
+
   next()
 })
 
@@ -64,39 +71,44 @@ router.use((req, res, next) => {
    HOME
 ========================================================= */
 
-router.get('/', (req, res) => {
-  res.render('index', {
-    title: 'Service Network'
-  })
-})
+router.get(
+  '/',
+  (req, res) => {
+
+    res.render('index', {
+      title: 'Service Network'
+    })
+
+  }
+)
 
 
 /* =========================================================
    ORGANIZATIONS
 ========================================================= */
 
-// Display all organizations
+/* Display all organizations */
 router.get(
   '/organizations',
   showOrganizationsPage
 )
 
 
-// Display one organization
+/* Display one organization */
 router.get(
   '/organization/:id',
   showOrganizationDetailsPage
 )
 
 
-// Display new organization form
+/* Display new organization form */
 router.get(
   '/new-organization',
   showNewOrganizationForm
 )
 
 
-// Process new organization form
+/* Process new organization form */
 router.post(
   '/new-organization',
   organizationValidation,
@@ -104,14 +116,14 @@ router.post(
 )
 
 
-// Display edit organization form
+/* Display edit organization form */
 router.get(
   '/edit-organization/:id',
   showEditOrganizationForm
 )
 
 
-// Process edit organization form
+/* Process edit organization form */
 router.post(
   '/edit-organization/:id',
   organizationValidation,
@@ -123,28 +135,28 @@ router.post(
    SERVICE PROJECTS
 ========================================================= */
 
-// Display upcoming service projects
+/* Display upcoming service projects */
 router.get(
   '/projects',
   showProjectsPage
 )
 
 
-// Display one service project
+/* Display one service project */
 router.get(
   '/project/:id',
   showProjectDetailsPage
 )
 
 
-// Display new service project form
+/* Display new service project form */
 router.get(
   '/new-project',
   showNewProjectForm
 )
 
 
-// Process new service project form
+/* Process new service project form */
 router.post(
   '/new-project',
   projectValidation,
@@ -152,14 +164,14 @@ router.post(
 )
 
 
-// Display edit service project form
+/* Display edit service project form */
 router.get(
   '/edit-project/:id',
   showEditProjectForm
 )
 
 
-// Process edit service project form
+/* Process edit service project form */
 router.post(
   '/edit-project/:id',
   projectValidation,
@@ -171,44 +183,46 @@ router.post(
    SERVICE PROJECT CATEGORIES
 ========================================================= */
 
-// Display all service project categories
+/* Display all service project categories */
 router.get(
   '/categories',
   showCategoriesPage
 )
 
 
-// Display one service project category
+/* Display one service project category */
 router.get(
   '/category/:id',
   showCategoryDetailsPage
 )
 
 
-// Display new category form
+/* Display new category form */
 router.get(
   '/new-category',
   showNewCategoryForm
 )
 
 
-// Process new category form
+/* Process new category form */
 router.post(
   '/new-category',
+  categoryValidation,
   processNewCategoryForm
 )
 
 
-// Display edit category form
+/* Display edit category form */
 router.get(
   '/edit-category/:id',
   showEditCategoryForm
 )
 
 
-// Process edit category form
+/* Process edit category form */
 router.post(
   '/edit-category/:id',
+  categoryValidation,
   processEditCategoryForm
 )
 
@@ -217,14 +231,14 @@ router.post(
    ASSIGN CATEGORIES TO SERVICE PROJECT
 ========================================================= */
 
-// Display assign categories form
+/* Display assign categories form */
 router.get(
   '/assign-categories/:projectId',
   showAssignCategoriesForm
 )
 
 
-// Process assign categories form
+/* Process category assignments */
 router.post(
   '/assign-categories/:projectId',
   processAssignCategoriesForm

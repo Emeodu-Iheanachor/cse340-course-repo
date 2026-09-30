@@ -2,65 +2,103 @@
 
 <main class="category-page">
 
+    <!-- Category Introduction -->
     <section class="page-intro">
+
         <h1><%= category.category_name %></h1>
 
         <p>
             Explore service projects available in the
             <%= category.category_name %> category.
         </p>
+
     </section>
 
 
+    <!-- Projects in This Category -->
     <% if (projects && projects.length > 0) { %>
 
         <section
             class="projects-list"
-            aria-label="Service projects in this category"
+            aria-labelledby="category-projects-heading"
         >
 
-            <% projects.forEach(project => { %>
+            <h2 id="category-projects-heading">
+                Service Projects
+            </h2>
 
-                <article class="project-card">
+            <div class="projects-grid">
 
-                    <h2>
-                        <a href="/project/<%= project.project_id %>">
+                <% projects.forEach(project => { %>
+
+                    <article class="project-card">
+
+                        <h3>
                             <%= project.title %>
-                        </a>
-                    </h2>
+                        </h3>
 
-                    <p>
-                        <%= project.description %>
-                    </p>
-
-                    <p>
-                        <strong>Partner Organization:</strong>
-                        <%= project.organization_name %>
-                    </p>
-
-                    <p>
-                        <strong>Start Date:</strong>
-                        <%= project.start_date %>
-                    </p>
-
-                    <% if (project.end_date) { %>
                         <p>
-                            <strong>End Date:</strong>
-                            <%= project.end_date %>
+                            <%= project.description %>
                         </p>
-                    <% } %>
 
-                </article>
+                        <div class="project-details">
 
-            <% }) %>
+                            <p>
+                                <strong>Start Date:</strong>
+                                <%= new Date(project.start_date).toLocaleDateString() %>
+                            </p>
+
+                            <p>
+                                <strong>End Date:</strong>
+                                <%= new Date(project.end_date).toLocaleDateString() %>
+                            </p>
+
+                            <p>
+                                <strong>Partner Organization:</strong>
+                                <%= project.organization_name %>
+                            </p>
+
+                        </div>
+
+                        <div class="card-actions">
+
+                            <a
+                                href="/project/<%= project.project_id %>"
+                                class="button"
+                            >
+                                View Project
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                <% }) %>
+
+            </div>
 
         </section>
 
     <% } else { %>
 
-        <p class="no-results">
-            There are currently no service projects in this category.
-        </p>
+        <!-- No Projects -->
+        <section class="empty-state">
+
+            <h2>No Service Projects Available</h2>
+
+            <p>
+                There are currently no service projects assigned
+                to this category.
+            </p>
+
+            <a
+                href="/projects"
+                class="button"
+            >
+                View All Projects
+            </a>
+
+        </section>
 
     <% } %>
 

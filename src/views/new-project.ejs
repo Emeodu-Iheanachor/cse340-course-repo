@@ -1,151 +1,150 @@
 <%- include('partials/header') %>
 
-<main>
+<main class="form-page">
 
-  <section class="page-intro">
+    <section class="page-intro">
 
-    <h1><%= title %></h1>
+        <h1><%= title %></h1>
 
-    <p>
-      Add a new service project to the Service Network.
-    </p>
+        <p>
+            Add a new service project to the Service Network.
+        </p>
 
-  </section>
+    </section>
 
 
-  <section class="organization-form-page">
+    <section class="form-container">
 
-    <form
-      class="organization-form"
-      action="/new-project"
-      method="POST"
-    >
-
-      <!-- Project Title -->
-      <div class="form-group">
-
-        <label for="title">
-          Project Title
-        </label>
-
-        <input
-          type="text"
-          id="title"
-          name="title"
-          maxlength="200"
-          minlength="3"
-          required
+        <form
+            action="/new-project"
+            method="POST"
         >
 
-      </div>
+            <!-- Project Title -->
+            <div class="form-group">
+
+                <label for="title">
+                    Project Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    maxlength="200"
+                    minlength="3"
+                    required
+                >
+
+            </div>
 
 
-      <!-- Description -->
-      <div class="form-group">
+            <!-- Description -->
+            <div class="form-group">
 
-        <label for="description">
-          Description
-        </label>
+                <label for="description">
+                    Description
+                </label>
 
-        <textarea
-          id="description"
-          name="description"
-          maxlength="1000"
-          required
-        ></textarea>
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="6"
+                    maxlength="1000"
+                    required
+                ></textarea>
 
-      </div>
-
-
-      <!-- Location -->
-      <div class="form-group">
-
-        <label for="location">
-          Location
-        </label>
-
-        <input
-          type="text"
-          id="location"
-          name="location"
-          maxlength="200"
-          required
-        >
-
-      </div>
+            </div>
 
 
-      <!-- Date -->
-      <div class="form-group">
+            <!-- Start Date -->
+            <div class="form-group">
 
-        <label for="startDate">
-          Project Date
-        </label>
+                <label for="start_date">
+                    Project Start Date
+                </label>
 
-        <input
-          type="date"
-          id="startDate"
-          name="startDate"
-          required
-        >
+                <input
+                    type="date"
+                    id="start_date"
+                    name="start_date"
+                    required
+                >
 
-      </div>
-
-
-      <!-- Organization -->
-      <div class="form-group">
-
-        <label for="organizationId">
-          Partner Organization
-        </label>
-
-        <select
-          id="organizationId"
-          name="organizationId"
-          required
-        >
-
-          <option value="">
-            Select an organization
-          </option>
-
-          <% organizations.forEach(org => { %>
-
-            <option
-              value="<%= org.organization_id %>"
-            >
-              <%= org.name %>
-            </option>
-
-          <% }) %>
-
-        </select>
-
-      </div>
+            </div>
 
 
-      <!-- Buttons -->
-      <div class="form-actions">
+            <!-- End Date -->
+            <div class="form-group">
 
-        <button
-          type="submit"
-          class="btn btn-primary"
-        >
-          Create Service Project
-        </button>
+                <label for="end_date">
+                    Project End Date
+                </label>
 
-        <a
-          href="/projects"
-          class="btn btn-secondary"
-        >
-          Cancel
-        </a>
+                <input
+                    type="date"
+                    id="end_date"
+                    name="end_date"
+                    required
+                >
 
-      </div>
+            </div>
 
-    </form>
 
-  </section>
+            <!-- Organization -->
+            <div class="form-group">
+
+                <label for="organization_id">
+                    Partner Organization
+                </label>
+
+                <select
+                    id="organization_id"
+                    name="organization_id"
+                    required
+                >
+
+                    <option value="">
+                        -- Select an organization --
+                    </option>
+
+                    <% organizations.forEach(organization => { %>
+
+                        <option
+                            value="<%= organization.organization_id %>"
+                        >
+                            <%= organization.name %>
+                        </option>
+
+                    <% }) %>
+
+                </select>
+
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Create Service Project
+                </button>
+
+                <a
+                    href="/projects"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
 
 </main>
 

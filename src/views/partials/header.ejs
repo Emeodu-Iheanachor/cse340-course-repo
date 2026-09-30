@@ -11,70 +11,70 @@
 
 <body>
 
+
 <header class="site-header">
 
-    <div class="site-header-inner">
+    <div class="header-inner">
 
+        <!-- Site Branding -->
         <a href="/" class="site-brand">
-            Service Network
+            <img
+                src="/images/cse340-service-network.png"
+                alt="CSE 340 Service Network logo"
+                class="site-logo"
+            >
+
+            <span class="site-title">
+                Service Network
+            </span>
         </a>
 
+
+        <!-- Mobile Navigation Toggle -->
         <button
             class="nav-toggle"
             type="button"
-            aria-label="Open navigation menu"
-            aria-expanded="false"
             aria-controls="site-navigation"
+            aria-expanded="false"
+            aria-label="Open navigation menu"
         >
-            <span class="nav-toggle-icon"></span>
+            ☰
         </button>
+
+
+        <!-- Navigation -->
+        <nav id="site-navigation" class="site-navigation" aria-label="Main navigation">
+
+            <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">
+                Home
+            </a>
+
+            <a
+                href="/organizations"
+                class="<%= currentPath.startsWith('/organization') ? 'active' : '' %>"
+            >
+                Our Partner Organizations
+            </a>
+
+            <a
+                href="/projects"
+                class="<%= currentPath.startsWith('/project') ? 'active' : '' %>"
+            >
+                Service Projects
+            </a>
+
+            <a
+                href="/categories"
+                class="<%= currentPath.startsWith('/categor') ? 'active' : '' %>"
+            >
+                Service Project Categories
+            </a>
+
+        </nav>
 
     </div>
 
-    <nav id="site-navigation">
-
-        <ul>
-            <li>
-                <a
-                    href="/"
-                    class="<%= currentPath === '/' ? 'active' : '' %>"
-                >
-                    Home
-                </a>
-            </li>
-
-            <li>
-                <a
-                    href="/organizations"
-                    class="<%= currentPath === '/organizations' ? 'active' : '' %>"
-                >
-                    Our Partner Organizations
-                </a>
-            </li>
-
-            <li>
-                <a
-                    href="/projects"
-                    class="<%= currentPath === '/projects' ? 'active' : '' %>"
-                >
-                    Service Projects
-                </a>
-            </li>
-
-            <li>
-                <a
-                    href="/categories"
-                    class="<%= currentPath === '/categories' ? 'active' : '' %>"
-                >
-                    Service Project Categories
-                </a>
-            </li>
-        </ul>
-
-    </nav>
-
 </header>
-
 
 <!-- Flash Messages -->
 <% const messages = flash(); %>

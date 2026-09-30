@@ -12,6 +12,11 @@ import {
   getProjectDetails
 } from '../models/projects.js'
 
+import {
+  body,
+  validationResult
+} from 'express-validator'
+
 
 // =========================================================
 // DISPLAY ALL SERVICE PROJECT CATEGORIES
@@ -21,10 +26,8 @@ const showCategoriesPage = async (req, res, next) => {
   try {
     const categories = await getAllCategories()
 
-    const title = 'Service Categories'
-
     res.render('categories', {
-      title,
+      title: 'Service Categories',
       categories
     })
   } catch (error) {
@@ -39,28 +42,44 @@ const showCategoriesPage = async (req, res, next) => {
 
 const showCategoryDetailsPage = async (req, res, next) => {
   try {
-    const categoryId = Number.parseInt(req.params.id, 10)
+    const categoryId = Number.parseInt(
+      req.params.id,
+      10
+    )
 
-    if (!Number.isInteger(categoryId) || categoryId <= 0) {
-      return res.status(404).render('error', {
-        title: 'Category Not Found',
-        message:
-          'The requested service project category could not be found.'
-      })
+    // Validate category ID.
+    if (
+      !Number.isInteger(categoryId) ||
+      categoryId <= 0
+    ) {
+      const error = new Error(
+        'Category not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
     }
 
-    const category = await getCategoryById(categoryId)
+    // Get the selected category.
+    const category =
+      await getCategoryById(categoryId)
 
     if (!category) {
-      return res.status(404).render('error', {
-        title: 'Category Not Found',
-        message:
-          'The requested service project category could not be found.'
-      })
+      const error = new Error(
+        'Category not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
     }
 
-    const projects = await getProjectsByCategoryId(categoryId)
+    // Get projects assigned to this category.
+    const projects =
+      await getProjectsByCategoryId(categoryId)
 
+    // Category details are displayed in category.ejs.
     res.render('category', {
       title: category.category_name,
       category,
@@ -73,91 +92,69 @@ const showCategoryDetailsPage = async (req, res, next) => {
 
 
 // =========================================================
-// DISPLAY NEW CATEGORY FORM
+// DISPLAY CREATE CATEGORY FORM
 // =========================================================
 
 const showNewCategoryForm = (req, res) => {
   res.render('new-category', {
     title: 'Create New Category',
     errors: [],
-    categoryName: ''
+    category: {
+      category_name: ''
+    }
   })
 }
 
 
 // =========================================================
-// VALIDATE CATEGORY
+// PROCESS CREATE CATEGORY FORM
 // =========================================================
 
-const validateCategory = (categoryName) => {
-  const errors = []
-
-  const name =
-    typeof categoryName === 'string'
-      ? categoryName.trim()
-      : ''
-
-  // Server-side required validation.
-  if (!name) {
-    errors.push('Category name is required.')
-  }
-
-  // Server-side minimum validation.
-  else if (name.length < 3) {
-    errors.push(
-      'Category name must be at least 3 characters long.'
-    )
-  }
-
-  // Server-side maximum validation.
-  else if (name.length > 100) {
-    errors.push(
-      'Category name must not exceed 100 characters.'
-    )
-  }
-
-  return {
-    errors,
-    categoryName: name
-  }
-}
-
-
-// =========================================================
-// PROCESS NEW CATEGORY FORM
-// =========================================================
-
-const processNewCategoryForm = async (req, res, next) => {
-  const {
-    errors,
-    categoryName
-  } = validateCategory(req.body.category_name)
-
-  if (errors.length > 0) {
-    return res.status(400).render('new-category', {
-      title: 'Create New Category',
-      errors,
-      categoryName
-    })
-  }
-
+const processNewCategoryForm = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const category = await createCategory(categoryName)
+    const errors = validationResult(req)
 
-    if (!category) {
-      const error = new Error(
-        'The category could not be created.'
+    const category = {
+      category_name:
+        req.body.category_name?.trim() || ''
+    }
+
+    // Redisplay form when validation fails.
+    if (!errors.isEmpty()) {
+      return res.status(400).render(
+        'new-category',
+        {
+          title: 'Create New Category',
+          errors: errors.array(),
+          category
+        }
       )
+    }
+
+    const newCategory = await createCategory(
+      category.category_name
+    )
+
+    if (!newCategory) {
+      const error = new Error(
+        'Category could not be created.'
+      )
+
+      error.status = 500
 
       return next(error)
     }
 
     req.flash(
       'success',
-      'Service category created successfully.'
+      'Category was created successfully.'
     )
 
-    res.redirect('/categories')
+    return res.redirect('/categories')
   } catch (error) {
     next(error)
   }
@@ -168,32 +165,49 @@ const processNewCategoryForm = async (req, res, next) => {
 // DISPLAY EDIT CATEGORY FORM
 // =========================================================
 
-const showEditCategoryForm = async (req, res, next) => {
+const showEditCategoryForm = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const categoryId = Number.parseInt(req.params.id, 10)
+    const categoryId = Number.parseInt(
+      req.params.id,
+      10
+    )
 
-    if (!Number.isInteger(categoryId) || categoryId <= 0) {
-      return res.status(404).render('error', {
-        title: 'Category Not Found',
-        message:
-          'The requested service project category could not be found.'
-      })
+    // Validate category ID.
+    if (
+      !Number.isInteger(categoryId) ||
+      categoryId <= 0
+    ) {
+      const error = new Error(
+        'Category not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
     }
 
-    const category = await getCategoryById(categoryId)
+    // Get existing category information.
+    const category =
+      await getCategoryById(categoryId)
 
     if (!category) {
-      return res.status(404).render('error', {
-        title: 'Category Not Found',
-        message:
-          'The requested service project category could not be found.'
-      })
+      const error = new Error(
+        'Category not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
     }
 
     res.render('edit-category', {
       title: 'Edit Category',
-      category,
-      errors: []
+      errors: [],
+      category
     })
   } catch (error) {
     next(error)
@@ -205,53 +219,75 @@ const showEditCategoryForm = async (req, res, next) => {
 // PROCESS EDIT CATEGORY FORM
 // =========================================================
 
-const processEditCategoryForm = async (req, res, next) => {
-  const categoryId = Number.parseInt(req.params.id, 10)
-
-  if (!Number.isInteger(categoryId) || categoryId <= 0) {
-    return res.status(404).render('error', {
-      title: 'Category Not Found',
-      message:
-        'The requested service project category could not be found.'
-    })
-  }
-
-  const {
-    errors,
-    categoryName
-  } = validateCategory(req.body.category_name)
-
-  if (errors.length > 0) {
-    return res.status(400).render('edit-category', {
-      title: 'Edit Category',
-      errors,
-      category: {
-        category_id: categoryId,
-        category_name: categoryName
-      }
-    })
-  }
-
+const processEditCategoryForm = async (
+  req,
+  res,
+  next
+) => {
   try {
-    const category = await updateCategory(
-      categoryId,
-      categoryName
+    const categoryId = Number.parseInt(
+      req.params.id,
+      10
     )
 
-    if (!category) {
-      return res.status(404).render('error', {
-        title: 'Category Not Found',
-        message:
-          'The requested service project category could not be found.'
-      })
+    // Validate category ID.
+    if (
+      !Number.isInteger(categoryId) ||
+      categoryId <= 0
+    ) {
+      const error = new Error(
+        'Category not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
+    }
+
+    const errors = validationResult(req)
+
+    const category = {
+      category_id: categoryId,
+      category_name:
+        req.body.category_name?.trim() || ''
+    }
+
+    // Redisplay form when validation fails.
+    if (!errors.isEmpty()) {
+      return res.status(400).render(
+        'edit-category',
+        {
+          title: 'Edit Category',
+          errors: errors.array(),
+          category
+        }
+      )
+    }
+
+    const updatedCategory =
+      await updateCategory(
+        categoryId,
+        category.category_name
+      )
+
+    if (!updatedCategory) {
+      const error = new Error(
+        'Category could not be updated.'
+      )
+
+      error.status = 404
+
+      return next(error)
     }
 
     req.flash(
       'success',
-      'Service category updated successfully.'
+      'Category was updated successfully.'
     )
 
-    res.redirect(`/category/${categoryId}`)
+    return res.redirect(
+      `/category/${categoryId}`
+    )
   } catch (error) {
     next(error)
   }
@@ -262,44 +298,57 @@ const processEditCategoryForm = async (req, res, next) => {
 // DISPLAY ASSIGN CATEGORIES FORM
 // =========================================================
 
-const showAssignCategoriesForm = async (req, res, next) => {
+const showAssignCategoriesForm = async (
+  req,
+  res,
+  next
+) => {
   try {
     const projectId = Number.parseInt(
       req.params.projectId,
       10
     )
 
-    if (!Number.isInteger(projectId) || projectId <= 0) {
-      return res.status(404).render('error', {
-        title: 'Project Not Found',
-        message:
-          'The requested service project could not be found.'
-      })
+    // Validate project ID.
+    if (
+      !Number.isInteger(projectId) ||
+      projectId <= 0
+    ) {
+      const error = new Error(
+        'Project not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
     }
 
-    // Get the project being edited.
+    // Get project details.
     const projectDetails =
       await getProjectDetails(projectId)
 
     if (!projectDetails) {
-      return res.status(404).render('error', {
-        title: 'Project Not Found',
-        message:
-          'The requested service project could not be found.'
-      })
+      const error = new Error(
+        'Project not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
     }
 
-    // Get every available category.
-    const categories = await getAllCategories()
+    // Get all available categories.
+    const categories =
+      await getAllCategories()
 
-    // Get categories currently assigned to this project.
+    // Get categories already assigned to this project.
     const assignedCategories =
-      await getCategoriesByServiceProjectId(projectId)
-
-    const title = 'Assign Categories to Project'
+      await getCategoriesByServiceProjectId(
+        projectId
+      )
 
     res.render('assign-categories', {
-      title,
+      title: 'Assign Categories to Project',
       projectId,
       projectDetails,
       categories,
@@ -326,25 +375,30 @@ const processAssignCategoriesForm = async (
       10
     )
 
-    if (!Number.isInteger(projectId) || projectId <= 0) {
-      return res.status(404).render('error', {
-        title: 'Project Not Found',
-        message:
-          'The requested service project could not be found.'
-      })
+    // Validate project ID.
+    if (
+      !Number.isInteger(projectId) ||
+      projectId <= 0
+    ) {
+      const error = new Error(
+        'Project not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
     }
 
     /*
-     * When no checkbox is selected, Express will not create
-     * req.body.categoryIds. Therefore, default to an empty
-     * array so all existing assignments are removed.
+     * If no checkbox is selected,
+     * Express does not create categoryIds.
      */
     let selectedCategoryIds =
       req.body.categoryIds || []
 
     /*
-     * When only one checkbox is selected, Express may provide
-     * a single string instead of an array. Convert it to an array.
+     * If only one checkbox is selected,
+     * Express provides a string instead of an array.
      */
     if (!Array.isArray(selectedCategoryIds)) {
       selectedCategoryIds = [
@@ -353,36 +407,61 @@ const processAssignCategoriesForm = async (
     }
 
     /*
-     * Convert checkbox values from strings to integers.
+     * Convert checkbox values to integers
+     * and remove invalid values.
      */
-    selectedCategoryIds = selectedCategoryIds
-      .map(id => Number.parseInt(id, 10))
-      .filter(id => Number.isInteger(id) && id > 0)
+    selectedCategoryIds =
+      selectedCategoryIds
+        .map(id =>
+          Number.parseInt(id, 10)
+        )
+        .filter(id =>
+          Number.isInteger(id) &&
+          id > 0
+        )
 
     /*
-     * Update the project's category assignments.
+     * Replace existing project-category
+     * assignments with the selected categories.
      */
     await updateCategoryAssignments(
       projectId,
       selectedCategoryIds
     )
 
-    /*
-     * Display a success message.
-     */
     req.flash(
       'success',
       'Project categories updated successfully.'
     )
 
-    /*
-     * Return to the project details page.
-     */
-    res.redirect(`/project/${projectId}`)
+    return res.redirect(
+      `/project/${projectId}`
+    )
   } catch (error) {
     next(error)
   }
 }
+
+
+// =========================================================
+// CATEGORY VALIDATION
+// =========================================================
+
+const categoryValidation = [
+  body('category_name')
+    .trim()
+    .notEmpty()
+    .withMessage(
+      'Category name is required.'
+    )
+    .isLength({
+      min: 3,
+      max: 100
+    })
+    .withMessage(
+      'Category name must be between 3 and 100 characters.'
+    )
+]
 
 
 // =========================================================
@@ -400,5 +479,7 @@ export {
   processEditCategoryForm,
 
   showAssignCategoriesForm,
-  processAssignCategoriesForm
+  processAssignCategoriesForm,
+
+  categoryValidation
 }

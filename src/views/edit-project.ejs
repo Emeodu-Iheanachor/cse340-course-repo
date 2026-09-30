@@ -20,6 +20,7 @@
             method="POST"
         >
 
+            <!-- Project Title -->
             <div class="form-group">
 
                 <label for="title">
@@ -31,12 +32,15 @@
                     id="title"
                     name="title"
                     value="<%= project.title %>"
+                    maxlength="200"
+                    minlength="3"
                     required
                 >
 
             </div>
 
 
+            <!-- Description -->
             <div class="form-group">
 
                 <label for="description">
@@ -47,16 +51,18 @@
                     id="description"
                     name="description"
                     rows="6"
+                    maxlength="1000"
                     required
                 ><%= project.description %></textarea>
 
             </div>
 
 
+            <!-- Start Date -->
             <div class="form-group">
 
                 <label for="start_date">
-                    Start Date
+                    Project Start Date
                 </label>
 
                 <input
@@ -74,10 +80,11 @@
             </div>
 
 
+            <!-- End Date -->
             <div class="form-group">
 
                 <label for="end_date">
-                    End Date
+                    Project End Date
                 </label>
 
                 <input
@@ -95,10 +102,11 @@
             </div>
 
 
+            <!-- Organization -->
             <div class="form-group">
 
                 <label for="organization_id">
-                    Organization
+                    Partner Organization
                 </label>
 
                 <select
@@ -115,7 +123,8 @@
 
                         <option
                             value="<%= organization.organization_id %>"
-                            <%= Number(organization.organization_id) === Number(project.organization_id)
+                            <%= Number(organization.organization_id) ===
+                                Number(project.organization_id)
                                 ? 'selected'
                                 : '' %>
                         >
@@ -129,15 +138,19 @@
             </div>
 
 
+            <!-- Buttons -->
             <div class="form-actions">
 
-                <button type="submit">
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
                     Update Project
                 </button>
 
                 <a
                     href="/project/<%= project.project_id %>"
-                    class="button secondary"
+                    class="btn btn-secondary"
                 >
                     Cancel
                 </a>
