@@ -10,6 +10,7 @@ const getAllProjects = async () => {
       sp.project_id,
       sp.title,
       sp.description,
+      sp.location,
       sp.start_date,
       sp.end_date,
       sp.organization_id,
@@ -36,6 +37,7 @@ const getUpcomingProjects = async (numberOfProjects) => {
       sp.project_id,
       sp.title,
       sp.description,
+      sp.location,
       sp.start_date,
       sp.end_date,
       sp.organization_id,
@@ -63,6 +65,7 @@ const getProjectDetails = async (projectId) => {
       sp.project_id,
       sp.title,
       sp.description,
+      sp.location,
       sp.start_date,
       sp.end_date,
       sp.organization_id,
@@ -89,6 +92,7 @@ const getProjectsByOrganizationId = async (organizationId) => {
       organization_id,
       title,
       description,
+      location,
       start_date,
       end_date
     FROM service_project
@@ -129,6 +133,7 @@ const getCategoriesByProjectId = async (projectId) => {
 const createProject = async (
   title,
   description,
+  location,
   startDate,
   endDate,
   organizationId
@@ -137,17 +142,19 @@ const createProject = async (
     INSERT INTO service_project (
       title,
       description,
+      location,
       start_date,
       end_date,
       organization_id
     )
-    VALUES ($1, $2, $3, $4, $5)
+    VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING project_id
   `
 
   const queryParams = [
     title,
     description,
+    location,
     startDate,
     endDate,
     organizationId
@@ -177,6 +184,7 @@ const updateProject = async (
   projectId,
   title,
   description,
+  location,
   startDate,
   endDate,
   organizationId
@@ -186,14 +194,16 @@ const updateProject = async (
     SET
       title = $1,
       description = $2,
-      start_date = $3,
-      end_date = $4,
-      organization_id = $5
-    WHERE project_id = $6
+      location = $3,
+      start_date = $4,
+      end_date = $5,
+      organization_id = $6
+    WHERE project_id = $7
     RETURNING
       project_id,
       title,
       description,
+      location,
       start_date,
       end_date,
       organization_id
@@ -202,6 +212,7 @@ const updateProject = async (
   const queryParams = [
     title,
     description,
+    location,
     startDate,
     endDate,
     organizationId,

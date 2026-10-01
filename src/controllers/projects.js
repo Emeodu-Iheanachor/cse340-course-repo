@@ -56,6 +56,20 @@ const projectValidation = [
       'Project description must be less than 1000 characters.'
     ),
 
+  body('location')
+    .trim()
+    .notEmpty()
+    .withMessage(
+      'Project location is required.'
+    )
+    .isLength({
+      min: 2,
+      max: 200
+    })
+    .withMessage(
+      'Project location must be between 2 and 200 characters.'
+    ),
+
   body('start_date')
     .notEmpty()
     .withMessage(
@@ -226,6 +240,7 @@ const processNewProjectForm = async (
     const {
       title,
       description,
+      location,
       start_date,
       end_date,
       organization_id
@@ -264,6 +279,7 @@ const processNewProjectForm = async (
       await createProject(
         title,
         description,
+        location,
         start_date,
         end_date,
         organization_id
@@ -376,10 +392,6 @@ const showEditProjectForm = async (
 
     /* -----------------------------------------------------
        Render EDIT project view
-
-       IMPORTANT:
-       The view is edit-project.ejs,
-       not update-project.ejs.
     ----------------------------------------------------- */
 
     return res.render(
@@ -440,18 +452,12 @@ const processEditProjectForm = async (
 
     /* -----------------------------------------------------
        Get submitted form data
-
-       These names MUST match:
-       - projectValidation
-       - new-project.ejs
-       - edit-project.ejs
-       - projects model
-       - database columns
     ----------------------------------------------------- */
 
     const {
       title,
       description,
+      location,
       start_date,
       end_date,
       organization_id
@@ -491,6 +497,7 @@ const processEditProjectForm = async (
         projectId,
         title,
         description,
+        location,
         start_date,
         end_date,
         organization_id
