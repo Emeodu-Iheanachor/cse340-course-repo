@@ -3342,3 +3342,285 @@ footer img,
 
 
 
+/* =========================================================
+   REGISTRATION PAGE
+========================================================= */
+
+.register-page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+}
+
+.register-page .page-intro {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.register-page .page-intro h1 {
+    margin-bottom: 0.75rem;
+}
+
+.register-page .page-intro p {
+    color: var(--muted);
+}
+
+
+/* =========================================================
+   REGISTRATION FORM
+========================================================= */
+
+.form-section {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 2rem;
+    box-shadow: 0 8px 24px rgba(23, 50, 77, 0.08);
+}
+
+.service-form {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.form-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+}
+
+.form-group input:focus {
+    outline: 3px solid rgba(23, 107, 104, 0.15);
+    border-color: var(--teal);
+}
+
+.form-group small {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+
+/* =========================================================
+   FORM BUTTONS
+========================================================= */
+
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.25rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    background: var(--teal);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: var(--teal-dark);
+}
+
+.btn-secondary {
+    background: var(--soft);
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+.btn-secondary:hover {
+    background: var(--page);
+}
+
+
+/* =========================================================
+   RESPONSIVE REGISTRATION FORM
+========================================================= */
+
+@media (max-width: 600px) {
+    .register-page {
+        padding: 1.5rem 0.85rem 3rem;
+    }
+
+    .form-section {
+        padding: 1.25rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+}
+
+
+
+
+/* =========================================================
+   DASHBOARD PAGE
+========================================================= */
+
+.dashboard-page {
+    padding-bottom: 4rem;
+}
+
+.dashboard-card {
+    width: min(100%, 760px);
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--line, #d3e2df);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(23, 50, 77, 0.08);
+}
+
+.dashboard-card h2 {
+    margin: 0 0 1.75rem;
+    color: var(--ink, #17324d);
+    font-family: Georgia, serif;
+    font-size: 2rem;
+}
+
+.user-information {
+    display: grid;
+    gap: 1rem;
+}
+
+.user-information-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--soft, #f7fbfa);
+    border: 1px solid var(--line, #d3e2df);
+    border-radius: 10px;
+}
+
+.user-information-label {
+    font-weight: 700;
+    color: var(--muted, #526577);
+}
+
+.user-information-value {
+    color: var(--ink, #17324d);
+    font-weight: 600;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.button {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+}
+
+.button-primary {
+    background: var(--accent, #d45d38);
+    color: #ffffff;
+}
+
+.button-primary:hover {
+    background: var(--accent-dark, #a94327);
+}
+
+.button-secondary {
+    background: var(--teal, #176b68);
+    color: #ffffff;
+}
+
+.button-secondary:hover {
+    background: var(--teal-dark, #0f514f);
+}
+
+
+/* =========================================================
+   DASHBOARD LINK ON HOME PAGE
+========================================================= */
+
+.dashboard-link {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+
+/* =========================================================
+   MOBILE DASHBOARD
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .dashboard-card {
+        padding: 1.5rem;
+    }
+
+    .user-information-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+    }
+
+    .user-information-value {
+        text-align: left;
+    }
+
+    .dashboard-actions {
+        flex-direction: column;
+    }
+
+    .dashboard-actions .button {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+}
+
+
+

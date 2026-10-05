@@ -1,0 +1,94 @@
+<%- include('partials/header') %>
+
+<main class="register-page">
+
+    <section class="page-intro">
+        <h1><%= title %></h1>
+        <p>
+            Create an account to access Service Network.
+        </p>
+    </section>
+
+    <section class="form-section">
+
+        <form
+            class="service-form"
+            action="/register"
+            method="POST"
+        >
+
+            <div class="form-group">
+                <label for="name">Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    minlength="2"
+                    maxlength="100"
+                    autocomplete="name"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="email">
+                    Email (Username)
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    maxlength="100"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+
+                <small>
+                    Password must be at least 8 characters long.
+                </small>
+            </div>
+
+
+            <div class="form-actions">
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Register
+                </button>
+
+                <a
+                    href="/"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>

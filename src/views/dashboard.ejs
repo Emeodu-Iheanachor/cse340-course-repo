@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+
+<main class="site-container dashboard-page">
+
+    <section class="page-intro">
+        <h1><%= title %></h1>
+        <p>Welcome to your Service Network dashboard.</p>
+    </section>
+
+    <section class="dashboard-card">
+
+        <h2>Dashboard</h2>
+
+        <div class="user-information">
+
+            <div class="user-information-item">
+                <span class="user-information-label">Name</span>
+                <span class="user-information-value">
+                    <%= name %>
+                </span>
+            </div>
+
+            <div class="user-information-item">
+                <span class="user-information-label">Email</span>
+                <span class="user-information-value">
+                    <%= email %>
+                </span>
+            </div>
+
+        </div>
+
+        <div class="dashboard-actions">
+            <a href="/" class="button button-secondary">
+                Back to Home
+            </a>
+
+            <a href="/logout" class="button button-primary">
+                Log Out
+            </a>
+        </div>
+
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>

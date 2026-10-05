@@ -6,7 +6,12 @@
 
     <title><%= title %> | Service Network</title>
 
+
+     <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico">
+
     <link rel="stylesheet" href="/css/main.css">
+    
 </head>
 
 <body>
@@ -18,6 +23,7 @@
 
         <!-- Site Branding -->
         <a href="/" class="site-brand">
+
             <img
                 src="/images/cse340-service-network.png"
                 alt="CSE 340 Service Network logo"
@@ -27,6 +33,7 @@
             <span class="site-title">
                 Service Network
             </span>
+
         </a>
 
 
@@ -42,13 +49,23 @@
         </button>
 
 
-        <!-- Navigation -->
-        <nav id="site-navigation" class="site-navigation" aria-label="Main navigation">
+        <!-- Main Navigation -->
+        <nav
+            id="site-navigation"
+            class="site-navigation"
+            aria-label="Main navigation"
+        >
 
-            <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">
+            <!-- Home -->
+            <a
+                href="/"
+                class="<%= currentPath === '/' ? 'active' : '' %>"
+            >
                 Home
             </a>
 
+
+            <!-- Organizations -->
             <a
                 href="/organizations"
                 class="<%= currentPath.startsWith('/organization') ? 'active' : '' %>"
@@ -56,6 +73,8 @@
                 Our Partner Organizations
             </a>
 
+
+            <!-- Projects -->
             <a
                 href="/projects"
                 class="<%= currentPath.startsWith('/project') ? 'active' : '' %>"
@@ -63,6 +82,8 @@
                 Service Projects
             </a>
 
+
+            <!-- Categories -->
             <a
                 href="/categories"
                 class="<%= currentPath.startsWith('/categor') ? 'active' : '' %>"
@@ -70,11 +91,54 @@
                 Service Project Categories
             </a>
 
+
+            <!-- Authentication Navigation -->
+            <% if (isLoggedIn) { %>
+
+                <!-- Dashboard -->
+                <a
+                    href="/dashboard"
+                    class="<%= currentPath.startsWith('/dashboard') ? 'active' : '' %>"
+                >
+                    My Dashboard
+                </a>
+
+
+                <!-- Logout -->
+                <a
+                    href="/logout"
+                    class="<%= currentPath.startsWith('/logout') ? 'active' : '' %>"
+                >
+                    Logout
+                </a>
+
+            <% } else { %>
+
+                <!-- Register -->
+                <a
+                    href="/register"
+                    class="<%= currentPath.startsWith('/register') ? 'active' : '' %>"
+                >
+                    Register
+                </a>
+
+
+                <!-- Login -->
+                <a
+                    href="/login"
+                    class="<%= currentPath.startsWith('/login') ? 'active' : '' %>"
+                >
+                    Login
+                </a>
+
+            <% } %>
+
         </nav>
 
     </div>
 
 </header>
+
 
 <!-- Flash Messages -->
 <% const messages = flash(); %>
@@ -83,7 +147,10 @@
 
     <% if (messages[type].length > 0) { %>
 
-        <div class="alert <%= type %>" role="alert">
+        <div
+            class="alert <%= type %>"
+            role="alert"
+        >
 
             <% messages[type].forEach(msg => { %>
                 <%= msg %>

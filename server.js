@@ -20,8 +20,7 @@ const NODE_ENV =
 const PORT = process.env.PORT || 3000
 
 // Load the session secret from the environment
-// The fallback helps prevent a missing-secret error during
-// local development. Set SESSION_SECRET in production.
+// Set SESSION_SECRET in production.
 const SESSION_SECRET =
   process.env.SESSION_SECRET || 'development-session-secret'
 
@@ -89,20 +88,11 @@ app.use((req, res, next) => {
 
 
 /* =========================================================
-   GLOBAL TEMPLATE VARIABLES
-========================================================= */
-
-// Make NODE_ENV available to all EJS templates.
-app.use((req, res, next) => {
-  res.locals.NODE_ENV = NODE_ENV
-  next()
-})
-
-
-/* =========================================================
    SESSION MANAGEMENT
 ========================================================= */
 
+// Session middleware MUST come before any middleware
+// that accesses req.session.
 app.use(
   session({
     secret: SESSION_SECRET,
@@ -123,6 +113,31 @@ app.use(
 // Flash middleware must come after the session middleware
 // because it uses the session to store messages.
 app.use(flash)
+
+
+/* =========================================================
+   GLOBAL TEMPLATE VARIABLES
+========================================================= */
+
+// Make authentication information available
+// to all EJS templates.
+app.use((req, res, next) => {
+  res.locals.isLoggedIn = false
+
+  if (req.session && req.session.user) {
+    res.locals.isLoggedIn = true
+  }
+
+  // Make the logged-in user's session data
+  // available to every EJS template.
+  res.locals.user = req.session.user || null
+
+  // Make the application environment available
+  // to every EJS template.
+  res.locals.NODE_ENV = NODE_ENV
+
+  next()
+})
 
 
 /* =========================================================

@@ -1,0 +1,71 @@
+<%- include('partials/header') %>
+
+<main class="site-container">
+
+<section class="page-intro" aria-labelledby="login-title">
+
+<h1 id="login-title">
+  <%= title %>
+</h1>
+
+<p>
+  Please enter your email address and password to log in.
+</p>
+
+</section>
+
+<section class="form-section">
+
+<form
+  action="/login"
+  method="POST"
+  class="form"
+>
+
+  <div class="form-group">
+
+    <label for="email">
+      Email
+    </label>
+
+    <input
+      type="email"
+      id="email"
+      name="email"
+      autocomplete="email"
+      required
+    >
+
+  </div>
+
+  <div class="form-group">
+
+    <label for="password">
+      Password
+    </label>
+
+    <input
+      type="password"
+      id="password"
+      name="password"
+      autocomplete="current-password"
+      required
+    >
+
+  </div>
+
+  <button
+    type="submit"
+    class="btn"
+  >
+    Login
+  </button>
+
+</form>
+
+</section>
+
+</main>
+
+<%- include('partials/footer') %>
+

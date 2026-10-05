@@ -2,6 +2,22 @@ import express from 'express'
 
 
 /* =========================================================
+   USER CONTROLLERS
+========================================================= */
+
+import {
+  requireLogin,
+  requireRole,
+  showDashboard,
+  showUserRegistrationForm,
+  processUserRegistrationForm,
+  showLoginForm,
+  processLoginForm,
+  processLogout
+} from './controllers/users.js'
+
+
+/* =========================================================
    ORGANIZATION CONTROLLERS
 ========================================================= */
 
@@ -60,11 +76,69 @@ const router = express.Router()
 ========================================================= */
 
 router.use((req, res, next) => {
-
   res.locals.currentPath = req.path
 
   next()
 })
+
+
+/* =========================================================
+   USER REGISTRATION
+========================================================= */
+
+/* Display user registration form */
+router.get(
+  '/register',
+  showUserRegistrationForm
+)
+
+
+/* Process user registration form */
+router.post(
+  '/register',
+  processUserRegistrationForm
+)
+
+
+/* =========================================================
+   USER AUTHENTICATION
+========================================================= */
+
+/* Display login form */
+router.get(
+  '/login',
+  showLoginForm
+)
+
+
+/* Process login form */
+router.post(
+  '/login',
+  processLoginForm
+)
+
+
+/* Process logout */
+router.get(
+  '/logout',
+  processLogout
+)
+
+
+/* =========================================================
+   PROTECTED USER DASHBOARD
+========================================================= */
+
+/*
+ * The requireLogin middleware runs first.
+ * If the user is not logged in, they are redirected to /login.
+ * If the user is logged in, showDashboard is executed.
+ */
+router.get(
+  '/dashboard',
+  requireLogin,
+  showDashboard
+)
 
 
 /* =========================================================
@@ -74,11 +148,9 @@ router.use((req, res, next) => {
 router.get(
   '/',
   (req, res) => {
-
     res.render('index', {
       title: 'Service Network'
     })
-
   }
 )
 
@@ -101,9 +173,14 @@ router.get(
 )
 
 
+/* ---------------------------------------------------------
+   ADMIN-ONLY ORGANIZATION ROUTES
+--------------------------------------------------------- */
+
 /* Display new organization form */
 router.get(
   '/new-organization',
+  requireRole('admin'),
   showNewOrganizationForm
 )
 
@@ -111,6 +188,7 @@ router.get(
 /* Process new organization form */
 router.post(
   '/new-organization',
+  requireRole('admin'),
   organizationValidation,
   processNewOrganizationForm
 )
@@ -119,6 +197,7 @@ router.post(
 /* Display edit organization form */
 router.get(
   '/edit-organization/:id',
+  requireRole('admin'),
   showEditOrganizationForm
 )
 
@@ -126,6 +205,7 @@ router.get(
 /* Process edit organization form */
 router.post(
   '/edit-organization/:id',
+  requireRole('admin'),
   organizationValidation,
   processEditOrganizationForm
 )
@@ -149,9 +229,14 @@ router.get(
 )
 
 
+/* ---------------------------------------------------------
+   ADMIN-ONLY SERVICE PROJECT ROUTES
+--------------------------------------------------------- */
+
 /* Display new service project form */
 router.get(
   '/new-project',
+  requireRole('admin'),
   showNewProjectForm
 )
 
@@ -159,6 +244,7 @@ router.get(
 /* Process new service project form */
 router.post(
   '/new-project',
+  requireRole('admin'),
   projectValidation,
   processNewProjectForm
 )
@@ -167,6 +253,7 @@ router.post(
 /* Display edit service project form */
 router.get(
   '/edit-project/:id',
+  requireRole('admin'),
   showEditProjectForm
 )
 
@@ -174,6 +261,7 @@ router.get(
 /* Process edit service project form */
 router.post(
   '/edit-project/:id',
+  requireRole('admin'),
   projectValidation,
   processEditProjectForm
 )
@@ -197,9 +285,14 @@ router.get(
 )
 
 
+/* ---------------------------------------------------------
+   ADMIN-ONLY CATEGORY ROUTES
+--------------------------------------------------------- */
+
 /* Display new category form */
 router.get(
   '/new-category',
+  requireRole('admin'),
   showNewCategoryForm
 )
 
@@ -207,6 +300,7 @@ router.get(
 /* Process new category form */
 router.post(
   '/new-category',
+  requireRole('admin'),
   categoryValidation,
   processNewCategoryForm
 )
@@ -215,6 +309,7 @@ router.post(
 /* Display edit category form */
 router.get(
   '/edit-category/:id',
+  requireRole('admin'),
   showEditCategoryForm
 )
 
@@ -222,6 +317,7 @@ router.get(
 /* Process edit category form */
 router.post(
   '/edit-category/:id',
+  requireRole('admin'),
   categoryValidation,
   processEditCategoryForm
 )
@@ -231,9 +327,14 @@ router.post(
    ASSIGN CATEGORIES TO SERVICE PROJECT
 ========================================================= */
 
+/* ---------------------------------------------------------
+   ADMIN-ONLY CATEGORY ASSIGNMENT ROUTES
+--------------------------------------------------------- */
+
 /* Display assign categories form */
 router.get(
   '/assign-categories/:projectId',
+  requireRole('admin'),
   showAssignCategoriesForm
 )
 
@@ -241,6 +342,7 @@ router.get(
 /* Process category assignments */
 router.post(
   '/assign-categories/:projectId',
+  requireRole('admin'),
   processAssignCategoriesForm
 )
 
