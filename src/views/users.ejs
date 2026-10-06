@@ -1,0 +1,76 @@
+users.ejs
+
+<%- include('partials/header') %>
+
+<main class="site-container">
+
+<section class="page-intro">
+    <h1><%= title %></h1>
+
+    <p>
+        View registered users and their assigned roles.
+    </p>
+</section>
+
+
+<section class="users-section">
+
+    <% if (users && users.length > 0) { %>
+
+        <div class="table-container">
+
+            <table class="users-table">
+
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <% users.forEach(user => { %>
+
+                        <tr>
+                            <td>
+                                <%= user.name %>
+                            </td>
+
+                            <td>
+                                <%= user.email %>
+                            </td>
+
+                            <td>
+                                <span class="role-badge">
+                                    <%= user.role_name %>
+                                </span>
+                            </td>
+                        </tr>
+
+                    <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    <% } else { %>
+
+        <div class="empty-state">
+            <h2>No Users Found</h2>
+
+            <p>
+                There are currently no registered users.
+            </p>
+        </div>
+
+    <% } %>
+
+</section>
+
+</main>
+
+<%- include('partials/footer') %>

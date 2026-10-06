@@ -12,15 +12,12 @@ import router from './src/routes.js'
    APPLICATION CONFIGURATION
 ========================================================= */
 
-// Define the application environment
 const NODE_ENV =
   process.env.NODE_ENV?.toLowerCase() || 'production'
 
-// Define the port number the server will listen on
-const PORT = process.env.PORT || 3000
+const PORT =
+  process.env.PORT || 3000
 
-// Load the session secret from the environment
-// Set SESSION_SECRET in production.
 const SESSION_SECRET =
   process.env.SESSION_SECRET || 'development-session-secret'
 
@@ -41,31 +38,35 @@ const app = express()
 
 
 /* =========================================================
-   EXPRESS MIDDLEWARE
+   REQUEST BODY MIDDLEWARE
 ========================================================= */
 
-// Allow Express to receive and process HTML form submissions.
-// This MUST appear before the routes.
 app.use(
   express.urlencoded({
     extended: true
   })
 )
 
-// Allow Express to receive JSON request bodies.
 app.use(express.json())
 
-// Serve static files from the public directory.
+
+/* =========================================================
+   STATIC FILES
+========================================================= */
+
 app.use(
   express.static(
     path.join(__dirname, 'public')
   )
 )
 
-// Set EJS as the templating engine.
+
+/* =========================================================
+   EJS CONFIGURATION
+========================================================= */
+
 app.set('view engine', 'ejs')
 
-// Tell Express where to find EJS templates.
 app.set(
   'views',
   path.join(__dirname, 'src/views')
@@ -91,16 +92,20 @@ app.use((req, res, next) => {
    SESSION MANAGEMENT
 ========================================================= */
 
-// Session middleware MUST come before any middleware
-// that accesses req.session.
+/*
+ * Session middleware must come before any middleware
+ * or route that accesses req.session.
+ */
 app.use(
   session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
 
     cookie: {
-      maxAge: 60 * 60 * 1000
+      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+      secure: NODE_ENV === 'production'
     }
   })
 )
@@ -110,8 +115,10 @@ app.use(
    FLASH MESSAGES
 ========================================================= */
 
-// Flash middleware must come after the session middleware
-// because it uses the session to store messages.
+/*
+ * Flash middleware uses the session, so it must
+ * come after express-session.
+ */
 app.use(flash)
 
 
@@ -119,22 +126,34 @@ app.use(flash)
    GLOBAL TEMPLATE VARIABLES
 ========================================================= */
 
-// Make authentication information available
-// to all EJS templates.
+/*
+ * Make authentication information available
+ * to every EJS template.
+ */
 app.use((req, res, next) => {
-  res.locals.isLoggedIn = false
 
-  if (req.session && req.session.user) {
-    res.locals.isLoggedIn = true
-  }
+  /* -------------------------------------------------------
+     LOGIN STATUS
+  ------------------------------------------------------- */
 
-  // Make the logged-in user's session data
-  // available to every EJS template.
-  res.locals.user = req.session.user || null
+  res.locals.isLoggedIn =
+    Boolean(req.session?.user)
 
-  // Make the application environment available
-  // to every EJS template.
-  res.locals.NODE_ENV = NODE_ENV
+
+  /* -------------------------------------------------------
+     CURRENT USER
+  ------------------------------------------------------- */
+
+  res.locals.user =
+    req.session?.user || null
+
+
+  /* -------------------------------------------------------
+     APPLICATION ENVIRONMENT
+  ------------------------------------------------------- */
+
+  res.locals.NODE_ENV =
+    NODE_ENV
 
   next()
 })
@@ -144,7 +163,6 @@ app.use((req, res, next) => {
    APPLICATION ROUTES
 ========================================================= */
 
-// All application routes are handled here.
 app.use(router)
 
 
@@ -152,9 +170,9 @@ app.use(router)
    404 CATCH-ALL
 ========================================================= */
 
-// This must appear AFTER all regular routes.
 app.use((req, res, next) => {
-  const err = new Error('Page Not Found')
+  const err =
+    new Error('Page Not Found')
 
   err.status = 404
 
@@ -166,10 +184,8 @@ app.use((req, res, next) => {
    GLOBAL ERROR HANDLER
 ========================================================= */
 
-// Express identifies this as error-handling middleware
-// because it has four parameters.
 app.use((err, req, res, next) => {
-  // Log error details during development.
+
   console.error(
     'Error occurred:',
     err.message
@@ -179,25 +195,25 @@ app.use((err, req, res, next) => {
     console.error(err.stack)
   }
 
-  // Determine the HTTP status.
-  const status = err.status || 500
+  const status =
+    err.status || 500
 
-  // Select the appropriate error template.
   const template =
     status === 404
       ? '404'
       : '500'
 
-  // Data passed to the error template.
   const context = {
     title:
       status === 404
         ? 'Page Not Found'
         : 'Server Error',
 
-    error: err.message,
+    error:
+      NODE_ENV === 'development'
+        ? err.message
+        : 'An unexpected error occurred.',
 
-    // Only expose the stack during development.
     stack:
       NODE_ENV === 'development'
         ? err.stack
@@ -218,7 +234,9 @@ app.use((err, req, res, next) => {
 ========================================================= */
 
 app.listen(PORT, async () => {
+
   try {
+
     await testConnection()
 
     console.log(
@@ -228,7 +246,9 @@ app.listen(PORT, async () => {
     console.log(
       `Environment: ${NODE_ENV}`
     )
+
   } catch (error) {
+
     console.error(
       'Error connecting to the database:',
       error

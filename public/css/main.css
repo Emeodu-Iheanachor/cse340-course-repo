@@ -3624,3 +3624,100 @@ footer img,
 
 
 
+
+
+/* =========================================================
+   USERS PAGE
+========================================================= */
+
+.users-section {
+    margin: 2rem auto 4rem;
+    width: 100%;
+}
+
+.users-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: #ffffff;
+    border: 1px solid #d3e2df;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(23, 50, 77, 0.08);
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+.users-table thead {
+    background: #17324d;
+    color: #ffffff;
+}
+
+.users-table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.users-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #d3e2df;
+    color: #526577;
+    vertical-align: middle;
+}
+
+.users-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.users-table tbody tr:hover {
+    background: #f7fbfa;
+}
+
+.users-table td strong {
+    color: #17324d;
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+    background: #eef5f3;
+    color: #176b68;
+}
+
+.role-badge.admin {
+    background: #f9e7e1;
+    color: #a94327;
+}
+
+.empty-state {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #d3e2df;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(23, 50, 77, 0.06);
+}
+
+.empty-state h2 {
+    margin-bottom: 0.75rem;
+    color: #17324d;
+}
+
+.empty-state p {
+    color: #526577;
+}
+
+
+

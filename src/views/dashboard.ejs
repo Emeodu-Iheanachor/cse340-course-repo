@@ -16,20 +16,40 @@
             <div class="user-information-item">
                 <span class="user-information-label">Name</span>
                 <span class="user-information-value">
-                    <%= name %>
+                    <%= user.name %>
                 </span>
             </div>
 
             <div class="user-information-item">
                 <span class="user-information-label">Email</span>
                 <span class="user-information-value">
-                    <%= email %>
+                    <%= user.email %>
+                </span>
+            </div>
+
+            <div class="user-information-item">
+                <span class="user-information-label">Role</span>
+                <span class="user-information-value">
+                    <%= user.role_name %>
                 </span>
             </div>
 
         </div>
 
-        <div class="dashboard-actions">
+        <section class="dashboard-actions">
+
+            <% if (user && user.role_name === 'admin') { %>
+
+                <a href="/users" class="button button-primary">
+                    Manage Users
+                </a>
+
+            <% } %>
+
+            <a href="/projects" class="button button-secondary">
+                View Service Projects
+            </a>
+
             <a href="/" class="button button-secondary">
                 Back to Home
             </a>
@@ -37,7 +57,8 @@
             <a href="/logout" class="button button-primary">
                 Log Out
             </a>
-        </div>
+
+        </section>
 
     </section>
 

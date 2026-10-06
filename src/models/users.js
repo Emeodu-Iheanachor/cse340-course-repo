@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 /* =========================================================
    CREATE NEW USER
 ========================================================= */
-const createUser = async (name, email, passwordHash) => {
+export const createUser = async (name, email, passwordHash) => {
   const defaultRole = 'user'
 
   const query = `
@@ -53,9 +53,9 @@ const createUser = async (name, email, passwordHash) => {
 
 
 /* =========================================================
-   FIND USER BY EMAIL
+   GET USER BY EMAIL
 ========================================================= */
-const findUserByEmail = async (email) => {
+export const getUserByEmail = async (email) => {
   const query = `
     SELECT
       u.user_id,
@@ -67,50 +67,33 @@ const findUserByEmail = async (email) => {
     JOIN roles r
       ON u.role_id = r.role_id
     WHERE u.email = $1
+    LIMIT 1
   `
 
-  const queryParams = [email]
+  const result = await db.query(query, [email])
 
-  const result = await db.query(
-    query,
-    queryParams
-  )
-
-  if (result.rows.length === 0) {
-    return null
-  }
-
-  return result.rows[0]
+  return result.rows[0] || null
 }
 
 
 /* =========================================================
    VERIFY PASSWORD
 ========================================================= */
-const verifyPassword = async (password, passwordHash) => {
-  return bcrypt.compare(
-    password,
-    passwordHash
-  )
+export const verifyPassword = async (password, passwordHash) => {
+  return bcrypt.compare(password, passwordHash)
 }
 
 
 /* =========================================================
    AUTHENTICATE USER
 ========================================================= */
-const authenticateUser = async (email, password) => {
-  const user = await findUserByEmail(email)
+export const authenticateUser = async (email, password) => {
+  const user = await getUserByEmail(email)
 
-  /* -------------------------------------------------------
-     USER NOT FOUND
-  ------------------------------------------------------- */
   if (!user) {
     return null
   }
 
-  /* -------------------------------------------------------
-     VERIFY PASSWORD
-  ------------------------------------------------------- */
   const passwordIsValid = await verifyPassword(
     password,
     user.password_hash
@@ -120,12 +103,10 @@ const authenticateUser = async (email, password) => {
     return null
   }
 
-  /* -------------------------------------------------------
-     RETURN ONLY SAFE USER INFORMATION
-     
-     The password hash is intentionally excluded.
-     The role name is included for authorization.
-  ------------------------------------------------------- */
+  /*
+   * Return only safe information.
+   * The password hash is intentionally excluded.
+   */
   return {
     user_id: user.user_id,
     name: user.name,
@@ -136,9 +117,45 @@ const authenticateUser = async (email, password) => {
 
 
 /* =========================================================
-   EXPORT MODEL FUNCTIONS
+   GET ALL USERS
 ========================================================= */
-export {
-  createUser,
-  authenticateUser
+export const getAllUsers = async () => {
+  const query = `
+    SELECT
+      u.user_id,
+      u.name,
+      u.email,
+      r.role_name
+    FROM users u
+    JOIN roles r
+      ON u.role_id = r.role_id
+    ORDER BY u.name ASC
+  `
+
+  const result = await db.query(query)
+
+  return result.rows
+}
+
+
+/* =========================================================
+   GET USER BY ID
+========================================================= */
+export const getUserById = async (userId) => {
+  const query = `
+    SELECT
+      u.user_id,
+      u.name,
+      u.email,
+      r.role_name
+    FROM users u
+    JOIN roles r
+      ON u.role_id = r.role_id
+    WHERE u.user_id = $1
+    LIMIT 1
+  `
+
+  const result = await db.query(query, [userId])
+
+  return result.rows[0] || null
 }

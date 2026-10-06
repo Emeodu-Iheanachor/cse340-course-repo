@@ -6,16 +6,17 @@
 
     <title><%= title %> | Service Network</title>
 
-
-     <!-- Favicon -->
-    <link rel="icon" href="/favicon.ico">
-
+    <!-- Favicon -->
+      <link
+        rel="icon"
+        href="/favicon.ico"
+        type="image/x-icon"
+    >
+    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="/css/main.css">
-    
 </head>
 
 <body>
-
 
 <header class="site-header">
 
@@ -93,7 +94,7 @@
 
 
             <!-- Authentication Navigation -->
-            <% if (isLoggedIn) { %>
+            <% if (user) { %>
 
                 <!-- Dashboard -->
                 <a
@@ -102,6 +103,12 @@
                 >
                     My Dashboard
                 </a>
+
+
+                <!-- Logged-in User -->
+                <span class="nav-user">
+                    <%= user.name %>
+                </span>
 
 
                 <!-- Logout -->
@@ -114,21 +121,21 @@
 
             <% } else { %>
 
-                <!-- Register -->
-                <a
-                    href="/register"
-                    class="<%= currentPath.startsWith('/register') ? 'active' : '' %>"
-                >
-                    Register
-                </a>
-
-
                 <!-- Login -->
                 <a
                     href="/login"
                     class="<%= currentPath.startsWith('/login') ? 'active' : '' %>"
                 >
                     Login
+                </a>
+
+
+                <!-- Register -->
+                <a
+                    href="/register"
+                    class="<%= currentPath.startsWith('/register') ? 'active' : '' %>"
+                >
+                    Register
                 </a>
 
             <% } %>

@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt'
+
 import {
   createUser,
-  authenticateUser
+  authenticateUser,
+  getAllUsers
 } from '../models/users.js'
 
 
@@ -74,6 +76,29 @@ const showDashboard = (req, res) => {
     name: user.name,
     email: user.email
   })
+}
+
+
+/* =========================================================
+   SHOW USERS PAGE
+   Admin-only page displaying registered users.
+========================================================= */
+const showUsersPage = async (req, res, next) => {
+  try {
+    const users = await getAllUsers()
+
+    res.render('users', {
+      title: 'Manage Users',
+      users
+    })
+  } catch (error) {
+    console.error(
+      'Error loading users page:',
+      error
+    )
+
+    next(error)
+  }
 }
 
 
@@ -353,6 +378,7 @@ export {
   requireLogin,
   requireRole,
   showDashboard,
+  showUsersPage,
   showUserRegistrationForm,
   processUserRegistrationForm,
   showLoginForm,
