@@ -164,10 +164,10 @@ const processUserRegistrationForm = async (req, res) => {
     /* -------------------------------------------------------
        VALIDATE PASSWORD
     ------------------------------------------------------- */
-    if (password.length < 8) {
+    if (password.length < 7) {
       req.flash(
         'error',
-        'Password must be at least 8 characters long.'
+        'Password must be at least 7 characters long.'
       )
 
       return res.redirect('/register')

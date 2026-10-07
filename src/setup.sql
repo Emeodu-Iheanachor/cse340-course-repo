@@ -41,13 +41,12 @@ CREATE TABLE service_project (
     description TEXT NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE,
+	location VARCHAR(200) NOT NULL DEFAULT 'Not specified',
     organization_id INT NOT NULL,
     CONSTRAINT fk_project_organization
         FOREIGN KEY (organization_id)
         REFERENCES organization (organization_id)
 );
-
-
 
 
 
@@ -166,6 +165,11 @@ VALUES
 
 
 
+
+
+
+
+
 -- =========================================
 -- CATEGORIES
 -- =========================================
@@ -274,24 +278,30 @@ VALUES
 
 
 
-/* =========================================================
-   ROLE-BASED ACCESS CONTROL DATABASE SETUP
-========================================================= */
+	
 
 
 /* =========================================================
-   DROP EXISTING TABLES
-   Users must be dropped before Roles because of the
-   foreign key relationship.
+   CSE 340 SERVICE NETWORK
+   WEEK 05 - AUTHENTICATION AND AUTHORIZATION
+   DATABASE SETUP
 ========================================================= */
 
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
 
-
 /* =========================================================
-   CREATE ROLES TABLE
+   ROLES TABLE
 ========================================================= */
+
+/*
+   The roles table defines the roles available in the
+   Service Network application.
+
+   Week 05 roles:
+   - user  = standard registered user
+   - admin = administrator with full administrative access
+*/
 
 CREATE TABLE roles (
     role_id SERIAL PRIMARY KEY,
@@ -301,26 +311,37 @@ CREATE TABLE roles (
 
 
 /* =========================================================
-   INSERT INITIAL ROLES
+   ROLE DATA
 ========================================================= */
 
-INSERT INTO roles (role_name, role_description)
+INSERT INTO roles (
+    role_name,
+    role_description
+)
 VALUES
-    ('user', 'Standard user with basic access'),
-    ('admin', 'Administrator with full system access');
+(
+    'user',
+    'Standard user with basic access'
+),
+(
+    'admin',
+    'Administrator with full system access'
+);
 
 
 /* =========================================================
-   VERIFY ROLES
+   USERS TABLE
 ========================================================= */
 
-SELECT *
-FROM roles;
+/*
+   The users table stores registered users.
 
+   Passwords must NOT be stored as plain text.
+   The application uses bcrypt to hash passwords before
+   storing the resulting hash in password_hash.
 
-/* =========================================================
-   CREATE USERS TABLE
-========================================================= */
+   role_id connects each user to a role in the roles table.
+*/
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
@@ -333,83 +354,38 @@ CREATE TABLE users (
 
 
 /* =========================================================
-   VERIFY TABLE STRUCTURE
+   WEEK 05 ADMINISTRATOR ACCOUNT
 ========================================================= */
 
-SELECT *
-FROM users;
+/*
+   The required administrator account is:
+
+         Name: Admin User
+         Email: admin@example.com
+         Password: ...
+
+   IMPORTANT:
+   Register this account through the application's
+   registration page.
+
+   The application will use bcrypt to hash the password
+   before storing it in password_hash.
+
+   Do NOT store the plain-text password in this database.
+*/
 
 
 /* =========================================================
-   INSERT TEST USER
-   Uses role_id 1, which should be the "user" role.
+   PROMOTE THE REGISTERED ADMIN TO ADMIN ROLE
 ========================================================= */
 
-INSERT INTO users (
-    name,
-    email,
-    password_hash,
-    role_id
-)
-VALUES (
-    'testuser',
-    'test@example.com',
-    'placeholder_hash',
-    1
-);
+/*
+   Run this AFTER registering:
 
+       admin@example.com
 
-/* =========================================================
-   TEST THE USERS/ROLES RELATIONSHIP
-========================================================= */
+   through the application's registration page.
 
-SELECT
-    u.user_id,
-    u.name,
-    u.email,
-    r.role_name,
-    r.role_description,
-    u.created_at
-FROM users u
-JOIN roles r
-    ON u.role_id = r.role_id;
-
-
-/* =========================================================
-   DELETE TEST USER
-========================================================= */
-
-DELETE FROM users
-WHERE email = 'test@example.com';
-
-
-/* =========================================================
-   FINAL VERIFICATION
-========================================================= */
-
-SELECT
-    u.user_id,
-    u.name,
-    u.email,
-    r.role_name,
-    r.role_description,
-    u.created_at
-FROM users u
-JOIN roles r
-    ON u.role_id = r.role_id;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   This changes the registered user's role from the default
+   "user" role to the "admin" role.
+*/
