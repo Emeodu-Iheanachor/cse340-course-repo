@@ -280,15 +280,12 @@ VALUES
 
 	
 
-
 /* =========================================================
    CSE 340 SERVICE NETWORK
    WEEK 05 - AUTHENTICATION AND AUTHORIZATION
    DATABASE SETUP
 ========================================================= */
 
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS roles;
 
 /* =========================================================
    ROLES TABLE
@@ -353,39 +350,3 @@ CREATE TABLE users (
 );
 
 
-/* =========================================================
-   WEEK 05 ADMINISTRATOR ACCOUNT
-========================================================= */
-
-/*
-   The required administrator account is:
-
-         Name: Admin User
-         Email: admin@example.com
-         Password: ...
-
-   IMPORTANT:
-   Register this account through the application's
-   registration page.
-
-   The application will use bcrypt to hash the password
-   before storing it in password_hash.
-
-   Do NOT store the plain-text password in this database.
-*/
-
-
-/* =========================================================
-   PROMOTE THE REGISTERED ADMIN TO ADMIN ROLE
-========================================================= */
-
-/*
-   Run this AFTER registering:
-
-       admin@example.com
-
-   through the application's registration page.
-
-   This changes the registered user's role from the default
-   "user" role to the "admin" role.
-*/

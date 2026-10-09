@@ -8,104 +8,127 @@
  * notice, success, error, warning, info
  */
 
-/**
- * Creates the req.flash() function.
- */
-const flashMiddleware = (req, res, next) => {
 
-    req.flash = function (type, message) {
-
-        // Initialize flash storage.
-        if (!req.session.flash) {
-            req.session.flash = {
-                notice: [],
-                success: [],
-                error: [],
-                warning: [],
-                info: []
-            }
-        }
-
-        /*
-         * SET MESSAGE
-         *
-         * Example:
-         * req.flash(
-         *     'notice',
-         *     'Category was created successfully.'
-         * )
-         */
-        if (type && message) {
-
-            // Create the message type if necessary.
-            if (!req.session.flash[type]) {
-                req.session.flash[type] = []
-            }
-
-            req.session.flash[type].push(message)
-
-            return
-        }
-
-        /*
-         * GET ONE MESSAGE TYPE
-         *
-         * Example:
-         * const messages = req.flash('notice')
-         */
-        if (type && !message) {
-
-            const messages = req.session.flash[type] || []
-
-            // Remove the messages after retrieving them.
-            req.session.flash[type] = []
-
-            return messages
-        }
-
-        /*
-         * GET ALL MESSAGE TYPES
-         *
-         * Example:
-         * const messages = req.flash()
-         */
-        const allMessages = req.session.flash
-
-        // Clear all messages after retrieving them.
-        req.session.flash = {
-            notice: [],
-            success: [],
-            error: [],
-            warning: [],
-            info: []
-        }
-
-        return allMessages
-    }
-
-    next()
-}
+/* =========================================================
+   FLASH STORAGE FACTORY
+========================================================= */
+const createFlashStore = () => ({
+  notice: [],
+  success: [],
+  error: [],
+  warning: [],
+  info: []
+})
 
 
-/**
- * Makes flash() available to EJS templates.
- */
-const flashLocals = (req, res, next) => {
-
-    res.locals.flash = req.flash
-
-    next()
-}
-
-
-/**
- * Combined flash middleware.
- */
+/* =========================================================
+   FLASH MIDDLEWARE
+========================================================= */
 const flash = (req, res, next) => {
 
-    flashMiddleware(req, res, () => {
-        flashLocals(req, res, next)
-    })
+  /* ---------------------------------------------------------
+     INITIALIZE FLASH STORAGE
+     
+     This runs when the middleware first processes
+     the request.
+  --------------------------------------------------------- */
+  if (!req.session.flash) {
+    req.session.flash = createFlashStore()
+  }
+
+
+  /* =========================================================
+     CREATE req.flash()
+
+     SET:
+       req.flash(
+         'success',
+         'Registration successful.'
+       )
+
+     GET ONE TYPE:
+       req.flash('success')
+
+     GET ALL:
+       req.flash()
+  ========================================================= */
+  req.flash = (type, message) => {
+
+    /* -------------------------------------------------------
+       REINITIALIZE FLASH STORAGE IF NECESSARY
+
+       IMPORTANT:
+       express-session's req.session.regenerate()
+       creates a new session object.
+
+       Therefore, req.session.flash may no longer exist
+       after login/logout session regeneration.
+    ------------------------------------------------------- */
+    if (!req.session.flash) {
+      req.session.flash = createFlashStore()
+    }
+
+
+    /* -------------------------------------------------------
+       SET A MESSAGE
+    ------------------------------------------------------- */
+    if (type && message) {
+
+      if (!req.session.flash[type]) {
+        req.session.flash[type] = []
+      }
+
+      req.session.flash[type].push(message)
+
+      return
+    }
+
+
+    /* -------------------------------------------------------
+       GET ONE MESSAGE TYPE
+    ------------------------------------------------------- */
+    if (type) {
+
+      const messages =
+        req.session.flash[type] || []
+
+      req.session.flash[type] = []
+
+      return messages
+    }
+
+
+    /* -------------------------------------------------------
+       GET ALL MESSAGE TYPES
+
+       The messages are returned to the template and
+       removed from the session so they appear only once.
+    ------------------------------------------------------- */
+    const messages = {
+      ...req.session.flash
+    }
+
+
+    req.session.flash = createFlashStore()
+
+
+    return messages
+  }
+
+
+  /* =========================================================
+     MAKE req.flash() AVAILABLE TO EJS
+
+     IMPORTANT:
+     EJS expects flash to be a FUNCTION because your
+     header.ejs uses:
+
+       const messages = flash()
+  ========================================================= */
+  res.locals.flash = req.flash
+
+
+  next()
 }
 
 

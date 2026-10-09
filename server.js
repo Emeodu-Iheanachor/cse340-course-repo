@@ -13,13 +13,13 @@ import router from './src/routes.js'
 ========================================================= */
 
 const NODE_ENV =
-  process.env.NODE_ENV?.toLowerCase() || 'production'
+  process.env.NODE_ENV?.toLowerCase() || 'development'
 
 const PORT =
   process.env.PORT || 3000
 
 const SESSION_SECRET =
-  process.env.SESSION_SECRET || 'development-session-secret'
+  process.env.SESSION_SECRET || 'cse340-development-secret'
 
 
 /* =========================================================
@@ -35,6 +35,18 @@ const __dirname = path.dirname(__filename)
 ========================================================= */
 
 const app = express()
+
+
+/* =========================================================
+   VIEW ENGINE
+========================================================= */
+
+app.set('view engine', 'ejs')
+
+app.set(
+  'views',
+  path.join(__dirname, 'src/views')
+)
 
 
 /* =========================================================
@@ -62,18 +74,6 @@ app.use(
 
 
 /* =========================================================
-   EJS CONFIGURATION
-========================================================= */
-
-app.set('view engine', 'ejs')
-
-app.set(
-  'views',
-  path.join(__dirname, 'src/views')
-)
-
-
-/* =========================================================
    REQUEST LOGGING
 ========================================================= */
 
@@ -93,19 +93,25 @@ app.use((req, res, next) => {
 ========================================================= */
 
 /*
- * Session middleware must come before any middleware
+ * express-session MUST come before any middleware
  * or route that accesses req.session.
  */
 app.use(
   session({
     secret: SESSION_SECRET,
+
     resave: false,
+
     saveUninitialized: false,
 
     cookie: {
-      maxAge: 60 * 60 * 1000,
       httpOnly: true,
-      secure: NODE_ENV === 'production'
+
+      secure:
+        NODE_ENV === 'production',
+
+      maxAge:
+        1000 * 60 * 60 * 24
     }
   })
 )
@@ -116,7 +122,7 @@ app.use(
 ========================================================= */
 
 /*
- * Flash middleware uses the session, so it must
+ * Flash middleware uses req.session, so it MUST
  * come after express-session.
  */
 app.use(flash)
@@ -127,15 +133,18 @@ app.use(flash)
 ========================================================= */
 
 /*
- * Make authentication information available
- * to every EJS template.
+ * This middleware comes AFTER session and flash.
+ *
+ * Therefore:
+ * - req.session is available
+ * - req.session.user is available
+ * - res.locals.flash is already available
  */
 app.use((req, res, next) => {
 
   /* -------------------------------------------------------
      LOGIN STATUS
   ------------------------------------------------------- */
-
   res.locals.isLoggedIn =
     Boolean(req.session?.user)
 
@@ -143,7 +152,6 @@ app.use((req, res, next) => {
   /* -------------------------------------------------------
      CURRENT USER
   ------------------------------------------------------- */
-
   res.locals.user =
     req.session?.user || null
 
@@ -151,7 +159,6 @@ app.use((req, res, next) => {
   /* -------------------------------------------------------
      APPLICATION ENVIRONMENT
   ------------------------------------------------------- */
-
   res.locals.NODE_ENV =
     NODE_ENV
 
@@ -171,12 +178,12 @@ app.use(router)
 ========================================================= */
 
 app.use((req, res, next) => {
-  const err =
+  const error =
     new Error('Page Not Found')
 
-  err.status = 404
+  error.status = 404
 
-  next(err)
+  next(error)
 })
 
 
@@ -220,7 +227,7 @@ app.use((err, req, res, next) => {
         : null
   }
 
-  res
+  return res
     .status(status)
     .render(
       `errors/${template}`,

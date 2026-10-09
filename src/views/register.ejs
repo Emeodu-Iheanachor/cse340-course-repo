@@ -4,10 +4,109 @@
 
     <section class="page-intro">
         <h1><%= title %></h1>
+
         <p>
             Create an account to access Service Network.
         </p>
     </section>
+
+
+    <!-- =====================================================
+         FLASH MESSAGES
+    ====================================================== -->
+
+    <% if (flash) { %>
+
+        <% if (flash.success && flash.success.length > 0) { %>
+
+            <div class="flash-messages">
+
+                <% flash.success.forEach(message => { %>
+
+                    <div class="flash flash-success">
+                        <%= message %>
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+
+        <% if (flash.error && flash.error.length > 0) { %>
+
+            <div class="flash-messages">
+
+                <% flash.error.forEach(message => { %>
+
+                    <div class="flash flash-error">
+                        <%= message %>
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+
+        <% if (flash.notice && flash.notice.length > 0) { %>
+
+            <div class="flash-messages">
+
+                <% flash.notice.forEach(message => { %>
+
+                    <div class="flash flash-notice">
+                        <%= message %>
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+
+        <% if (flash.warning && flash.warning.length > 0) { %>
+
+            <div class="flash-messages">
+
+                <% flash.warning.forEach(message => { %>
+
+                    <div class="flash flash-warning">
+                        <%= message %>
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+
+        <% if (flash.info && flash.info.length > 0) { %>
+
+            <div class="flash-messages">
+
+                <% flash.info.forEach(message => { %>
+
+                    <div class="flash flash-info">
+                        <%= message %>
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+    <% } %>
+
+
+    <!-- =====================================================
+         REGISTRATION FORM
+    ====================================================== -->
 
     <section class="form-section">
 
@@ -17,8 +116,13 @@
             method="POST"
         >
 
+            <!-- NAME -->
+
             <div class="form-group">
-                <label for="name">Name</label>
+
+                <label for="name">
+                    Name
+                </label>
 
                 <input
                     type="text"
@@ -30,10 +134,14 @@
                     autocomplete="name"
                     required
                 >
+
             </div>
 
 
+            <!-- EMAIL -->
+
             <div class="form-group">
+
                 <label for="email">
                     Email (Username)
                 </label>
@@ -47,11 +155,17 @@
                     autocomplete="email"
                     required
                 >
+
             </div>
 
 
+            <!-- PASSWORD -->
+
             <div class="form-group">
-                <label for="password">Password</label>
+
+                <label for="password">
+                    Password
+                </label>
 
                 <input
                     type="password"
@@ -66,10 +180,14 @@
                 <small>
                     Password must be at least 7 characters long.
                 </small>
+
             </div>
 
 
+            <!-- FORM ACTIONS -->
+
             <div class="form-actions">
+
                 <button
                     type="submit"
                     class="btn btn-primary"
@@ -77,12 +195,14 @@
                     Register
                 </button>
 
+
                 <a
-                    href="/"
+                    href="/login"
                     class="btn btn-secondary"
                 >
-                    Cancel
+                    Already have an account? Log in
                 </a>
+
             </div>
 
         </form>

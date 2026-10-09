@@ -3721,3 +3721,144 @@ footer img,
 
 
 
+
+
+
+/* =========================================
+   NOTIFICATION / FLASH MESSAGE CONTAINER
+========================================= */
+
+.flash-messages {
+  position: sticky;
+  top: 75px; /* Adjust to match your header height */
+  z-index: 1000;
+
+  width: min(92%, 900px);
+  margin: 12px auto;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Individual notification */
+
+.flash-message {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding: 15px 20px;
+  border-radius: 8px;
+  border-left: 5px solid;
+
+  background: #ffffff;
+  color: #17324d;
+
+  box-shadow: 0 5px 18px rgba(23, 50, 77, 0.15);
+
+  font-size: 0.98rem;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+  animation: notificationSlideIn 0.3s ease-out;
+}
+
+/* Error notification */
+
+.flash-message.error {
+  background: #fff0f0;
+  border-color: #c62828;
+  color: #8b1e1e;
+}
+
+/* Warning notification */
+
+.flash-message.warning {
+  background: #fff8e5;
+  border-color: #e09b00;
+  color: #795500;
+}
+
+/* Success notification */
+
+.flash-message.success {
+  background: #eaf7ee;
+  border-color: #238443;
+  color: #17652e;
+}
+
+/* Informational notification */
+
+.flash-message.info,
+.flash-message.notice {
+  background: #eaf4ff;
+  border-color: #176baf;
+  color: #174d7a;
+}
+
+/* Close button */
+
+.flash-close {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.flash-close:hover {
+  opacity: 0.7;
+}
+
+/* Keyboard focus */
+
+.flash-close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* Notification animation */
+
+@keyframes notificationSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsiveness */
+
+@media (max-width: 600px) {
+  .flash-messages {
+    top: 65px;
+    width: 94%;
+  }
+
+  .flash-message {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+  .flash-message {
+    animation: none;
+  }
+}
+

@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt'
 
 /* =========================================================
    CREATE NEW USER
+   Public registration always creates a normal user.
+   The role is intentionally NOT supplied by the user.
 ========================================================= */
 export const createUser = async (name, email, passwordHash) => {
   const defaultRole = 'user'
@@ -25,7 +27,7 @@ export const createUser = async (name, email, passwordHash) => {
         WHERE role_name = $4
       )
     )
-    RETURNING user_id
+    RETURNING user_id, name, email
   `
 
   const queryParams = [
@@ -48,7 +50,7 @@ export const createUser = async (name, email, passwordHash) => {
     )
   }
 
-  return result.rows[0].user_id
+  return result.rows[0]
 }
 
 
@@ -66,7 +68,7 @@ export const getUserByEmail = async (email) => {
     FROM users u
     JOIN roles r
       ON u.role_id = r.role_id
-    WHERE u.email = $1
+    WHERE LOWER(u.email) = LOWER($1)
     LIMIT 1
   `
 
@@ -86,6 +88,8 @@ export const verifyPassword = async (password, passwordHash) => {
 
 /* =========================================================
    AUTHENTICATE USER
+   Returns only safe information.
+   The password hash is never returned.
 ========================================================= */
 export const authenticateUser = async (email, password) => {
   const user = await getUserByEmail(email)
@@ -103,10 +107,6 @@ export const authenticateUser = async (email, password) => {
     return null
   }
 
-  /*
-   * Return only safe information.
-   * The password hash is intentionally excluded.
-   */
   return {
     user_id: user.user_id,
     name: user.name,
@@ -118,6 +118,7 @@ export const authenticateUser = async (email, password) => {
 
 /* =========================================================
    GET ALL USERS
+   Used by the admin users page.
 ========================================================= */
 export const getAllUsers = async () => {
   const query = `

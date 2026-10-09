@@ -1,20 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><%= title %> | Service Network</title>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        <%= title %> | Service Network
+    </title>
+
 
     <!-- Favicon -->
-      <link
+    <link
         rel="icon"
         href="/favicon.ico"
         type="image/x-icon"
     >
+
+
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="/css/main.css">
+    <link
+        rel="stylesheet"
+        href="/css/main.css"
+    >
+
 </head>
+
 
 <body>
 
@@ -22,8 +38,12 @@
 
     <div class="header-inner">
 
+
         <!-- Site Branding -->
-        <a href="/" class="site-brand">
+        <a
+            href="/"
+            class="site-brand"
+        >
 
             <img
                 src="/images/cse340-service-network.png"
@@ -57,6 +77,7 @@
             aria-label="Main navigation"
         >
 
+
             <!-- Home -->
             <a
                 href="/"
@@ -66,7 +87,7 @@
             </a>
 
 
-            <!-- Organizations -->
+            <!-- Partner Organizations -->
             <a
                 href="/organizations"
                 class="<%= currentPath.startsWith('/organization') ? 'active' : '' %>"
@@ -75,7 +96,7 @@
             </a>
 
 
-            <!-- Projects -->
+            <!-- Service Projects -->
             <a
                 href="/projects"
                 class="<%= currentPath.startsWith('/project') ? 'active' : '' %>"
@@ -84,7 +105,7 @@
             </a>
 
 
-            <!-- Categories -->
+            <!-- Service Project Categories -->
             <a
                 href="/categories"
                 class="<%= currentPath.startsWith('/categor') ? 'active' : '' %>"
@@ -93,8 +114,12 @@
             </a>
 
 
-            <!-- Authentication Navigation -->
-            <% if (user) { %>
+            <!-- =====================================================
+                 AUTHENTICATION NAVIGATION
+                 ===================================================== -->
+
+            <% if (isLoggedIn) { %>
+
 
                 <!-- Dashboard -->
                 <a
@@ -105,6 +130,23 @@
                 </a>
 
 
+                <!-- =================================================
+                     ADMIN-ONLY NAVIGATION
+                     ================================================= -->
+
+                <% if (user?.role_name === 'admin') { %>
+
+                    <!-- Users Management -->
+                    <a
+                        href="/users"
+                        class="<%= currentPath.startsWith('/users') ? 'active' : '' %>"
+                    >
+                        Users
+                    </a>
+
+                <% } %>
+
+
                 <!-- Logged-in User -->
                 <span class="nav-user">
                     <%= user.name %>
@@ -112,14 +154,24 @@
 
 
                 <!-- Logout -->
-                <a
-                    href="/logout"
-                    class="<%= currentPath.startsWith('/logout') ? 'active' : '' %>"
+                <form
+                    action="/logout"
+                    method="POST"
+                    class="logout-form"
                 >
-                    Logout
-                </a>
+
+                    <button
+                        type="submit"
+                        class="nav-link-button"
+                    >
+                        Logout
+                    </button>
+
+                </form>
+
 
             <% } else { %>
+
 
                 <!-- Login -->
                 <a
@@ -138,6 +190,7 @@
                     Register
                 </a>
 
+
             <% } %>
 
         </nav>
@@ -147,7 +200,10 @@
 </header>
 
 
-<!-- Flash Messages -->
+<!-- =========================================================
+     FLASH MESSAGES
+     ========================================================= -->
+
 <% const messages = flash(); %>
 
 <% Object.keys(messages).forEach(type => { %>
@@ -160,7 +216,11 @@
         >
 
             <% messages[type].forEach(msg => { %>
-                <%= msg %>
+
+                <p>
+                    <%= msg %>
+                </p>
+
             <% }); %>
 
         </div>

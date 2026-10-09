@@ -1,106 +1,136 @@
-import { Pool } from 'pg';
+import { Pool } from 'pg'
 
 
 /**
- * Connection pool for PostgreSQL database.
+ * PostgreSQL connection pool.
  *
- * Uses the database connection string stored in the DB_URL
- * environment variable.
+ * The project uses the Render PostgreSQL database
+ * through the DB_URL environment variable.
+ *
+ * Render PostgreSQL requires SSL connections.
  */
 const pool = new Pool({
     connectionString: process.env.DB_URL,
     ssl: {
         rejectUnauthorized: false
     }
-});
+})
 
 
 /**
  * Export a wrapped database object in development mode
  * when SQL logging is enabled.
  */
-let db = null;
-
+let db = null
 
 if (
     process.env.NODE_ENV === 'development' &&
     process.env.ENABLE_SQL_LOGGING === 'true'
 ) {
+
     db = {
-        /**
-         * Execute a SQL query.
-         */
+
         async query(text, params) {
+
             try {
-                const start = Date.now();
 
-                const res = await pool.query(text, params);
+                const start = Date.now()
 
-                const duration = Date.now() - start;
+                const res =
+                    await pool.query(
+                        text,
+                        params
+                    )
 
-                console.log('Executed query:', {
-                    text: text.replace(/\s+/g, ' ').trim(),
-                    duration: `${duration}ms`,
-                    rows: res.rowCount
-                });
+                const duration =
+                    Date.now() - start
 
-                return res;
+                console.log(
+                    'Executed query:',
+                    {
+                        text: text
+                            .replace(/\s+/g, ' ')
+                            .trim(),
+
+                        duration:
+                            `${duration}ms`,
+
+                        rows:
+                            res.rowCount
+                    }
+                )
+
+                return res
+
             } catch (error) {
-                console.error('Error in query:', {
-                    text: text.replace(/\s+/g, ' ').trim(),
-                    error: error.message
-                });
 
-                throw error;
+                console.error(
+                    'Error in query:',
+                    {
+                        text: text
+                            .replace(/\s+/g, ' ')
+                            .trim(),
+
+                        error:
+                            error.message
+                    }
+                )
+
+                throw error
             }
         },
 
-        /**
-         * Get a PostgreSQL client from the connection pool.
-         *
-         * Required for transactions such as:
-         * BEGIN, COMMIT, and ROLLBACK.
-         */
+
         async connect() {
-            return pool.connect();
+            return pool.connect()
         },
 
-        /**
-         * Close the PostgreSQL connection pool.
-         */
+
         async close() {
-            await pool.end();
+            await pool.end()
         }
-    };
+
+    }
+
 } else {
-    db = pool;
+
+    db = pool
+
 }
 
 
 /**
- * Tests the database connection.
+ * Test the PostgreSQL database connection.
  */
 const testConnection = async () => {
+
     try {
-        const result = await db.query(
-            'SELECT NOW() AS current_time'
-        );
+
+        const result =
+            await db.query(
+                'SELECT NOW() AS current_time'
+            )
 
         console.log(
             'Database connection successful:',
             result.rows[0].current_time
-        );
+        )
 
-        return true;
+        return true
+
     } catch (error) {
+
         console.error(
             'Database connection failed:',
             error.message
-        );
+        )
 
-        throw error;
+        throw error
     }
-};
+}
 
 
-export { db as default, testConnection };
+export {
+    db as default,
+    testConnection
+}
