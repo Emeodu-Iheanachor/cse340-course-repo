@@ -19,7 +19,16 @@ const PORT =
   process.env.PORT || 3000
 
 const SESSION_SECRET =
-  process.env.SESSION_SECRET || 'cse340-development-secret'
+  process.env.SESSION_SECRET ||
+  (NODE_ENV === 'development'
+    ? 'cse340-development-secret'
+    : undefined)
+
+if (!SESSION_SECRET) {
+  throw new Error(
+    'SESSION_SECRET must be configured in production.'
+  )
+}
 
 
 /* =========================================================
@@ -35,6 +44,15 @@ const __dirname = path.dirname(__filename)
 ========================================================= */
 
 const app = express()
+
+
+/* =========================================================
+   TRUST RENDER HTTPS REVERSE PROXY
+========================================================= */
+
+if (NODE_ENV === 'production') {
+  app.set('trust proxy', 1)
+}
 
 
 /* =========================================================
@@ -78,11 +96,15 @@ app.use(
 ========================================================= */
 
 app.use((req, res, next) => {
-  if (NODE_ENV === 'development') {
+  console.log(
+    `${new Date().toISOString()} ${req.method} ${req.originalUrl}`
+  )
+
+  res.on('finish', () => {
     console.log(
-      `${req.method} ${req.url}`
+      `${req.method} ${req.originalUrl} ${res.statusCode}`
     )
-  }
+  })
 
   next()
 })
@@ -92,12 +114,10 @@ app.use((req, res, next) => {
    SESSION MANAGEMENT
 ========================================================= */
 
-/*
- * express-session MUST come before any middleware
- * or route that accesses req.session.
- */
 app.use(
   session({
+    name: 'serviceNetwork.sid',
+
     secret: SESSION_SECRET,
 
     resave: false,
@@ -107,11 +127,11 @@ app.use(
     cookie: {
       httpOnly: true,
 
-      secure:
-        NODE_ENV === 'production',
+      secure: NODE_ENV === 'production',
 
-      maxAge:
-        1000 * 60 * 60 * 24
+      sameSite: 'lax',
+
+      maxAge: 1000 * 60 * 60 * 24
     }
   })
 )
@@ -121,10 +141,6 @@ app.use(
    FLASH MESSAGES
 ========================================================= */
 
-/*
- * Flash middleware uses req.session, so it MUST
- * come after express-session.
- */
 app.use(flash)
 
 
@@ -132,33 +148,13 @@ app.use(flash)
    GLOBAL TEMPLATE VARIABLES
 ========================================================= */
 
-/*
- * This middleware comes AFTER session and flash.
- *
- * Therefore:
- * - req.session is available
- * - req.session.user is available
- * - res.locals.flash is already available
- */
 app.use((req, res, next) => {
-
-  /* -------------------------------------------------------
-     LOGIN STATUS
-  ------------------------------------------------------- */
   res.locals.isLoggedIn =
     Boolean(req.session?.user)
 
-
-  /* -------------------------------------------------------
-     CURRENT USER
-  ------------------------------------------------------- */
   res.locals.user =
     req.session?.user || null
 
-
-  /* -------------------------------------------------------
-     APPLICATION ENVIRONMENT
-  ------------------------------------------------------- */
   res.locals.NODE_ENV =
     NODE_ENV
 
@@ -178,8 +174,7 @@ app.use(router)
 ========================================================= */
 
 app.use((req, res, next) => {
-  const error =
-    new Error('Page Not Found')
+  const error = new Error('Page Not Found')
 
   error.status = 404
 
@@ -192,7 +187,6 @@ app.use((req, res, next) => {
 ========================================================= */
 
 app.use((err, req, res, next) => {
-
   console.error(
     'Error occurred:',
     err.message
@@ -200,6 +194,10 @@ app.use((err, req, res, next) => {
 
   if (NODE_ENV === 'development') {
     console.error(err.stack)
+  }
+
+  if (res.headersSent) {
+    return next(err)
   }
 
   const status =
@@ -241,21 +239,21 @@ app.use((err, req, res, next) => {
 ========================================================= */
 
 app.listen(PORT, async () => {
+  console.log(
+    `Server is running on port ${PORT}`
+  )
+
+  console.log(
+    `Environment: ${NODE_ENV}`
+  )
 
   try {
-
     await testConnection()
 
     console.log(
-      `Server is running at http://127.0.0.1:${PORT}`
+      'Database connection successful.'
     )
-
-    console.log(
-      `Environment: ${NODE_ENV}`
-    )
-
   } catch (error) {
-
     console.error(
       'Error connecting to the database:',
       error
