@@ -1,3 +1,9 @@
+------------------------------------------------------------
+-- ORGANIZATION TABLE
+-- Stores partner organization information.
+------------------------------------------------------------
+
+DROP TABLE IF EXISTS organization;
 
 CREATE TABLE organization (
     organization_id SERIAL PRIMARY KEY,
@@ -28,12 +34,36 @@ VALUES
     'A volunteer coordination group supporting local charities and service initiatives.',
     'hello@unityserve.org',
     'unityserve-logo.png'
+	
 );
 
 
 
 
 
+INSERT INTO organization (
+    name,
+    description,
+    contact_email,
+    logo_filename
+)
+VALUES (
+    'Graders',
+    'A placeholder organization used for grading and testing the Service Network application.',
+    'graders@example.com',
+    'placeholder-logo.png'
+);
+
+
+
+
+------------------------------------------------------------
+-- SERVICE PROJECT TABLE
+-- Stores service project information and links each project
+-- to a partner organization.
+------------------------------------------------------------
+
+DROP TABLE IF EXISTS service_project;
 
 CREATE TABLE service_project (
     project_id SERIAL PRIMARY KEY,
@@ -167,8 +197,12 @@ VALUES
 
 
 
+------------------------------------------------------------
+-- CATEGORY TABLE
+-- Stores the categories used to classify service projects.
+------------------------------------------------------------
 
-
+DROP TABLE IF EXISTS category;
 
 -- =========================================
 -- CATEGORIES
@@ -178,6 +212,8 @@ CREATE TABLE category (
     category_id SERIAL PRIMARY KEY,
     category_name VARCHAR(100) NOT NULL UNIQUE
 );
+
+
 
 
 -- =========================================
@@ -195,6 +231,9 @@ VALUES
 -- =========================================
 -- PROJECT-CATEGORY JUNCTION TABLE
 -- =========================================
+
+DROP TABLE IF EXISTS project_category;
+
 
 CREATE TABLE project_category (
     project_id INT NOT NULL,
@@ -275,30 +314,23 @@ VALUES
 
 
 
-
-
-
 	
+------------------------------------------------------------
+-- CSE 340 SERVICE NETWORK
+-- WEEK 05 - AUTHENTICATION AND AUTHORIZATION
+-- DATABASE SETUP
+------------------------------------------------------------
 
-/* =========================================================
-   CSE 340 SERVICE NETWORK
-   WEEK 05 - AUTHENTICATION AND AUTHORIZATION
-   DATABASE SETUP
-========================================================= */
 
+------------------------------------------------------------
+-- 1. ROLES TABLE
+-- Defines the roles available in the application.
+-- user  = standard registered user
+-- admin = administrator with administrative access
+------------------------------------------------------------
 
-/* =========================================================
-   ROLES TABLE
-========================================================= */
-
-/*
-   The roles table defines the roles available in the
-   Service Network application.
-
-   Week 05 roles:
-   - user  = standard registered user
-   - admin = administrator with full administrative access
-*/
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS roles;
 
 CREATE TABLE roles (
     role_id SERIAL PRIMARY KEY,
@@ -307,46 +339,35 @@ CREATE TABLE roles (
 );
 
 
-/* =========================================================
-   ROLE DATA
-========================================================= */
+------------------------------------------------------------
+-- 2. INSERT DEFAULT ROLES
+------------------------------------------------------------
 
 INSERT INTO roles (
     role_name,
     role_description
 )
 VALUES
-(
-    'user',
-    'Standard user with basic access'
-),
-(
-    'admin',
-    'Administrator with full system access'
-);
+    ('user', 'Standard user with basic access'),
+    ('admin', 'Administrator with full system access');
 
 
-/* =========================================================
-   USERS TABLE
-========================================================= */
-
-/*
-   The users table stores registered users.
-
-   Passwords must NOT be stored as plain text.
-   The application uses bcrypt to hash passwords before
-   storing the resulting hash in password_hash.
-
-   role_id connects each user to a role in the roles table.
-*/
+------------------------------------------------------------
+-- 3. USERS TABLE
+-- Stores registered users.
+-- Passwords must be hashed with bcrypt before storage.
+-- role_id connects each user to a role in the roles table.
+------------------------------------------------------------
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    role_id INTEGER REFERENCES roles(role_id),
+    role_id INTEGER NOT NULL REFERENCES roles(role_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
 
 
