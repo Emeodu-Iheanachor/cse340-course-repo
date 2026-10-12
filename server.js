@@ -19,16 +19,7 @@ const PORT =
   process.env.PORT || 3000
 
 const SESSION_SECRET =
-  process.env.SESSION_SECRET ||
-  (NODE_ENV === 'development'
-    ? 'cse340-development-secret'
-    : undefined)
-
-if (!SESSION_SECRET) {
-  throw new Error(
-    'SESSION_SECRET must be configured in production.'
-  )
-}
+  process.env.SESSION_SECRET || 'cse340-development-secret'
 
 
 /* =========================================================
@@ -44,15 +35,6 @@ const __dirname = path.dirname(__filename)
 ========================================================= */
 
 const app = express()
-
-
-/* =========================================================
-   TRUST RENDER HTTPS REVERSE PROXY
-========================================================= */
-
-if (NODE_ENV === 'production') {
-  app.set('trust proxy', 1)
-}
 
 
 /* =========================================================
@@ -96,15 +78,9 @@ app.use(
 ========================================================= */
 
 app.use((req, res, next) => {
-  console.log(
-    `${new Date().toISOString()} ${req.method} ${req.originalUrl}`
-  )
-
-  res.on('finish', () => {
-    console.log(
-      `${req.method} ${req.originalUrl} ${res.statusCode}`
-    )
-  })
+  if (NODE_ENV === 'development') {
+    console.log(`${req.method} ${req.url}`)
+  }
 
   next()
 })
@@ -114,10 +90,16 @@ app.use((req, res, next) => {
    SESSION MANAGEMENT
 ========================================================= */
 
+/*
+ * express-session must run before middleware or routes
+ * that access req.session.
+ *
+ * The SESSION_SECRET should be configured in the
+ * environment variables for the deployed application.
+ */
+
 app.use(
   session({
-    name: 'serviceNetwork.sid',
-
     secret: SESSION_SECRET,
 
     resave: false,
@@ -129,8 +111,6 @@ app.use(
 
       secure: NODE_ENV === 'production',
 
-      sameSite: 'lax',
-
       maxAge: 1000 * 60 * 60 * 24
     }
   })
@@ -141,6 +121,11 @@ app.use(
    FLASH MESSAGES
 ========================================================= */
 
+/*
+ * Flash middleware depends on req.session and must
+ * therefore run after express-session.
+ */
+
 app.use(flash)
 
 
@@ -148,15 +133,67 @@ app.use(flash)
    GLOBAL TEMPLATE VARIABLES
 ========================================================= */
 
+/*
+ * These variables are available to EJS templates.
+ *
+ * isLoggedIn:
+ *   Indicates whether a user is logged in.
+ *
+ * user:
+ *   Contains the current user's session data.
+ *
+ * isAdmin:
+ *   Indicates whether the current user has the admin role.
+ *
+ * NODE_ENV:
+ *   Identifies the application environment.
+ *
+ * currentPath:
+ *   Identifies the current request path.
+ */
+
 app.use((req, res, next) => {
+
+  /* -------------------------------------------------------
+     LOGIN STATUS
+  ------------------------------------------------------- */
+
   res.locals.isLoggedIn =
     Boolean(req.session?.user)
+
+
+  /* -------------------------------------------------------
+     CURRENT USER
+  ------------------------------------------------------- */
 
   res.locals.user =
     req.session?.user || null
 
+
+  /* -------------------------------------------------------
+     ADMINISTRATOR STATUS
+  ------------------------------------------------------- */
+
+  res.locals.isAdmin =
+    String(req.session?.user?.role_name || '')
+      .toLowerCase() === 'admin'
+
+
+  /* -------------------------------------------------------
+     APPLICATION ENVIRONMENT
+  ------------------------------------------------------- */
+
   res.locals.NODE_ENV =
     NODE_ENV
+
+
+  /* -------------------------------------------------------
+     CURRENT REQUEST PATH
+  ------------------------------------------------------- */
+
+  res.locals.currentPath =
+    req.path
+
 
   next()
 })
@@ -187,6 +224,7 @@ app.use((req, res, next) => {
 ========================================================= */
 
 app.use((err, req, res, next) => {
+
   console.error(
     'Error occurred:',
     err.message
@@ -194,10 +232,6 @@ app.use((err, req, res, next) => {
 
   if (NODE_ENV === 'development') {
     console.error(err.stack)
-  }
-
-  if (res.headersSent) {
-    return next(err)
   }
 
   const status =
@@ -239,24 +273,18 @@ app.use((err, req, res, next) => {
 ========================================================= */
 
 app.listen(PORT, async () => {
-  console.log(
-    `Server is running on port ${PORT}`
-  )
-
-  console.log(
-    `Environment: ${NODE_ENV}`
-  )
-
   try {
     await testConnection()
 
     console.log(
-      'Database connection successful.'
+      `Server is running at http://127.0.0.1:${PORT}`
     )
+
+    console.log(`Environment: ${NODE_ENV}`)
   } catch (error) {
     console.error(
       'Error connecting to the database:',
-      error
+      error.message
     )
   }
 })

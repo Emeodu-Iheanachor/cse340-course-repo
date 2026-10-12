@@ -2,6 +2,10 @@
 
 <main class="categories-page">
 
+    <!-- =====================================================
+         PAGE INTRODUCTION
+    ====================================================== -->
+
     <section class="page-intro">
 
         <h1><%= title %></h1>
@@ -11,19 +15,32 @@
             opportunities to make a positive difference in the community.
         </p>
 
-        <div class="page-actions">
+        <!-- =================================================
+             PAGE ACTIONS
+             Only administrators can create categories.
+        ================================================== -->
 
-            <a
-                href="/new-category"
-                class="btn btn-primary"
-            >
-                Create New Category
-            </a>
+        <% if (isAdmin) { %>
 
-        </div>
+            <div class="page-actions">
+
+                <a
+                    href="/new-category"
+                    class="btn btn-primary"
+                >
+                    Create New Category
+                </a>
+
+            </div>
+
+        <% } %>
 
     </section>
 
+
+    <!-- =====================================================
+         CATEGORY LIST
+    ====================================================== -->
 
     <% if (categories && categories.length > 0) { %>
 
@@ -37,15 +54,17 @@
                 <article class="category-card">
 
                     <h2>
-                        <a
-                            href="/category/<%= category.category_id %>"
-                        >
+                        <a href="/category/<%= category.category_id %>">
                             <%= category.category_name %>
                         </a>
                     </h2>
 
-
                     <div class="card-actions">
+
+                        <!-- =================================
+                             VIEW CATEGORY
+                             Available to all visitors.
+                        ================================== -->
 
                         <a
                             href="/category/<%= category.category_id %>"
@@ -54,12 +73,21 @@
                             View
                         </a>
 
-                        <a
-                            href="/edit-category/<%= category.category_id %>"
-                            class="btn btn-primary"
-                        >
-                            Edit
-                        </a>
+                        <!-- =================================
+                             EDIT CATEGORY
+                             Only administrators can edit.
+                        ================================== -->
+
+                        <% if (isAdmin) { %>
+
+                            <a
+                                href="/edit-category/<%= category.category_id %>"
+                                class="btn btn-primary"
+                            >
+                                Edit
+                            </a>
+
+                        <% } %>
 
                     </div>
 
@@ -70,11 +98,22 @@
         </section>
 
 
+    <!-- =====================================================
+         EMPTY STATE
+    ====================================================== -->
+
     <% } else { %>
 
-        <p class="empty-state">
-            No service project categories are currently available.
-        </p>
+        <section class="empty-state">
+
+            <h2>No Service Project Categories Available</h2>
+
+            <p>
+                There are currently no service project categories available.
+                Please check back later.
+            </p>
+
+        </section>
 
     <% } %>
 

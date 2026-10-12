@@ -1,67 +1,130 @@
 <%- include('partials/header') %>
 
-<main>
+<main class="organizations-page">
 
-<section class="page-intro">
-    <h1><%= title %></h1>
+    <!-- =====================================================
+         PAGE INTRODUCTION
+    ====================================================== -->
 
-    <p>
-        Explore our partner organizations and discover
-        meaningful opportunities to serve in the community.
-    </p>
-</section>
+    <section class="page-intro">
+
+        <h1><%= title %></h1>
+
+        <p>
+            Explore our partner organizations and discover
+            meaningful opportunities to serve in the community.
+        </p>
+
+    </section>
 
 
-<section class="organization-list">
+    <!-- =====================================================
+         ORGANIZATION LIST
+    ====================================================== -->
 
-    <% organizations.forEach(organization => { %>
+    <% if (organizations && organizations.length > 0) { %>
 
-        <article class="organization-card">
+        <section
+            class="organization-list"
+            aria-label="Partner organizations"
+        >
 
-            <div class="organization-card-image">
-                <img
-                    src="/images/<%= organization.logo_filename %>"
-                    alt="<%= organization.name %> logo"
-                >
-            </div>
+            <% organizations.forEach(organization => { %>
 
-            <div class="organization-card-content">
+                <article class="organization-card">
 
-                <h2>
-                    <a href="/organization/<%= organization.organization_id %>">
-                        <%= organization.name %>
-                    </a>
-                </h2>
+                    <!-- Organization Logo -->
 
-                <p>
-                    <%= organization.description %>
-                </p>
+                    <div class="organization-card-image">
 
-                <p>
-                    <strong>Contact:</strong>
-                    <a href="mailto:<%= organization.contact_email %>">
-                        <%= organization.contact_email %>
-                    </a>
-                </p>
+                        <img
+                            src="/images/<%= organization.logo_filename %>"
+                            alt="<%= organization.name %> logo"
+                        >
 
-                <a
-                    class="project-link"
-                    href="/organization/<%= organization.organization_id %>"
-                >
-                    View Organization
-                </a>
+                    </div>
 
-            </div>
 
-        </article>
+                    <!-- Organization Information -->
 
-    <% }) %>
+                    <div class="organization-card-content">
 
-</section>
+                        <h2>
+                            <a href="/organization/<%= organization.organization_id %>">
+                                <%= organization.name %>
+                            </a>
+                        </h2>
 
-<p>
-    <a href="/new-organization">Add a new organization</a>
-</p>
+                        <p>
+                            <%= organization.description %>
+                        </p>
+
+                        <p>
+                            <strong>Contact:</strong>
+
+                            <a href="mailto:<%= organization.contact_email %>">
+                                <%= organization.contact_email %>
+                            </a>
+                        </p>
+
+
+                        <!-- View Organization -->
+
+                        <a
+                            class="project-link"
+                            href="/organization/<%= organization.organization_id %>"
+                        >
+                            View Organization
+                        </a>
+
+                    </div>
+
+                </article>
+
+            <% }) %>
+
+        </section>
+
+
+    <!-- =====================================================
+         EMPTY STATE
+    ====================================================== -->
+
+    <% } else { %>
+
+        <section class="empty-state">
+
+            <h2>No Partner Organizations Available</h2>
+
+            <p>
+                There are currently no partner organizations available.
+                Please check back later.
+            </p>
+
+        </section>
+
+    <% } %>
+
+
+    <!-- =====================================================
+         ADMINISTRATOR ACTIONS
+         Only administrators can add organizations.
+    ====================================================== -->
+
+    <% if (isAdmin) { %>
+
+        <section class="admin-actions">
+
+            <a
+                href="/new-organization"
+                class="project-link"
+            >
+                Add a New Organization
+            </a>
+
+        </section>
+
+    <% } %>
 
 </main>
 

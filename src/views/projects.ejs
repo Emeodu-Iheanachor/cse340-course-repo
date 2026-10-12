@@ -20,18 +20,23 @@
 
     <!-- =====================================================
          PAGE ACTIONS
+         Only administrators can add service projects.
     ====================================================== -->
 
-    <div class="page-actions">
+    <% if (isAdmin) { %>
 
-        <a
-            href="/new-project"
-            class="btn btn-primary"
-        >
-            Add New Service Project
-        </a>
+        <section class="page-actions">
 
-    </div>
+            <a
+                href="/new-project"
+                class="btn btn-primary"
+            >
+                Add New Service Project
+            </a>
+
+        </section>
+
+    <% } %>
 
 
     <!-- =====================================================
@@ -55,15 +60,11 @@
                             Service Project
                         </p>
 
-
                         <h2>
-                            <a
-                                href="/project/<%= project.project_id %>"
-                            >
+                            <a href="/project/<%= project.project_id %>">
                                 <%= project.title %>
                             </a>
                         </h2>
-
 
                         <p class="project-description">
                             <%= project.description %>
@@ -76,7 +77,6 @@
 
                         <div class="project-details">
 
-
                             <!-- Organization -->
 
                             <div class="project-detail">
@@ -87,9 +87,7 @@
 
                                 <span class="detail-value">
 
-                                    <a
-                                        href="/organization/<%= project.organization_id %>"
-                                    >
+                                    <a href="/organization/<%= project.organization_id %>">
                                         <%= project.organization_name %>
                                     </a>
 
@@ -151,12 +149,12 @@
 
                             <% } %>
 
-
                         </div>
 
 
                         <!-- =====================================
                              PROJECT ACTION
+                             Available to all visitors.
                         ====================================== -->
 
                         <div class="project-card-action">
@@ -170,7 +168,6 @@
 
                         </div>
 
-
                     </div>
 
                 </article>
@@ -181,7 +178,7 @@
 
 
     <!-- =====================================================
-         NO PROJECTS
+         EMPTY STATE
     ====================================================== -->
 
     <% } else { %>

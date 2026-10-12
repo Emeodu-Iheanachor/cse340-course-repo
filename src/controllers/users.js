@@ -11,6 +11,7 @@ import {
    REQUIRE LOGIN MIDDLEWARE
    Protects routes that require authentication.
 ========================================================= */
+
 const requireLogin = (req, res, next) => {
   if (!req.session?.user) {
     req.flash(
@@ -29,12 +30,12 @@ const requireLogin = (req, res, next) => {
    REQUIRE ROLE MIDDLEWARE
    Protects routes that require a specific user role.
 ========================================================= */
+
 const requireRole = (requiredRole) => {
   return (req, res, next) => {
 
-    /* -------------------------------------------------------
-       USER MUST BE LOGGED IN
-    ------------------------------------------------------- */
+    /* Verify authentication */
+
     if (!req.session?.user) {
       req.flash(
         'error',
@@ -44,10 +45,12 @@ const requireRole = (requiredRole) => {
       return res.redirect('/login')
     }
 
-    /* -------------------------------------------------------
-       USER MUST HAVE THE REQUIRED ROLE
-    ------------------------------------------------------- */
-    if (req.session.user.role_name !== requiredRole) {
+    /* Verify authorization */
+
+    const userRole =
+      String(req.session.user.role_name || '').toLowerCase()
+
+    if (userRole !== String(requiredRole).toLowerCase()) {
       req.flash(
         'error',
         'You do not have permission to access this page.'
@@ -64,22 +67,21 @@ const requireRole = (requiredRole) => {
 /* =========================================================
    SHOW DASHBOARD
 ========================================================= */
-const showDashboard = (req, res) => {
-  const user = req.session.user
 
-  res.render('dashboard', {
+const showDashboard = (req, res) => {
+  return res.render('dashboard', {
     title: 'Dashboard',
-    name: user.name,
-    email: user.email
+    user: req.session.user
   })
 }
 
 
 /* =========================================================
    SHOW USERS PAGE
-   Admin-only page displaying registered users.
+   Displays registered users to authorized administrators.
 ========================================================= */
-const showUsersPage = async (req, res, next) => {
+
+const showUsersPage = async (req, res) => {
   try {
     const users = await getAllUsers()
 
@@ -89,14 +91,11 @@ const showUsersPage = async (req, res, next) => {
     })
 
   } catch (error) {
-    console.error(
-      'Error loading users page:',
-      error
-    )
+    console.error('Error loading users page:', error)
 
     req.flash(
       'error',
-      'Unable to load users.'
+      'Unable to load users. Please try again.'
     )
 
     return res.redirect('/dashboard')
@@ -107,8 +106,9 @@ const showUsersPage = async (req, res, next) => {
 /* =========================================================
    SHOW REGISTRATION FORM
 ========================================================= */
+
 const showUserRegistrationForm = (req, res) => {
-  res.render('register', {
+  return res.render('register', {
     title: 'Register'
   })
 }
@@ -116,14 +116,25 @@ const showUserRegistrationForm = (req, res) => {
 
 /* =========================================================
    PROCESS USER REGISTRATION
+   Validates input, hashes the password, and creates a user.
 ========================================================= */
-const processUserRegistrationForm = async (req, res) => {
-  const { name, email, password } = req.body
 
-  /* ---------------------------------------------------------
-     BASIC SERVER-SIDE VALIDATION
-  --------------------------------------------------------- */
-  if (!name || !email || !password) {
+const processUserRegistrationForm = async (req, res) => {
+  const {
+    name,
+    email,
+    password,
+    confirmPassword
+  } = req.body
+
+  /* Validate required fields */
+
+  if (
+    !name ||
+    !email ||
+    !password ||
+    !confirmPassword
+  ) {
     req.flash(
       'error',
       'Please complete all required fields.'
@@ -132,15 +143,29 @@ const processUserRegistrationForm = async (req, res) => {
     return res.redirect('/register')
   }
 
-  /* ---------------------------------------------------------
-     CLEAN USER INPUT
-  --------------------------------------------------------- */
+  /* Validate input types */
+
+  if (
+    typeof name !== 'string' ||
+    typeof email !== 'string' ||
+    typeof password !== 'string' ||
+    typeof confirmPassword !== 'string'
+  ) {
+    req.flash(
+      'error',
+      'Please provide valid registration information.'
+    )
+
+    return res.redirect('/register')
+  }
+
+  /* Clean user input */
+
   const cleanName = name.trim()
   const cleanEmail = email.trim().toLowerCase()
 
-  /* ---------------------------------------------------------
-     VALIDATE NAME
-  --------------------------------------------------------- */
+  /* Validate name */
+
   if (cleanName.length < 2) {
     req.flash(
       'error',
@@ -150,10 +175,11 @@ const processUserRegistrationForm = async (req, res) => {
     return res.redirect('/register')
   }
 
-  /* ---------------------------------------------------------
-     VALIDATE EMAIL
-  --------------------------------------------------------- */
-  if (!cleanEmail.includes('@')) {
+  /* Validate email */
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  if (!emailPattern.test(cleanEmail)) {
     req.flash(
       'error',
       'Please enter a valid email address.'
@@ -162,10 +188,8 @@ const processUserRegistrationForm = async (req, res) => {
     return res.redirect('/register')
   }
 
-  /* ---------------------------------------------------------
-     VALIDATE PASSWORD
-     Password must be at least 7 characters.
-  --------------------------------------------------------- */
+  /* Validate password length */
+
   if (password.length < 7) {
     req.flash(
       'error',
@@ -175,32 +199,36 @@ const processUserRegistrationForm = async (req, res) => {
     return res.redirect('/register')
   }
 
-  try {
-    /* -------------------------------------------------------
-       HASH PASSWORD
-       Never store the plain-text password.
-    ------------------------------------------------------- */
-    const saltRounds = 10
+  /* Confirm password */
 
-    const passwordHash = await bcrypt.hash(
-      password,
-      saltRounds
+  if (password !== confirmPassword) {
+    req.flash(
+      'error',
+      'Passwords do not match.'
     )
 
-    /* -------------------------------------------------------
-       CREATE USER
-       createUser() assigns the default "user" role.
-       The registration form cannot select an admin role.
-    ------------------------------------------------------- */
+    return res.redirect('/register')
+  }
+
+  try {
+
+    /* Hash the password before storing it */
+
+    const passwordHash = await bcrypt.hash(password, 10)
+
+    /*
+     * Public registration must create an ordinary user.
+     * The model should assign the default "user" role.
+     */
+
     await createUser(
       cleanName,
       cleanEmail,
       passwordHash
     )
 
-    /* -------------------------------------------------------
-       SUCCESS MESSAGE
-    ------------------------------------------------------- */
+    /* Registration success */
+
     req.flash(
       'success',
       'Registration successful! Please log in.'
@@ -209,15 +237,10 @@ const processUserRegistrationForm = async (req, res) => {
     return res.redirect('/login')
 
   } catch (error) {
-    console.error(
-      'Error registering user:',
-      error
-    )
+    console.error('Error registering user:', error)
 
-    /* -------------------------------------------------------
-       HANDLE DUPLICATE EMAIL
-       PostgreSQL unique constraint violation.
-    ------------------------------------------------------- */
+    /* Handle duplicate email addresses */
+
     if (error.code === '23505') {
       req.flash(
         'error',
@@ -227,9 +250,8 @@ const processUserRegistrationForm = async (req, res) => {
       return res.redirect('/register')
     }
 
-    /* -------------------------------------------------------
-       HANDLE OTHER DATABASE/REGISTRATION ERRORS
-    ------------------------------------------------------- */
+    /* Handle other registration errors */
+
     req.flash(
       'error',
       'An error occurred during registration. Please try again.'
@@ -243,8 +265,9 @@ const processUserRegistrationForm = async (req, res) => {
 /* =========================================================
    SHOW LOGIN FORM
 ========================================================= */
+
 const showLoginForm = (req, res) => {
-  res.render('login', {
+  return res.render('login', {
     title: 'Login'
   })
 }
@@ -252,14 +275,20 @@ const showLoginForm = (req, res) => {
 
 /* =========================================================
    PROCESS LOGIN
+   Authenticates the user and creates an authenticated session.
 ========================================================= */
+
 const processLoginForm = async (req, res) => {
   const { email, password } = req.body
 
-  /* ---------------------------------------------------------
-     BASIC LOGIN VALIDATION
-  --------------------------------------------------------- */
-  if (!email || !password) {
+  /* Validate required fields */
+
+  if (
+    typeof email !== 'string' ||
+    typeof password !== 'string' ||
+    !email.trim() ||
+    !password
+  ) {
     req.flash(
       'error',
       'Please enter your email and password.'
@@ -268,28 +297,19 @@ const processLoginForm = async (req, res) => {
     return res.redirect('/login')
   }
 
-  /* ---------------------------------------------------------
-     CLEAN EMAIL
-  --------------------------------------------------------- */
   const cleanEmail = email.trim().toLowerCase()
 
   try {
-    /* -------------------------------------------------------
-       AUTHENTICATE USER
 
-       authenticateUser() handles:
-       - finding the user
-       - bcrypt password comparison
-       - returning safe user information
-    ------------------------------------------------------- */
+    /* Authenticate the user */
+
     const user = await authenticateUser(
       cleanEmail,
       password
     )
 
-    /* -------------------------------------------------------
-       AUTHENTICATION FAILED
-    ------------------------------------------------------- */
+    /* Reject invalid credentials */
+
     if (!user) {
       req.flash(
         'error',
@@ -299,10 +319,32 @@ const processLoginForm = async (req, res) => {
       return res.redirect('/login')
     }
 
-    /* -------------------------------------------------------
-       REGENERATE SESSION
-       Helps prevent session fixation after login.
-    ------------------------------------------------------- */
+    /*
+     * Verify that the authenticated user has a valid role.
+     * The model should return role_name from the database.
+     */
+
+    if (
+      typeof user.role_name !== 'string' ||
+      !user.role_name.trim()
+    ) {
+      console.error(
+        'Login failed: the authenticated user has no valid role.'
+      )
+
+      req.flash(
+        'error',
+        'Unable to verify your account permissions. Please contact support.'
+      )
+
+      return res.redirect('/login')
+    }
+
+    /*
+     * Regenerate the session after successful authentication
+     * to help prevent session fixation.
+     */
+
     req.session.regenerate((error) => {
       if (error) {
         console.error(
@@ -310,18 +352,14 @@ const processLoginForm = async (req, res) => {
           error
         )
 
-        return res.redirect('/login')
+        return res.status(500).render('login', {
+          title: 'Login',
+          error: 'Unable to start your session. Please try again.'
+        })
       }
 
-      /* -----------------------------------------------------
-         STORE ONLY SAFE USER INFORMATION IN SESSION
+      /* Store only necessary user information */
 
-         NEVER store:
-         - password
-         - password_hash
-
-         role_name is required by requireRole().
-      ----------------------------------------------------- */
       req.session.user = {
         user_id: user.user_id,
         name: user.name,
@@ -329,25 +367,37 @@ const processLoginForm = async (req, res) => {
         role_name: user.role_name
       }
 
-      /* -----------------------------------------------------
-         SUCCESS FLASH MESSAGE
-      ----------------------------------------------------- */
+      /* Set the flash message */
+
       req.flash(
         'success',
         `Welcome back, ${user.name}!`
       )
 
-      /* -----------------------------------------------------
-         REDIRECT TO PROTECTED DASHBOARD
-      ----------------------------------------------------- */
-      return res.redirect('/dashboard')
+      /*
+       * Save the session before redirecting so that the
+       * authenticated session is available on the next request.
+       */
+
+      req.session.save((saveError) => {
+        if (saveError) {
+          console.error(
+            'Error saving login session:',
+            saveError
+          )
+
+          return res.status(500).render('login', {
+            title: 'Login',
+            error: 'Unable to save your session. Please try again.'
+          })
+        }
+
+        return res.redirect('/dashboard')
+      })
     })
 
   } catch (error) {
-    console.error(
-      'Error during login:',
-      error
-    )
+    console.error('Error during login:', error)
 
     req.flash(
       'error',
@@ -361,31 +411,25 @@ const processLoginForm = async (req, res) => {
 
 /* =========================================================
    PROCESS LOGOUT
+   Clears the authenticated session and displays a message.
 ========================================================= */
+
 const processLogout = (req, res) => {
   if (!req.session) {
     return res.redirect('/login')
   }
 
-  /* ---------------------------------------------------------
-     REGENERATE SESSION
-     Replaces the authenticated session with a new session
-     while allowing the logout flash message to be displayed.
-  --------------------------------------------------------- */
-  req.session.regenerate((error) => {
+  req.session.destroy((error) => {
     if (error) {
       console.error(
-        'Error regenerating session during logout:',
+        'Error destroying session during logout:',
         error
       )
 
-      return res.redirect('/login')
+      return res.status(500).redirect('/dashboard')
     }
 
-    req.flash(
-      'success',
-      'You have been logged out successfully.'
-    )
+    res.clearCookie('connect.sid')
 
     return res.redirect('/login')
   })
@@ -393,8 +437,10 @@ const processLogout = (req, res) => {
 
 
 /* =========================================================
-   EXPORT CONTROLLER FUNCTIONS AND MIDDLEWARE
+   EXPORT CONTROLLERS AND MIDDLEWARE
+   These names must match the imports in src/routes.js.
 ========================================================= */
+
 export {
   requireLogin,
   requireRole,

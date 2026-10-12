@@ -1,5 +1,6 @@
 import express from 'express'
 
+
 /* =========================================================
    USER CONTROLLERS
 ========================================================= */
@@ -72,39 +73,28 @@ const router = express.Router()
 
 
 /* =========================================================
-   CURRENT URL
+   PUBLIC AUTHENTICATION ROUTES
 ========================================================= */
 
-router.use((req, res, next) => {
-  res.locals.currentPath = req.path
-  next()
-})
-
-
-/* =========================================================
-   USER REGISTRATION
-========================================================= */
-
+/* Display registration form */
 router.get(
   '/register',
   showUserRegistrationForm
 )
 
+/* Process registration */
 router.post(
   '/register',
   processUserRegistrationForm
 )
 
-
-/* =========================================================
-   USER LOGIN
-========================================================= */
-
+/* Display login form */
 router.get(
   '/login',
   showLoginForm
 )
 
+/* Process login */
 router.post(
   '/login',
   processLoginForm
@@ -112,7 +102,9 @@ router.post(
 
 
 /* =========================================================
-   USER LOGOUT
+   LOGOUT
+   Only authenticated users can log out.
+   POST is used because logout changes session state.
 ========================================================= */
 
 router.post(
@@ -123,7 +115,7 @@ router.post(
 
 
 /* =========================================================
-   USER DASHBOARD
+   PROTECTED DASHBOARD
 ========================================================= */
 
 router.get(
@@ -134,7 +126,7 @@ router.get(
 
 
 /* =========================================================
-   ADMIN USERS PAGE
+   ADMIN-ONLY USERS PAGE
 ========================================================= */
 
 router.get(
@@ -146,13 +138,13 @@ router.get(
 
 
 /* =========================================================
-   HOME
+   HOME PAGE
 ========================================================= */
 
 router.get(
   '/',
   (req, res) => {
-    res.render('index', {
+    return res.render('index', {
       title: 'Service Network'
     })
   }
@@ -161,15 +153,16 @@ router.get(
 
 /* =========================================================
    ORGANIZATIONS
+   Listing and details are public.
 ========================================================= */
 
-/* Public organization listing */
+/* Display all organizations */
 router.get(
   '/organizations',
   showOrganizationsPage
 )
 
-/* Public organization details */
+/* Display organization details */
 router.get(
   '/organization/:id',
   showOrganizationDetailsPage
@@ -180,7 +173,7 @@ router.get(
    ADMIN-ONLY ORGANIZATION ROUTES
 --------------------------------------------------------- */
 
-/* Create organization - GET */
+/* Display new organization form */
 router.get(
   '/new-organization',
   requireLogin,
@@ -188,7 +181,7 @@ router.get(
   showNewOrganizationForm
 )
 
-/* Create organization - POST */
+/* Process new organization */
 router.post(
   '/new-organization',
   requireLogin,
@@ -197,7 +190,7 @@ router.post(
   processNewOrganizationForm
 )
 
-/* Edit organization - GET */
+/* Display organization edit form */
 router.get(
   '/edit-organization/:id',
   requireLogin,
@@ -205,7 +198,7 @@ router.get(
   showEditOrganizationForm
 )
 
-/* Edit organization - POST */
+/* Process organization update */
 router.post(
   '/edit-organization/:id',
   requireLogin,
@@ -217,15 +210,16 @@ router.post(
 
 /* =========================================================
    SERVICE PROJECTS
+   Listing and details are public.
 ========================================================= */
 
-/* Public project listing */
+/* Display all service projects */
 router.get(
   '/projects',
   showProjectsPage
 )
 
-/* Public project details */
+/* Display service project details */
 router.get(
   '/project/:id',
   showProjectDetailsPage
@@ -236,7 +230,7 @@ router.get(
    ADMIN-ONLY SERVICE PROJECT ROUTES
 --------------------------------------------------------- */
 
-/* Create project - GET */
+/* Display new project form */
 router.get(
   '/new-project',
   requireLogin,
@@ -244,7 +238,7 @@ router.get(
   showNewProjectForm
 )
 
-/* Create project - POST */
+/* Process new project */
 router.post(
   '/new-project',
   requireLogin,
@@ -253,7 +247,7 @@ router.post(
   processNewProjectForm
 )
 
-/* Edit project - GET */
+/* Display project edit form */
 router.get(
   '/edit-project/:id',
   requireLogin,
@@ -261,7 +255,7 @@ router.get(
   showEditProjectForm
 )
 
-/* Edit project - POST */
+/* Process project update */
 router.post(
   '/edit-project/:id',
   requireLogin,
@@ -273,15 +267,16 @@ router.post(
 
 /* =========================================================
    SERVICE PROJECT CATEGORIES
+   Listing and details are public.
 ========================================================= */
 
-/* Public category listing */
+/* Display all categories */
 router.get(
   '/categories',
   showCategoriesPage
 )
 
-/* Public category details */
+/* Display category details */
 router.get(
   '/category/:id',
   showCategoryDetailsPage
@@ -292,7 +287,7 @@ router.get(
    ADMIN-ONLY CATEGORY ROUTES
 --------------------------------------------------------- */
 
-/* Create category - GET */
+/* Display new category form */
 router.get(
   '/new-category',
   requireLogin,
@@ -300,7 +295,7 @@ router.get(
   showNewCategoryForm
 )
 
-/* Create category - POST */
+/* Process new category */
 router.post(
   '/new-category',
   requireLogin,
@@ -309,7 +304,7 @@ router.post(
   processNewCategoryForm
 )
 
-/* Edit category - GET */
+/* Display category edit form */
 router.get(
   '/edit-category/:id',
   requireLogin,
@@ -317,7 +312,7 @@ router.get(
   showEditCategoryForm
 )
 
-/* Edit category - POST */
+/* Process category update */
 router.post(
   '/edit-category/:id',
   requireLogin,
@@ -329,9 +324,10 @@ router.post(
 
 /* =========================================================
    ASSIGN CATEGORIES TO SERVICE PROJECT
+   Only administrators can assign categories.
 ========================================================= */
 
-/* Assign categories - GET */
+/* Display category assignment form */
 router.get(
   '/assign-categories/:projectId',
   requireLogin,
@@ -339,7 +335,7 @@ router.get(
   showAssignCategoriesForm
 )
 
-/* Assign categories - POST */
+/* Process category assignments */
 router.post(
   '/assign-categories/:projectId',
   requireLogin,

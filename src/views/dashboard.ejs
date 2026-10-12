@@ -2,116 +2,98 @@
 
 <main class="site-container dashboard-page">
 
-<section class="page-intro">
+  <section class="page-intro">
     <h1><%= title %></h1>
 
     <p>
-        Welcome to your Service Network dashboard.
+      Welcome, <%= user.name %>! Welcome to your Service Network dashboard.
     </p>
-</section>
+  </section>
 
+  <section class="dashboard-card">
 
-<section class="dashboard-card">
-
-    <h2>Dashboard</h2>
-
+    <h2>Your Account Information</h2>
 
     <div class="user-information">
 
-        <div class="user-information-item">
+      <div class="user-information-item">
+        <span class="user-information-label">
+          Name
+        </span>
 
-            <span class="user-information-label">
-                Name
-            </span>
+        <span class="user-information-value">
+          <%= user.name %>
+        </span>
+      </div>
 
-            <span class="user-information-value">
-                <%= user.name %>
-            </span>
+      <div class="user-information-item">
+        <span class="user-information-label">
+          Email
+        </span>
 
-        </div>
+        <span class="user-information-value">
+          <%= user.email %>
+        </span>
+      </div>
 
+      <div class="user-information-item">
+        <span class="user-information-label">
+          Role
+        </span>
 
-        <div class="user-information-item">
-
-            <span class="user-information-label">
-                Email
-            </span>
-
-            <span class="user-information-value">
-                <%= user.email %>
-            </span>
-
-        </div>
-
-
-        <div class="user-information-item">
-
-            <span class="user-information-label">
-                Role
-            </span>
-
-            <span class="user-information-value">
-                <%= user.role_name %>
-            </span>
-
-        </div>
+        <span class="user-information-value">
+          <%= user.role_name %>
+        </span>
+      </div>
 
     </div>
 
-
     <section class="dashboard-actions">
 
+      <!-- Admin-only user management -->
+      <% if (user && user.role_name === 'admin') { %>
 
-        <!-- Admin-only user management -->
-        <% if (user && user.role_name === 'admin') { %>
-
-            <a
-                href="/users"
-                class="button button-primary"
-            >
-                Manage Users
-            </a>
-
-        <% } %>
-
-
-        <!-- Service projects -->
         <a
-            href="/projects"
-            class="button button-secondary"
+          href="/users"
+          class="button button-primary"
         >
-            View Service Projects
+          Manage Users
         </a>
 
+      <% } %>
 
-        <!-- Return to home page -->
-        <a
-            href="/"
-            class="button button-secondary"
+      <!-- View service projects -->
+      <a
+        href="/projects"
+        class="button button-secondary"
+      >
+        View Service Projects
+      </a>
+
+      <!-- Return to home page -->
+      <a
+        href="/"
+        class="button button-secondary"
+      >
+        Back to Home
+      </a>
+
+      <!-- Log out -->
+      <form
+        action="/logout"
+        method="POST"
+      >
+        <button
+          type="submit"
+          class="button button-primary"
         >
-            Back to Home
-        </a>
-
-
-        <!-- Logout -->
-        <form
-            action="/logout"
-            method="POST"
-        >
-
-            <button
-                type="submit"
-                class="button button-primary"
-            >
-                Log Out
-            </button>
-
-        </form>
-
+          Log Out
+        </button>
+      </form>
 
     </section>
 
-</section>
+  </section>
 
 </main>
 

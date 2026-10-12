@@ -1,16 +1,19 @@
 <%- include('partials/header') %>
 
-<main class="site-container">
+<main class="site-container users-page">
 
+<!-- Page Introduction -->
 <section class="page-intro">
-    <h1><%= title %></h1>
+
+    <h1><%= title || 'Registered Users' %></h1>
 
     <p>
-        View registered users and their assigned roles.
+        View all registered users and their assigned roles.
     </p>
+
 </section>
 
-
+<!-- Registered Users -->
 <section class="users-section">
 
     <% if (users && users.length > 0) { %>
@@ -21,9 +24,9 @@
 
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
                     </tr>
                 </thead>
 
@@ -32,6 +35,7 @@
                     <% users.forEach(user => { %>
 
                         <tr>
+
                             <td>
                                 <%= user.name %>
                             </td>
@@ -45,6 +49,7 @@
                                     <%= user.role_name %>
                                 </span>
                             </td>
+
                         </tr>
 
                     <% }) %>
@@ -57,18 +62,34 @@
 
     <% } else { %>
 
+        <!-- Empty State -->
         <div class="empty-state">
-            <h2>No Users Found</h2>
+
+            <h2>No Registered Users Found</h2>
 
             <p>
-                There are currently no registered users.
+                There are currently no registered users to display.
             </p>
+
         </div>
 
     <% } %>
 
 </section>
 
+<!-- Navigation -->
+<section class="dashboard-actions">
+
+    <a
+        href="/dashboard"
+        class="button button-secondary"
+    >
+        Back to Dashboard
+    </a>
+
+</section>
+
 </main>
 
 <%- include('partials/footer') %>
+

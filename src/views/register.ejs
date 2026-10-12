@@ -1,3 +1,4 @@
+Corrected Registration Page — src/views/register.ejs
 <%- include('partials/header') %>
 
 <main class="register-page">
@@ -10,99 +11,38 @@
         </p>
     </section>
 
-
     <!-- =====================================================
          FLASH MESSAGES
     ====================================================== -->
 
-    <% if (flash) { %>
+    <% if (typeof flash === 'function') { %>
 
-        <% if (flash.success && flash.success.length > 0) { %>
+        <% const messages = flash() %>
 
-            <div class="flash-messages">
+        <% Object.entries(messages).forEach(([type, messageList]) => { %>
 
-                <% flash.success.forEach(message => { %>
+            <% if (messageList.length > 0) { %>
 
-                    <div class="flash flash-success">
-                        <%= message %>
-                    </div>
+                <div class="flash-messages">
 
-                <% }) %>
+                    <% messageList.forEach(message => { %>
 
-            </div>
+                        <div
+                            class="flash flash-<%= type %>"
+                            role="alert"
+                        >
+                            <%= message %>
+                        </div>
 
-        <% } %>
+                    <% }) %>
 
+                </div>
 
-        <% if (flash.error && flash.error.length > 0) { %>
+            <% } %>
 
-            <div class="flash-messages">
-
-                <% flash.error.forEach(message => { %>
-
-                    <div class="flash flash-error">
-                        <%= message %>
-                    </div>
-
-                <% }) %>
-
-            </div>
-
-        <% } %>
-
-
-        <% if (flash.notice && flash.notice.length > 0) { %>
-
-            <div class="flash-messages">
-
-                <% flash.notice.forEach(message => { %>
-
-                    <div class="flash flash-notice">
-                        <%= message %>
-                    </div>
-
-                <% }) %>
-
-            </div>
-
-        <% } %>
-
-
-        <% if (flash.warning && flash.warning.length > 0) { %>
-
-            <div class="flash-messages">
-
-                <% flash.warning.forEach(message => { %>
-
-                    <div class="flash flash-warning">
-                        <%= message %>
-                    </div>
-
-                <% }) %>
-
-            </div>
-
-        <% } %>
-
-
-        <% if (flash.info && flash.info.length > 0) { %>
-
-            <div class="flash-messages">
-
-                <% flash.info.forEach(message => { %>
-
-                    <div class="flash flash-info">
-                        <%= message %>
-                    </div>
-
-                <% }) %>
-
-            </div>
-
-        <% } %>
+        <% }) %>
 
     <% } %>
-
 
     <!-- =====================================================
          REGISTRATION FORM
@@ -137,7 +77,6 @@
 
             </div>
 
-
             <!-- EMAIL -->
 
             <div class="form-group">
@@ -157,7 +96,6 @@
                 >
 
             </div>
-
 
             <!-- PASSWORD -->
 
@@ -183,6 +121,25 @@
 
             </div>
 
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="confirmPassword">
+                    Confirm Password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Enter your password again"
+                    minlength="7"
+                    autocomplete="new-password"
+                    required
+                >
+
+            </div>
 
             <!-- FORM ACTIONS -->
 
@@ -194,7 +151,6 @@
                 >
                     Register
                 </button>
-
 
                 <a
                     href="/login"
