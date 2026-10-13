@@ -26,7 +26,7 @@ const requireLogin = (req, res, next) => {
     return res.redirect('/login')
   }
 
-  next()
+  return next()
 }
 
 
@@ -37,9 +37,6 @@ const requireLogin = (req, res, next) => {
 
 const requireRole = (requiredRole) => {
   return (req, res, next) => {
-
-    /* Verify authentication */
-
     if (!req.session?.user) {
       req.flash(
         'error',
@@ -49,12 +46,15 @@ const requireRole = (requiredRole) => {
       return res.redirect('/login')
     }
 
-    /* Verify authorization */
+    const userRole = String(
+      req.session.user.role_name || ''
+    ).trim().toLowerCase()
 
-    const userRole =
-      String(req.session.user.role_name || '').toLowerCase()
+    const expectedRole = String(
+      requiredRole || ''
+    ).trim().toLowerCase()
 
-    if (userRole !== String(requiredRole).toLowerCase()) {
+    if (!expectedRole || userRole !== expectedRole) {
       req.flash(
         'error',
         'You do not have permission to access this page.'
@@ -63,7 +63,7 @@ const requireRole = (requiredRole) => {
       return res.redirect('/dashboard')
     }
 
-    next()
+    return next()
   }
 }
 
@@ -76,25 +76,17 @@ const requireRole = (requiredRole) => {
 
 const showDashboard = async (req, res, next) => {
   try {
-
-    /* Retrieve the authenticated user */
-
     const user = req.session.user
-
-    /* Retrieve projects this user has volunteered for */
 
     const volunteerProjects = await getProjectsByVolunteer(
       user.user_id
     )
-
-    /* Render the dashboard */
 
     return res.render('dashboard', {
       title: 'Dashboard',
       user,
       volunteerProjects
     })
-
   } catch (error) {
     console.error(
       'Error loading dashboard:',
@@ -108,7 +100,7 @@ const showDashboard = async (req, res, next) => {
 
 /* =========================================================
    SHOW USERS PAGE
-   Displays registered users to authorized administrators.
+   Displays registered users to administrators.
 ========================================================= */
 
 const showUsersPage = async (req, res) => {
@@ -119,9 +111,11 @@ const showUsersPage = async (req, res) => {
       title: 'Manage Users',
       users
     })
-
   } catch (error) {
-    console.error('Error loading users page:', error)
+    console.error(
+      'Error loading users page:',
+      error
+    )
 
     req.flash(
       'error',
@@ -158,11 +152,32 @@ const processUserRegistrationForm = async (req, res) => {
     confirmPassword
   } = req.body
 
-  /* Validate required fields */
+  /* Validate input types before processing. */
 
   if (
-    !name ||
-    !email ||
+    typeof name !== 'string' ||
+    typeof email !== 'string' ||
+    typeof password !== 'string' ||
+    typeof confirmPassword !== 'string'
+  ) {
+    req.flash(
+      'error',
+      'Please complete all required fields with valid information.'
+    )
+
+    return res.redirect('/register')
+  }
+
+  /* Normalize name and email. */
+
+  const cleanName = name.trim()
+  const cleanEmail = email.trim().toLowerCase()
+
+  /* Validate required fields. */
+
+  if (
+    !cleanName ||
+    !cleanEmail ||
     !password ||
     !confirmPassword
   ) {
@@ -174,28 +189,7 @@ const processUserRegistrationForm = async (req, res) => {
     return res.redirect('/register')
   }
 
-  /* Validate input types */
-
-  if (
-    typeof name !== 'string' ||
-    typeof email !== 'string' ||
-    typeof password !== 'string' ||
-    typeof confirmPassword !== 'string'
-  ) {
-    req.flash(
-      'error',
-      'Please provide valid registration information.'
-    )
-
-    return res.redirect('/register')
-  }
-
-  /* Clean user input */
-
-  const cleanName = name.trim()
-  const cleanEmail = email.trim().toLowerCase()
-
-  /* Validate name */
+  /* Validate name. */
 
   if (cleanName.length < 2) {
     req.flash(
@@ -206,7 +200,7 @@ const processUserRegistrationForm = async (req, res) => {
     return res.redirect('/register')
   }
 
-  /* Validate email */
+  /* Validate email format. */
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -219,7 +213,7 @@ const processUserRegistrationForm = async (req, res) => {
     return res.redirect('/register')
   }
 
-  /* Validate password length */
+  /* Validate password length. */
 
   if (password.length < 7) {
     req.flash(
@@ -230,7 +224,7 @@ const processUserRegistrationForm = async (req, res) => {
     return res.redirect('/register')
   }
 
-  /* Confirm password */
+  /* Confirm password. */
 
   if (password !== confirmPassword) {
     req.flash(
@@ -242,14 +236,16 @@ const processUserRegistrationForm = async (req, res) => {
   }
 
   try {
+    /* Hash the password before storing it. */
 
-    /* Hash the password before storing it */
-
-    const passwordHash = await bcrypt.hash(password, 10)
+    const passwordHash = await bcrypt.hash(
+      password,
+      10
+    )
 
     /*
-     * Public registration must create an ordinary user.
-     * The model should assign the default "user" role.
+     * Public registration creates an ordinary user.
+     * The model assigns the default user role.
      */
 
     await createUser(
@@ -258,21 +254,27 @@ const processUserRegistrationForm = async (req, res) => {
       passwordHash
     )
 
-    /* Registration success */
-
     req.flash(
       'success',
       'Registration successful! Please log in.'
     )
 
     return res.redirect('/login')
-
   } catch (error) {
-    console.error('Error registering user:', error)
+    console.error(
+      'Error registering user:',
+      error
+    )
 
-    /* Handle duplicate email addresses */
+    /* Handle duplicate email addresses. */
 
-    if (error.code === '23505') {
+    if (
+      error.code === '23505' &&
+      (
+        !error.constraint ||
+        error.constraint === 'users_email_key'
+      )
+    ) {
       req.flash(
         'error',
         'An account with that email already exists.'
@@ -281,7 +283,18 @@ const processUserRegistrationForm = async (req, res) => {
       return res.redirect('/register')
     }
 
-    /* Handle other registration errors */
+    /* Handle a missing default user role. */
+
+    if (error.code === 'USER_ROLE_NOT_FOUND') {
+      req.flash(
+        'error',
+        'Registration is temporarily unavailable. Please contact support.'
+      )
+
+      return res.redirect('/register')
+    }
+
+    /* Handle other registration errors. */
 
     req.flash(
       'error',
@@ -305,6 +318,19 @@ const showLoginForm = (req, res) => {
 
 
 /* =========================================================
+   RENDER LOGIN ERROR
+   Keeps login error handling consistent.
+========================================================= */
+
+const renderLoginError = (res, message, statusCode = 500) => {
+  return res.status(statusCode).render('login', {
+    title: 'Login',
+    error: message
+  })
+}
+
+
+/* =========================================================
    PROCESS LOGIN
    Authenticates the user and creates an authenticated session.
 ========================================================= */
@@ -312,7 +338,7 @@ const showLoginForm = (req, res) => {
 const processLoginForm = async (req, res) => {
   const { email, password } = req.body
 
-  /* Validate required fields */
+  /* Validate input types. */
 
   if (
     typeof email !== 'string' ||
@@ -331,15 +357,12 @@ const processLoginForm = async (req, res) => {
   const cleanEmail = email.trim().toLowerCase()
 
   try {
-
-    /* Authenticate the user */
+    /* Authenticate the user. */
 
     const user = await authenticateUser(
       cleanEmail,
       password
     )
-
-    /* Reject invalid credentials */
 
     if (!user) {
       req.flash(
@@ -350,10 +373,7 @@ const processLoginForm = async (req, res) => {
       return res.redirect('/login')
     }
 
-    /*
-     * Verify that the authenticated user has a valid role.
-     * The model should return role_name from the database.
-     */
+    /* Verify the user's role. */
 
     if (
       typeof user.role_name !== 'string' ||
@@ -383,13 +403,13 @@ const processLoginForm = async (req, res) => {
           error
         )
 
-        return res.status(500).render('login', {
-          title: 'Login',
-          error: 'Unable to start your session. Please try again.'
-        })
+        return renderLoginError(
+          res,
+          'Unable to start your session. Please try again.'
+        )
       }
 
-      /* Store only necessary user information */
+      /* Store only necessary user information. */
 
       req.session.user = {
         user_id: user.user_id,
@@ -398,7 +418,10 @@ const processLoginForm = async (req, res) => {
         role_name: user.role_name
       }
 
-      /* Set the flash message */
+      /*
+       * Store the welcome message directly in the new session.
+       * The flash middleware remains responsible for retrieving it.
+       */
 
       req.flash(
         'success',
@@ -406,8 +429,7 @@ const processLoginForm = async (req, res) => {
       )
 
       /*
-       * Save the session before redirecting so that the
-       * authenticated session is available on the next request.
+       * Save the authenticated session before redirecting.
        */
 
       req.session.save((saveError) => {
@@ -417,18 +439,20 @@ const processLoginForm = async (req, res) => {
             saveError
           )
 
-          return res.status(500).render('login', {
-            title: 'Login',
-            error: 'Unable to save your session. Please try again.'
-          })
+          return renderLoginError(
+            res,
+            'Unable to save your session. Please try again.'
+          )
         }
 
         return res.redirect('/dashboard')
       })
     })
-
   } catch (error) {
-    console.error('Error during login:', error)
+    console.error(
+      'Error during login:',
+      error
+    )
 
     req.flash(
       'error',
@@ -442,7 +466,7 @@ const processLoginForm = async (req, res) => {
 
 /* =========================================================
    PROCESS LOGOUT
-   Clears the authenticated session and displays a message.
+   Destroys the authenticated session.
 ========================================================= */
 
 const processLogout = (req, res) => {
@@ -469,7 +493,7 @@ const processLogout = (req, res) => {
 
 /* =========================================================
    EXPORT CONTROLLERS AND MIDDLEWARE
-   These names must match the imports in src/routes.js.
+   These names match src/routes.js.
 ========================================================= */
 
 export {

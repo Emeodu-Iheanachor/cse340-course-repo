@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 /* =========================================================
    CREATE NEW USER
    Public registration always creates a normal user.
-   The user cannot select their own role.
+   Duplicate emails are handled safely.
 ========================================================= */
 export const createUser = async (
   name,
@@ -28,6 +28,7 @@ export const createUser = async (
       role_id
     FROM roles
     WHERE role_name = $4
+    ON CONFLICT (email) DO NOTHING
     RETURNING user_id, name, email, role_id
   `
 
@@ -41,9 +42,12 @@ export const createUser = async (
   const result = await db.query(query, values)
 
   if (result.rows.length === 0) {
-    throw new Error(
-      'User registration failed. Ensure the default user role exists.'
+    const error = new Error(
+      'An account with this email already exists.'
     )
+
+    error.code = '23505'
+    throw error
   }
 
   if (process.env.ENABLE_SQL_LOGGING === 'true') {

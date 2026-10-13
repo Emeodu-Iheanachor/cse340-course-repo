@@ -19,7 +19,16 @@ const PORT =
   process.env.PORT || 3000
 
 const SESSION_SECRET =
-  process.env.SESSION_SECRET || 'cse340-development-secret'
+  process.env.SESSION_SECRET ||
+  (NODE_ENV === 'development'
+    ? 'cse340-development-secret'
+    : undefined)
+
+if (!SESSION_SECRET) {
+  throw new Error(
+    'SESSION_SECRET must be configured in production.'
+  )
+}
 
 
 /* =========================================================
