@@ -2,13 +2,24 @@
 
 <main class="site-container dashboard-page">
 
+  <!-- =====================================================
+       DASHBOARD INTRODUCTION
+  ====================================================== -->
+
   <section class="page-intro">
+
     <h1><%= title %></h1>
 
     <p>
       Welcome, <%= user.name %>! Welcome to your Service Network dashboard.
     </p>
+
   </section>
+
+
+  <!-- =====================================================
+       ACCOUNT INFORMATION
+  ====================================================== -->
 
   <section class="dashboard-card">
 
@@ -17,6 +28,7 @@
     <div class="user-information">
 
       <div class="user-information-item">
+
         <span class="user-information-label">
           Name
         </span>
@@ -24,9 +36,12 @@
         <span class="user-information-value">
           <%= user.name %>
         </span>
+
       </div>
 
+
       <div class="user-information-item">
+
         <span class="user-information-label">
           Email
         </span>
@@ -34,9 +49,12 @@
         <span class="user-information-value">
           <%= user.email %>
         </span>
+
       </div>
 
+
       <div class="user-information-item">
+
         <span class="user-information-label">
           Role
         </span>
@@ -44,9 +62,15 @@
         <span class="user-information-value">
           <%= user.role_name %>
         </span>
+
       </div>
 
     </div>
+
+
+    <!-- =====================================================
+         DASHBOARD ACTIONS
+    ====================================================== -->
 
     <section class="dashboard-actions">
 
@@ -62,6 +86,7 @@
 
       <% } %>
 
+
       <!-- View service projects -->
       <a
         href="/projects"
@@ -69,6 +94,7 @@
       >
         View Service Projects
       </a>
+
 
       <!-- Return to home page -->
       <a
@@ -78,20 +104,154 @@
         Back to Home
       </a>
 
+
       <!-- Log out -->
       <form
         action="/logout"
         method="POST"
       >
+
         <button
           type="submit"
           class="button button-primary"
         >
           Log Out
         </button>
+
       </form>
 
     </section>
+
+  </section>
+
+
+  <!-- =====================================================
+       VOLUNTEER PROJECTS
+  ====================================================== -->
+
+  <section class="dashboard-card volunteer-dashboard">
+
+    <h2>Your Volunteer Projects</h2>
+
+    <p>
+      Review the service projects you have signed up for and manage
+      your volunteer commitments.
+    </p>
+
+
+    <% if (volunteerProjects && volunteerProjects.length > 0) { %>
+
+      <div class="volunteer-project-list">
+
+        <% volunteerProjects.forEach((project) => { %>
+
+          <article class="volunteer-project-card">
+
+            <h3>
+              <%= project.title %>
+            </h3>
+
+
+            <div class="volunteer-project-information">
+
+              <p>
+                <strong>Location:</strong>
+                <%= project.location || 'Not specified' %>
+              </p>
+
+
+              <p>
+                <strong>Start Date:</strong>
+
+                <% if (project.start_date) { %>
+
+                  <%= new Date(project.start_date).toLocaleDateString() %>
+
+                <% } else { %>
+
+                  Not specified
+
+                <% } %>
+
+              </p>
+
+
+              <p>
+                <strong>End Date:</strong>
+
+                <% if (project.end_date) { %>
+
+                  <%= new Date(project.end_date).toLocaleDateString() %>
+
+                <% } else { %>
+
+                  Not specified
+
+                <% } %>
+
+              </p>
+
+            </div>
+
+
+            <div class="volunteer-project-actions">
+
+              <!-- View project details -->
+              <a
+                href="/project/<%= project.project_id %>"
+                class="button button-secondary"
+              >
+                View Project
+              </a>
+
+
+              <!-- Withdraw from the project -->
+              <form
+                action="/project/<%= project.project_id %>/unvolunteer"
+                method="POST"
+              >
+
+                <button
+                  type="submit"
+                  class="button button-primary"
+                >
+                  Withdraw from Project
+                </button>
+
+              </form>
+
+            </div>
+
+          </article>
+
+        <% }) %>
+
+      </div>
+
+    <% } else { %>
+
+      <!-- Displayed when the user has no volunteer commitments -->
+      <div class="empty-volunteer-projects">
+
+        <p>
+          You have not signed up for any service projects yet.
+        </p>
+
+        <p>
+          Explore the available opportunities and find a project
+          where you can make a difference.
+        </p>
+
+        <a
+          href="/projects"
+          class="button button-primary"
+        >
+          Explore Service Projects
+        </a>
+
+      </div>
+
+    <% } %>
 
   </section>
 

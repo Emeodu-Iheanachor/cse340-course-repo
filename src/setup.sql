@@ -371,3 +371,24 @@ CREATE TABLE users (
 
 
 
+DROP TABLE IF EXISTS project_volunteer;
+
+CREATE TABLE project_volunteer (
+    volunteer_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    project_id INTEGER NOT NULL,
+    volunteered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_volunteer_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_volunteer_project
+        FOREIGN KEY (project_id)
+        REFERENCES service_project(project_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT unique_user_project
+        UNIQUE (user_id, project_id)
+);

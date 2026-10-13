@@ -6,6 +6,10 @@ import {
   getAllUsers
 } from '../models/users.js'
 
+import {
+  getProjectsByVolunteer
+} from '../models/volunteer-model.js'
+
 
 /* =========================================================
    REQUIRE LOGIN MIDDLEWARE
@@ -66,13 +70,39 @@ const requireRole = (requiredRole) => {
 
 /* =========================================================
    SHOW DASHBOARD
+   Displays the logged-in user's information and the service
+   projects they have volunteered for.
 ========================================================= */
 
-const showDashboard = (req, res) => {
-  return res.render('dashboard', {
-    title: 'Dashboard',
-    user: req.session.user
-  })
+const showDashboard = async (req, res, next) => {
+  try {
+
+    /* Retrieve the authenticated user */
+
+    const user = req.session.user
+
+    /* Retrieve projects this user has volunteered for */
+
+    const volunteerProjects = await getProjectsByVolunteer(
+      user.user_id
+    )
+
+    /* Render the dashboard */
+
+    return res.render('dashboard', {
+      title: 'Dashboard',
+      user,
+      volunteerProjects
+    })
+
+  } catch (error) {
+    console.error(
+      'Error loading dashboard:',
+      error
+    )
+
+    return next(error)
+  }
 }
 
 
@@ -116,7 +146,8 @@ const showUserRegistrationForm = (req, res) => {
 
 /* =========================================================
    PROCESS USER REGISTRATION
-   Validates input, hashes the password, and creates a user.
+   Validates input, confirms the password, hashes it,
+   and creates a new user.
 ========================================================= */
 
 const processUserRegistrationForm = async (req, res) => {

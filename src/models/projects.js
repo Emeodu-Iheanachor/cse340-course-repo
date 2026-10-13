@@ -18,7 +18,7 @@ const getAllProjects = async () => {
     FROM service_project AS sp
     JOIN organization AS o
       ON sp.organization_id = o.organization_id
-    ORDER BY sp.start_date ASC
+    ORDER BY sp.start_date ASC NULLS LAST
   `
 
   const result = await db.query(query)
@@ -46,7 +46,7 @@ const getUpcomingProjects = async (numberOfProjects) => {
     JOIN organization AS o
       ON sp.organization_id = o.organization_id
     WHERE sp.start_date >= CURRENT_DATE
-    ORDER BY sp.start_date ASC
+    ORDER BY sp.start_date ASC NULLS LAST
     LIMIT $1
   `
 
@@ -97,7 +97,7 @@ const getProjectsByOrganizationId = async (organizationId) => {
       end_date
     FROM service_project
     WHERE organization_id = $1
-    ORDER BY start_date ASC
+    ORDER BY start_date ASC NULLS LAST
   `
 
   const result = await db.query(query, [organizationId])

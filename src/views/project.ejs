@@ -2,6 +2,10 @@
 
 <main class="project-page">
 
+    <!-- =====================================================
+         PROJECT INTRODUCTION
+    ====================================================== -->
+
     <section class="page-intro">
 
         <h1><%= title %></h1>
@@ -13,6 +17,10 @@
 
     </section>
 
+
+    <!-- =====================================================
+         PROJECT DETAILS
+    ====================================================== -->
 
     <section
         class="project-details"
@@ -30,20 +38,27 @@
                 <h2><%= project.title %></h2>
 
 
+                <!-- Project Description -->
+
                 <div class="project-detail-section">
 
                     <h3>Description</h3>
 
                     <p class="project-description">
-                        <%= project.description %>
+                        <%= project.description || 'No description is available for this project.' %>
                     </p>
 
                 </div>
 
 
+                <!-- =================================================
+                     PROJECT INFORMATION
+                ================================================== -->
+
                 <div class="project-details-list">
 
                     <!-- Partner Organization -->
+
                     <div class="project-detail">
 
                         <span class="detail-label">
@@ -52,11 +67,19 @@
 
                         <span class="detail-value">
 
-                            <a
-                                href="/organization/<%= project.organization_id %>"
-                            >
-                                <%= project.organization_name %>
-                            </a>
+                            <% if (project.organization_id) { %>
+
+                                <a
+                                    href="/organization/<%= project.organization_id %>"
+                                >
+                                    <%= project.organization_name || 'View Partner Organization' %>
+                                </a>
+
+                            <% } else { %>
+
+                                <%= project.organization_name || 'Not specified' %>
+
+                            <% } %>
 
                         </span>
 
@@ -64,6 +87,7 @@
 
 
                     <!-- Project Location -->
+
                     <div class="project-detail">
 
                         <span class="detail-label">
@@ -71,13 +95,14 @@
                         </span>
 
                         <span class="detail-value">
-                            <%= project.location %>
+                            <%= project.location || 'Not specified' %>
                         </span>
 
                     </div>
 
 
                     <!-- Start Date -->
+
                     <div class="project-detail">
 
                         <span class="detail-label">
@@ -86,15 +111,23 @@
 
                         <span class="detail-value">
 
-                            <%= new Date(project.start_date).toLocaleDateString(
-                                'en-US',
-                                {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    timeZone: 'UTC'
-                                }
-                            ) %>
+                            <% if (project.start_date) { %>
+
+                                <%= new Date(project.start_date).toLocaleDateString(
+                                    'en-US',
+                                    {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        timeZone: 'UTC'
+                                    }
+                                ) %>
+
+                            <% } else { %>
+
+                                To be announced
+
+                            <% } %>
 
                         </span>
 
@@ -102,15 +135,16 @@
 
 
                     <!-- End Date -->
-                    <% if (project.end_date) { %>
 
-                        <div class="project-detail">
+                    <div class="project-detail">
 
-                            <span class="detail-label">
-                                End Date
-                            </span>
+                        <span class="detail-label">
+                            End Date
+                        </span>
 
-                            <span class="detail-value">
+                        <span class="detail-value">
+
+                            <% if (project.end_date) { %>
 
                                 <%= new Date(project.end_date).toLocaleDateString(
                                     'en-US',
@@ -122,16 +156,22 @@
                                     }
                                 ) %>
 
-                            </span>
+                            <% } else { %>
 
-                        </div>
+                                To be announced
 
-                    <% } %>
+                            <% } %>
+
+                        </span>
+
+                    </div>
 
                 </div>
 
 
-                <!-- Currently assigned service categories -->
+                <!-- =================================================
+                     SERVICE CATEGORIES
+                ================================================== -->
 
                 <section
                     class="project-categories"
@@ -171,25 +211,140 @@
                 </section>
 
 
-                <!-- Project actions -->
+                <!-- =================================================
+                     VOLUNTEER REGISTRATION
+                     Logged-in users can volunteer or withdraw.
+                ================================================== -->
+
+                <section
+                    class="project-volunteer-section"
+                    aria-label="Volunteer for this service project"
+                >
+
+                    <h3>
+                        Get Involved
+                    </h3>
+
+                    <p>
+                        Make a difference in your community by
+                        participating in this service project.
+                    </p>
+
+
+                    <% if (user) { %>
+
+                        <% if (volunteering) { %>
+
+                            <!-- User has already volunteered -->
+
+                            <div class="volunteer-status">
+
+                                <p class="success-message">
+                                    You are already volunteering
+                                    for this project.
+                                </p>
+
+                                <form
+                                    action="/project/<%= project.project_id %>/unvolunteer"
+                                    method="POST"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                    >
+                                        Withdraw from Project
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        <% } else { %>
+
+                            <!-- User has not volunteered -->
+
+                            <div class="volunteer-registration">
+
+                                <p>
+                                    Interested in helping?
+                                    Sign up to volunteer for this project.
+                                </p>
+
+                                <form
+                                    action="/project/<%= project.project_id %>/volunteer"
+                                    method="POST"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                    >
+                                        Volunteer for This Project
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        <% } %>
+
+                    <% } else { %>
+
+                        <!-- Visitor is not logged in -->
+
+                        <p>
+                            Please
+                            <a href="/login">log in</a>
+                            to volunteer for this project.
+                        </p>
+
+                        <p>
+                            Don't have an account?
+                            <a href="/register">Register here</a>.
+                        </p>
+
+                    <% } %>
+
+                </section>
+
+
+                <!-- =================================================
+                     ADMINISTRATOR PROJECT MANAGEMENT
+                ================================================== -->
+
+                <% if (
+                    user &&
+                    String(user.role_name || '').toLowerCase() === 'admin'
+                ) { %>
+
+                    <div class="project-actions">
+
+                        <a
+                            href="/edit-project/<%= project.project_id %>"
+                            class="btn btn-primary"
+                        >
+                            Edit Project
+                        </a>
+
+
+                        <a
+                            href="/assign-categories/<%= project.project_id %>"
+                            class="btn btn-primary"
+                        >
+                            Edit Categories
+                        </a>
+
+                    </div>
+
+                <% } %>
+
+
+                <!-- =================================================
+                     BACK TO PROJECTS
+                ================================================== -->
 
                 <div class="project-actions">
-
-                    <a
-                        href="/edit-project/<%= project.project_id %>"
-                        class="btn btn-primary"
-                    >
-                        Edit Project
-                    </a>
-
-
-                    <a
-                        href="/assign-categories/<%= project.project_id %>"
-                        class="btn btn-primary"
-                    >
-                        Edit Categories
-                    </a>
-
 
                     <a
                         href="/projects"

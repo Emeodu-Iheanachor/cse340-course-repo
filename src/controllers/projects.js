@@ -11,6 +11,12 @@ import {
 } from '../models/organizations.js'
 
 import {
+  addVolunteer,
+  removeVolunteer,
+  isVolunteer
+} from '../models/volunteer-model.js'
+
+import {
   body,
   validationResult
 } from 'express-validator'
@@ -53,7 +59,7 @@ const projectValidation = [
       max: 1000
     })
     .withMessage(
-      'Project description must be less than 1000 characters.'
+      'Project description must be no more than 1000 characters.'
     ),
 
   body('location')
@@ -75,7 +81,9 @@ const projectValidation = [
     .withMessage(
       'Project start date is required.'
     )
-    .isISO8601()
+    .isISO8601({
+      strict: true
+    })
     .withMessage(
       'Project start date must be a valid date.'
     ),
@@ -85,17 +93,38 @@ const projectValidation = [
     .withMessage(
       'Project end date is required.'
     )
-    .isISO8601()
+    .isISO8601({
+      strict: true
+    })
     .withMessage(
       'Project end date must be a valid date.'
-    ),
+    )
+    .custom((endDate, { req }) => {
+
+      const startDate = req.body.start_date
+
+      if (
+        startDate &&
+        /^\d{4}-\d{2}-\d{2}$/.test(startDate) &&
+        /^\d{4}-\d{2}-\d{2}$/.test(endDate) &&
+        endDate < startDate
+      ) {
+        throw new Error(
+          'Project end date must be on or after the start date.'
+        )
+      }
+
+      return true
+    }),
 
   body('organization_id')
     .notEmpty()
     .withMessage(
       'Organization is required.'
     )
-    .isInt()
+    .isInt({
+      min: 1
+    })
     .withMessage(
       'Organization must be a valid organization ID.'
     )
@@ -126,7 +155,7 @@ const showProjectsPage = async (
 
   } catch (error) {
 
-    next(error)
+    return next(error)
 
   }
 }
@@ -182,15 +211,272 @@ const showProjectDetailsPage = async (
         projectId
       )
 
+    /* -----------------------------------------------------
+       CHECK VOLUNTEER STATUS
+    ----------------------------------------------------- */
+
+    let volunteering = false
+
+    const user = req.session?.user || null
+
+    if (user) {
+
+      volunteering = await isVolunteer(
+        user.user_id,
+        projectId
+      )
+
+    }
+
     return res.render('project', {
       title: project.title,
       project,
-      categories
+      categories,
+      volunteering,
+      user
     })
 
   } catch (error) {
 
-    next(error)
+    return next(error)
+
+  }
+}
+
+
+/* =========================================================
+   REGISTER AS A VOLUNTEER
+========================================================= */
+
+const processVolunteerSignup = async (
+  req,
+  res,
+  next
+) => {
+
+  try {
+
+    const projectId = Number.parseInt(
+      req.params.id,
+      10
+    )
+
+    /* -----------------------------------------------------
+       VALIDATE PROJECT ID
+    ----------------------------------------------------- */
+
+    if (
+      !Number.isInteger(projectId) ||
+      projectId <= 0
+    ) {
+
+      const error = new Error(
+        'Project not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
+    }
+
+    /* -----------------------------------------------------
+       VERIFY THAT THE PROJECT EXISTS
+    ----------------------------------------------------- */
+
+    const project =
+      await getProjectDetails(projectId)
+
+    if (!project) {
+
+      const error = new Error(
+        'Project not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
+    }
+
+    /* -----------------------------------------------------
+       GET THE LOGGED-IN USER
+    ----------------------------------------------------- */
+
+    const userId =
+      req.session.user.user_id
+
+    /* -----------------------------------------------------
+       PREVENT DUPLICATE VOLUNTEER REGISTRATIONS
+    ----------------------------------------------------- */
+
+    const alreadyVolunteering =
+      await isVolunteer(
+        userId,
+        projectId
+      )
+
+    if (alreadyVolunteering) {
+
+      req.flash(
+        'notice',
+        'You are already volunteering for this project.'
+      )
+
+      return res.redirect(
+        `/project/${projectId}`
+      )
+    }
+
+    /* -----------------------------------------------------
+       ADD VOLUNTEER REGISTRATION
+    ----------------------------------------------------- */
+
+    const volunteer =
+      await addVolunteer(
+        userId,
+        projectId
+      )
+
+    if (!volunteer) {
+
+      req.flash(
+        'notice',
+        'You are already volunteering for this project.'
+      )
+
+      return res.redirect(
+        `/project/${projectId}`
+      )
+    }
+
+    /* -----------------------------------------------------
+       SUCCESS MESSAGE
+    ----------------------------------------------------- */
+
+    req.flash(
+      'success',
+      'You have successfully signed up to volunteer for this project!'
+    )
+
+    return res.redirect(
+      `/project/${projectId}`
+    )
+
+  } catch (error) {
+
+    console.error(
+      'Error registering volunteer:',
+      error
+    )
+
+    return next(error)
+
+  }
+}
+
+
+/* =========================================================
+   WITHDRAW FROM A SERVICE PROJECT
+========================================================= */
+
+const processVolunteerWithdrawal = async (
+  req,
+  res,
+  next
+) => {
+
+  try {
+
+    const projectId = Number.parseInt(
+      req.params.id,
+      10
+    )
+
+    /* -----------------------------------------------------
+       VALIDATE PROJECT ID
+    ----------------------------------------------------- */
+
+    if (
+      !Number.isInteger(projectId) ||
+      projectId <= 0
+    ) {
+
+      const error = new Error(
+        'Project not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
+    }
+
+    /* -----------------------------------------------------
+       VERIFY THAT THE PROJECT EXISTS
+    ----------------------------------------------------- */
+
+    const project =
+      await getProjectDetails(projectId)
+
+    if (!project) {
+
+      const error = new Error(
+        'Project not found.'
+      )
+
+      error.status = 404
+
+      return next(error)
+    }
+
+    /* -----------------------------------------------------
+       GET THE LOGGED-IN USER
+    ----------------------------------------------------- */
+
+    const userId =
+      req.session.user.user_id
+
+    /* -----------------------------------------------------
+       REMOVE VOLUNTEER REGISTRATION
+    ----------------------------------------------------- */
+
+    const removedVolunteer =
+      await removeVolunteer(
+        userId,
+        projectId
+      )
+
+    if (!removedVolunteer) {
+
+      req.flash(
+        'notice',
+        'You are not currently volunteering for this project.'
+      )
+
+      return res.redirect(
+        `/project/${projectId}`
+      )
+    }
+
+    /* -----------------------------------------------------
+       SUCCESS MESSAGE
+    ----------------------------------------------------- */
+
+    req.flash(
+      'success',
+      'You have successfully withdrawn from this service project.'
+    )
+
+    return res.redirect(
+      `/project/${projectId}`
+    )
+
+  } catch (error) {
+
+    console.error(
+      'Error withdrawing volunteer:',
+      error
+    )
+
+    return next(error)
 
   }
 }
@@ -219,7 +505,7 @@ const showNewProjectForm = async (
 
   } catch (error) {
 
-    next(error)
+    return next(error)
 
   }
 }
@@ -246,9 +532,8 @@ const processNewProjectForm = async (
       organization_id
     } = req.body
 
-
     /* -----------------------------------------------------
-       Check validation errors
+       CHECK VALIDATION ERRORS
     ----------------------------------------------------- */
 
     const errors =
@@ -270,9 +555,8 @@ const processNewProjectForm = async (
       )
     }
 
-
     /* -----------------------------------------------------
-       Create project
+       CREATE PROJECT
     ----------------------------------------------------- */
 
     const newProjectId =
@@ -285,14 +569,15 @@ const processNewProjectForm = async (
         organization_id
       )
 
-    console.log(
-      'New service project created:',
-      newProjectId
-    )
-
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+      console.log(
+        'New service project created:',
+        newProjectId
+      )
+    }
 
     /* -----------------------------------------------------
-       Success message
+       SUCCESS MESSAGE
     ----------------------------------------------------- */
 
     req.flash(
@@ -311,14 +596,8 @@ const processNewProjectForm = async (
       error
     )
 
-    req.flash(
-      'error',
-      'There was an error creating the service project.'
-    )
+    return next(error)
 
-    return res.redirect(
-      '/new-project'
-    )
   }
 }
 
@@ -341,9 +620,8 @@ const showEditProjectForm = async (
         10
       )
 
-
     /* -----------------------------------------------------
-       Validate project ID
+       VALIDATE PROJECT ID
     ----------------------------------------------------- */
 
     if (
@@ -360,9 +638,8 @@ const showEditProjectForm = async (
       return next(error)
     }
 
-
     /* -----------------------------------------------------
-       Get existing project
+       GET EXISTING PROJECT
     ----------------------------------------------------- */
 
     const project =
@@ -381,17 +658,15 @@ const showEditProjectForm = async (
       return next(error)
     }
 
-
     /* -----------------------------------------------------
-       Get organizations for dropdown
+       GET ORGANIZATIONS FOR DROPDOWN
     ----------------------------------------------------- */
 
     const organizations =
       await getAllOrganizations()
 
-
     /* -----------------------------------------------------
-       Render EDIT project view
+       RENDER EDIT PROJECT VIEW
     ----------------------------------------------------- */
 
     return res.render(
@@ -406,7 +681,7 @@ const showEditProjectForm = async (
 
   } catch (error) {
 
-    next(error)
+    return next(error)
 
   }
 }
@@ -430,9 +705,8 @@ const processEditProjectForm = async (
         10
       )
 
-
     /* -----------------------------------------------------
-       Validate project ID
+       VALIDATE PROJECT ID
     ----------------------------------------------------- */
 
     if (
@@ -449,9 +723,8 @@ const processEditProjectForm = async (
       return next(error)
     }
 
-
     /* -----------------------------------------------------
-       Get submitted form data
+       GET SUBMITTED FORM DATA
     ----------------------------------------------------- */
 
     const {
@@ -463,9 +736,8 @@ const processEditProjectForm = async (
       organization_id
     } = req.body
 
-
     /* -----------------------------------------------------
-       Check validation errors
+       CHECK VALIDATION ERRORS
     ----------------------------------------------------- */
 
     const errors =
@@ -487,9 +759,8 @@ const processEditProjectForm = async (
       )
     }
 
-
     /* -----------------------------------------------------
-       Update project
+       UPDATE PROJECT
     ----------------------------------------------------- */
 
     const updatedProject =
@@ -514,15 +785,15 @@ const processEditProjectForm = async (
       return next(error)
     }
 
-
-    console.log(
-      'Service project updated:',
-      projectId
-    )
-
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+      console.log(
+        'Service project updated:',
+        projectId
+      )
+    }
 
     /* -----------------------------------------------------
-       Success message
+       SUCCESS MESSAGE
     ----------------------------------------------------- */
 
     req.flash(
@@ -530,9 +801,8 @@ const processEditProjectForm = async (
       'Service project updated successfully!'
     )
 
-
     /* -----------------------------------------------------
-       Return to updated project
+       RETURN TO UPDATED PROJECT
     ----------------------------------------------------- */
 
     return res.redirect(
@@ -546,14 +816,8 @@ const processEditProjectForm = async (
       error
     )
 
-    req.flash(
-      'error',
-      'There was an error updating the service project.'
-    )
+    return next(error)
 
-    return res.redirect(
-      `/edit-project/${req.params.id}`
-    )
   }
 }
 
@@ -571,6 +835,9 @@ export {
 
   showEditProjectForm,
   processEditProjectForm,
+
+  processVolunteerSignup,
+  processVolunteerWithdrawal,
 
   projectValidation
 }

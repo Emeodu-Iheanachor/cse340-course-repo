@@ -3862,3 +3862,123 @@ footer img,
   }
 }
 
+
+
+
+
+/* =========================================================
+   VOLUNTEER DASHBOARD
+========================================================= */
+
+.volunteer-dashboard {
+    margin-top: 2rem;
+}
+
+.volunteer-dashboard > h2 {
+    margin-bottom: 0.75rem;
+}
+
+.volunteer-dashboard > p {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+.volunteer-project-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.volunteer-project-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.volunteer-project-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--teal);
+    box-shadow: var(--shadow-hover);
+}
+
+.volunteer-project-card h3 {
+    margin: 0 0 1rem;
+    color: var(--ink);
+    line-height: 1.4;
+}
+
+.volunteer-project-information {
+    margin-bottom: 1rem;
+}
+
+.volunteer-project-information p {
+    margin: 0 0 0.75rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.volunteer-project-information p:last-child {
+    margin-bottom: 0;
+}
+
+.volunteer-project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 1.25rem;
+}
+
+.volunteer-project-actions form {
+    margin: 0;
+}
+
+.empty-volunteer-projects {
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--surface);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+}
+
+.empty-volunteer-projects p {
+    line-height: 1.7;
+}
+
+.empty-volunteer-projects .button {
+    margin-top: 0.75rem;
+}
+
+@media (max-width: 640px) {
+    .volunteer-project-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .volunteer-project-card {
+        padding: 1.25rem;
+    }
+
+    .volunteer-project-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .volunteer-project-actions .button,
+    .volunteer-project-actions form,
+    .volunteer-project-actions form button {
+        width: 100%;
+    }
+}
+
+

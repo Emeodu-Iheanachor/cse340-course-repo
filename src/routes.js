@@ -44,6 +44,8 @@ import {
   processNewProjectForm,
   showEditProjectForm,
   processEditProjectForm,
+  processVolunteerSignup,
+  processVolunteerWithdrawal,
   projectValidation
 } from './controllers/projects.js'
 
@@ -223,6 +225,26 @@ router.get(
 router.get(
   '/project/:id',
   showProjectDetailsPage
+)
+
+
+/* ---------------------------------------------------------
+   W06 VOLUNTEER FUNCTIONALITY
+   Only logged-in users can volunteer or withdraw.
+--------------------------------------------------------- */
+
+/* Register the logged-in user as a volunteer */
+router.post(
+  '/project/:id/volunteer',
+  requireLogin,
+  processVolunteerSignup
+)
+
+/* Remove the logged-in user's volunteer registration */
+router.post(
+  '/project/:id/unvolunteer',
+  requireLogin,
+  processVolunteerWithdrawal
 )
 
 
