@@ -1,9 +1,11 @@
+
 import express from 'express'
 import session from 'express-session'
+import connectPgSimple from 'connect-pg-simple'
 import { fileURLToPath } from 'url'
 import path from 'path'
 
-import { testConnection } from './src/models/db.js'
+import { pool, testConnection } from './src/models/db.js'
 import flash from './src/middleware/flash.js'
 import router from './src/routes.js'
 
@@ -13,26 +15,25 @@ import router from './src/routes.js'
 ========================================================= */
 
 const NODE_ENV =
-  process.env.NODE_ENV?.toLowerCase() || 'development'
+    process.env.NODE_ENV?.toLowerCase() || 'development'
 
-const PORT =
-  process.env.PORT || 3000
+const PORT = process.env.PORT || 3000
 
 const SESSION_SECRET =
-  process.env.SESSION_SECRET ||
-  (NODE_ENV === 'development'
-    ? 'cse340-development-secret'
-    : undefined)
+    process.env.SESSION_SECRET ||
+    (NODE_ENV === 'development'
+        ? 'cse340-development-secret'
+        : undefined)
 
 if (!SESSION_SECRET) {
-  throw new Error(
-    'SESSION_SECRET must be configured in production.'
-  )
+    throw new Error(
+        'SESSION_SECRET must be configured in production.'
+    )
 }
 
 
 /* =========================================================
-   PATH CONFIGURATION
+   FILE PATH CONFIGURATION
 ========================================================= */
 
 const __filename = fileURLToPath(import.meta.url)
@@ -40,10 +41,14 @@ const __dirname = path.dirname(__filename)
 
 
 /* =========================================================
-   CREATE EXPRESS APPLICATION
+   INITIALIZE EXPRESS
 ========================================================= */
 
 const app = express()
+
+if (NODE_ENV === 'production') {
+    app.set('trust proxy', 1)
+}
 
 
 /* =========================================================
@@ -53,21 +58,16 @@ const app = express()
 app.set('view engine', 'ejs')
 
 app.set(
-  'views',
-  path.join(__dirname, 'src/views')
+    'views',
+    path.join(__dirname, 'src', 'views')
 )
 
 
 /* =========================================================
-   REQUEST BODY MIDDLEWARE
+   BODY PARSING
 ========================================================= */
 
-app.use(
-  express.urlencoded({
-    extended: true
-  })
-)
-
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 
@@ -75,11 +75,7 @@ app.use(express.json())
    STATIC FILES
 ========================================================= */
 
-app.use(
-  express.static(
-    path.join(__dirname, 'public')
-  )
-)
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 /* =========================================================
@@ -87,42 +83,64 @@ app.use(
 ========================================================= */
 
 app.use((req, res, next) => {
-  if (NODE_ENV === 'development') {
-    console.log(`${req.method} ${req.url}`)
-  }
+    if (NODE_ENV === 'development') {
+        console.log(`${req.method} ${req.originalUrl}`)
+    }
 
-  next()
+    next()
 })
 
 
 /* =========================================================
-   SESSION MANAGEMENT
+   POSTGRESQL SESSION STORE
 ========================================================= */
 
-/*
- * express-session must run before middleware or routes
- * that access req.session.
- *
- * The SESSION_SECRET should be configured in the
- * environment variables for the deployed application.
- */
+const PgSession = connectPgSimple(session)
+
+const sessionStore = new PgSession({
+    // Reuse the existing PostgreSQL connection pool.
+    pool,
+
+    // Store sessions in this table.
+    tableName: 'user_sessions',
+
+    // Create the table if it does not exist.
+    createTableIfMissing: true,
+
+    // Session lifetime: 24 hours.
+    ttl: 24 * 60 * 60,
+
+    // Remove expired sessions every 15 minutes.
+    pruneSessionInterval: 15 * 60
+})
+
+
+/* =========================================================
+   SESSION MIDDLEWARE
+========================================================= */
 
 app.use(
-  session({
-    secret: SESSION_SECRET,
+    session({
+        name: 'connect.sid',
 
-    resave: false,
+        secret: SESSION_SECRET,
 
-    saveUninitialized: false,
+        store: sessionStore,
 
-    cookie: {
-      httpOnly: true,
+        resave: false,
 
-      secure: NODE_ENV === 'production',
+        saveUninitialized: false,
 
-      maxAge: 1000 * 60 * 60 * 24
-    }
-  })
+        cookie: {
+            httpOnly: true,
+
+            secure: NODE_ENV === 'production',
+
+            sameSite: 'lax',
+
+            maxAge: 1000 * 60 * 60 * 24
+        }
+    })
 )
 
 
@@ -130,81 +148,29 @@ app.use(
    FLASH MESSAGES
 ========================================================= */
 
-/*
- * Flash middleware depends on req.session and must
- * therefore run after express-session.
- */
-
+// The session middleware must run before flash middleware.
 app.use(flash)
 
 
 /* =========================================================
-   GLOBAL TEMPLATE VARIABLES
+   GLOBAL TEMPLATE LOCALS
 ========================================================= */
 
-/*
- * These variables are available to EJS templates.
- *
- * isLoggedIn:
- *   Indicates whether a user is logged in.
- *
- * user:
- *   Contains the current user's session data.
- *
- * isAdmin:
- *   Indicates whether the current user has the admin role.
- *
- * NODE_ENV:
- *   Identifies the application environment.
- *
- * currentPath:
- *   Identifies the current request path.
- */
-
 app.use((req, res, next) => {
+    const user = req.session.user || null
 
-  /* -------------------------------------------------------
-     LOGIN STATUS
-  ------------------------------------------------------- */
+    res.locals.isLoggedIn = Boolean(user)
 
-  res.locals.isLoggedIn =
-    Boolean(req.session?.user)
+    res.locals.user = user
 
+    res.locals.isAdmin =
+        user?.role_name?.toLowerCase() === 'admin'
 
-  /* -------------------------------------------------------
-     CURRENT USER
-  ------------------------------------------------------- */
+    res.locals.NODE_ENV = NODE_ENV
 
-  res.locals.user =
-    req.session?.user || null
+    res.locals.currentPath = req.originalUrl
 
-
-  /* -------------------------------------------------------
-     ADMINISTRATOR STATUS
-  ------------------------------------------------------- */
-
-  res.locals.isAdmin =
-    String(req.session?.user?.role_name || '')
-      .toLowerCase() === 'admin'
-
-
-  /* -------------------------------------------------------
-     APPLICATION ENVIRONMENT
-  ------------------------------------------------------- */
-
-  res.locals.NODE_ENV =
-    NODE_ENV
-
-
-  /* -------------------------------------------------------
-     CURRENT REQUEST PATH
-  ------------------------------------------------------- */
-
-  res.locals.currentPath =
-    req.path
-
-
-  next()
+    next()
 })
 
 
@@ -215,16 +181,28 @@ app.use((req, res, next) => {
 app.use(router)
 
 
+
 /* =========================================================
-   404 CATCH-ALL
+   404 NOT FOUND HANDLER
 ========================================================= */
 
 app.use((req, res, next) => {
-  const error = new Error('Page Not Found')
+    res.status(404).render('errors/404', {
+        title: 'Page Not Found',
 
-  error.status = 404
+        message: 'Sorry, the page you requested could not be found.',
 
-  next(error)
+        currentPath: req.originalUrl,
+
+        user: req.session?.user || null,
+
+        isLoggedIn: Boolean(req.session?.user),
+
+        isAdmin:
+            req.session?.user?.role_name?.toLowerCase() === 'admin',
+
+        NODE_ENV
+    })
 })
 
 
@@ -233,48 +211,45 @@ app.use((req, res, next) => {
 ========================================================= */
 
 app.use((err, req, res, next) => {
+    console.error('Application error:', err)
 
-  console.error(
-    'Error occurred:',
-    err.message
-  )
+    if (res.headersSent) {
+        return next(err)
+    }
 
-  if (NODE_ENV === 'development') {
-    console.error(err.stack)
-  }
+    const status = err.status || err.statusCode || 500
 
-  const status =
-    err.status || 500
+    res.status(status).render('errors/500', {
+        title: 'Server Error',
 
-  const template =
-    status === 404
-      ? '404'
-      : '500'
+        message:
+            NODE_ENV === 'development'
+                ? err.message
+                : 'An unexpected error occurred. Please try again later.',
 
-  const context = {
-    title:
-      status === 404
-        ? 'Page Not Found'
-        : 'Server Error',
+        error:
+            NODE_ENV === 'development'
+                ? err.message
+                : 'An unexpected error occurred.',
 
-    error:
-      NODE_ENV === 'development'
-        ? err.message
-        : 'An unexpected error occurred.',
+        stack:
+            NODE_ENV === 'development'
+                ? err.stack
+                : '',
 
-    stack:
-      NODE_ENV === 'development'
-        ? err.stack
-        : null
-  }
+        currentPath: req.originalUrl,
 
-  return res
-    .status(status)
-    .render(
-      `errors/${template}`,
-      context
-    )
+        user: req.session?.user || null,
+
+        isLoggedIn: Boolean(req.session?.user),
+
+        isAdmin:
+            req.session?.user?.role_name?.toLowerCase() === 'admin',
+
+        NODE_ENV
+    })
 })
+
 
 
 /* =========================================================
@@ -282,18 +257,22 @@ app.use((err, req, res, next) => {
 ========================================================= */
 
 app.listen(PORT, async () => {
-  try {
-    await testConnection()
+    try {
+        await testConnection()
 
-    console.log(
-      `Server is running at http://127.0.0.1:${PORT}`
-    )
+        console.log('Database connection successful')
 
-    console.log(`Environment: ${NODE_ENV}`)
-  } catch (error) {
-    console.error(
-      'Error connecting to the database:',
-      error.message
-    )
-  }
+        console.log(
+            `Server is running at http://127.0.0.1:${PORT}`
+        )
+
+        console.log(`Environment: ${NODE_ENV}`)
+
+        console.log('Session storage: PostgreSQL')
+    } catch (error) {
+        console.error(
+            'Error connecting to the database:',
+            error.message
+        )
+    }
 })
