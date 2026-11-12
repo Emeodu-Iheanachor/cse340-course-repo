@@ -1,3 +1,31 @@
+/* =========================================================
+   SERVICE NETWORK
+   PROJECT AND VOLUNTEER CONTROLLER
+
+   Handles:
+   - Displaying upcoming projects
+   - Displaying individual projects
+   - Volunteer registration
+   - Volunteer withdrawal
+   - Creating projects
+   - Editing projects
+   - Recording project and volunteer activities
+========================================================= */
+
+
+/* =========================================================
+   IMPORT ACTIVITY LOGGING MODEL
+========================================================= */
+
+import {
+  createActivityLog
+} from '../models/activity-model.js'
+
+
+/* =========================================================
+   IMPORT PROJECT MODEL
+========================================================= */
+
 import {
   getUpcomingProjects,
   getProjectDetails,
@@ -6,15 +34,30 @@ import {
   updateProject
 } from '../models/projects.js'
 
+
+/* =========================================================
+   IMPORT ORGANIZATION MODEL
+========================================================= */
+
 import {
   getAllOrganizations
 } from '../models/organizations.js'
+
+
+/* =========================================================
+   IMPORT VOLUNTEER MODEL
+========================================================= */
 
 import {
   addVolunteer,
   removeVolunteer,
   isVolunteer
 } from '../models/volunteer-model.js'
+
+
+/* =========================================================
+   IMPORT EXPRESS VALIDATOR
+========================================================= */
 
 import {
   body,
@@ -30,10 +73,60 @@ const NUMBER_OF_UPCOMING_PROJECTS = 5
 
 
 /* =========================================================
+   RECORD PROJECT AND VOLUNTEER ACTIVITIES
+
+   Records activities in PostgreSQL.
+
+   Activity logging must never interrupt successful
+   application operations if logging fails.
+========================================================= */
+
+const recordProjectActivity = async (
+  req,
+  action,
+  description
+) => {
+
+  try {
+
+    await createActivityLog({
+
+      user_id:
+        req.session?.user?.user_id ?? null,
+
+      action,
+
+      description,
+
+      ip_address:
+        req.ip || null,
+
+      user_agent:
+        req.get('user-agent') || null
+
+    })
+
+  } catch (error) {
+
+    console.error(
+      `Failed to record ${action} activity:`,
+      error
+    )
+
+  }
+
+}
+
+
+/* =========================================================
    PROJECT VALIDATION RULES
 ========================================================= */
 
 const projectValidation = [
+
+  /* -------------------------------------------------------
+     PROJECT TITLE
+  ------------------------------------------------------- */
 
   body('title')
     .trim()
@@ -49,6 +142,11 @@ const projectValidation = [
       'Project title must be between 3 and 200 characters.'
     ),
 
+
+  /* -------------------------------------------------------
+     PROJECT DESCRIPTION
+  ------------------------------------------------------- */
+
   body('description')
     .trim()
     .notEmpty()
@@ -61,6 +159,11 @@ const projectValidation = [
     .withMessage(
       'Project description must be no more than 1000 characters.'
     ),
+
+
+  /* -------------------------------------------------------
+     PROJECT LOCATION
+  ------------------------------------------------------- */
 
   body('location')
     .trim()
@@ -76,6 +179,11 @@ const projectValidation = [
       'Project location must be between 2 and 200 characters.'
     ),
 
+
+  /* -------------------------------------------------------
+     PROJECT START DATE
+  ------------------------------------------------------- */
+
   body('start_date')
     .notEmpty()
     .withMessage(
@@ -87,6 +195,11 @@ const projectValidation = [
     .withMessage(
       'Project start date must be a valid date.'
     ),
+
+
+  /* -------------------------------------------------------
+     PROJECT END DATE
+  ------------------------------------------------------- */
 
   body('end_date')
     .notEmpty()
@@ -101,7 +214,8 @@ const projectValidation = [
     )
     .custom((endDate, { req }) => {
 
-      const startDate = req.body.start_date
+      const startDate =
+        req.body.start_date
 
       if (
         startDate &&
@@ -109,13 +223,21 @@ const projectValidation = [
         /^\d{4}-\d{2}-\d{2}$/.test(endDate) &&
         endDate < startDate
       ) {
+
         throw new Error(
           'Project end date must be on or after the start date.'
         )
+
       }
 
       return true
+
     }),
+
+
+  /* -------------------------------------------------------
+     PROJECT ORGANIZATION
+  ------------------------------------------------------- */
 
   body('organization_id')
     .notEmpty()
@@ -128,6 +250,7 @@ const projectValidation = [
     .withMessage(
       'Organization must be a valid organization ID.'
     )
+
 ]
 
 
@@ -149,8 +272,11 @@ const showProjectsPage = async (
       )
 
     return res.render('projects', {
+
       title: 'Upcoming Service Projects',
+
       projects
+
     })
 
   } catch (error) {
@@ -158,6 +284,7 @@ const showProjectsPage = async (
     return next(error)
 
   }
+
 }
 
 
@@ -173,10 +300,16 @@ const showProjectDetailsPage = async (
 
   try {
 
-    const projectId = Number.parseInt(
-      req.params.id,
-      10
-    )
+    const projectId =
+      Number.parseInt(
+        req.params.id,
+        10
+      )
+
+
+    /* -----------------------------------------------------
+       VALIDATE PROJECT ID
+    ----------------------------------------------------- */
 
     if (
       !Number.isInteger(projectId) ||
@@ -190,10 +323,17 @@ const showProjectDetailsPage = async (
       error.status = 404
 
       return next(error)
+
     }
+
+
+    /* -----------------------------------------------------
+       GET PROJECT DETAILS
+    ----------------------------------------------------- */
 
     const project =
       await getProjectDetails(projectId)
+
 
     if (!project) {
 
@@ -204,12 +344,19 @@ const showProjectDetailsPage = async (
       error.status = 404
 
       return next(error)
+
     }
+
+
+    /* -----------------------------------------------------
+       GET PROJECT CATEGORIES
+    ----------------------------------------------------- */
 
     const categories =
       await getCategoriesByProjectId(
         projectId
       )
+
 
     /* -----------------------------------------------------
        CHECK VOLUNTEER STATUS
@@ -217,23 +364,37 @@ const showProjectDetailsPage = async (
 
     let volunteering = false
 
-    const user = req.session?.user || null
+    const user =
+      req.session?.user || null
+
 
     if (user) {
 
-      volunteering = await isVolunteer(
-        user.user_id,
-        projectId
-      )
+      volunteering =
+        await isVolunteer(
+          user.user_id,
+          projectId
+        )
 
     }
 
+
+    /* -----------------------------------------------------
+       RENDER PROJECT DETAILS
+    ----------------------------------------------------- */
+
     return res.render('project', {
+
       title: project.title,
+
       project,
+
       categories,
+
       volunteering,
+
       user
+
     })
 
   } catch (error) {
@@ -241,6 +402,7 @@ const showProjectDetailsPage = async (
     return next(error)
 
   }
+
 }
 
 
@@ -256,10 +418,12 @@ const processVolunteerSignup = async (
 
   try {
 
-    const projectId = Number.parseInt(
-      req.params.id,
-      10
-    )
+    const projectId =
+      Number.parseInt(
+        req.params.id,
+        10
+      )
+
 
     /* -----------------------------------------------------
        VALIDATE PROJECT ID
@@ -277,7 +441,9 @@ const processVolunteerSignup = async (
       error.status = 404
 
       return next(error)
+
     }
+
 
     /* -----------------------------------------------------
        VERIFY THAT THE PROJECT EXISTS
@@ -285,6 +451,7 @@ const processVolunteerSignup = async (
 
     const project =
       await getProjectDetails(projectId)
+
 
     if (!project) {
 
@@ -295,7 +462,9 @@ const processVolunteerSignup = async (
       error.status = 404
 
       return next(error)
+
     }
+
 
     /* -----------------------------------------------------
        GET THE LOGGED-IN USER
@@ -303,6 +472,7 @@ const processVolunteerSignup = async (
 
     const userId =
       req.session.user.user_id
+
 
     /* -----------------------------------------------------
        PREVENT DUPLICATE VOLUNTEER REGISTRATIONS
@@ -314,6 +484,7 @@ const processVolunteerSignup = async (
         projectId
       )
 
+
     if (alreadyVolunteering) {
 
       req.flash(
@@ -324,7 +495,9 @@ const processVolunteerSignup = async (
       return res.redirect(
         `/project/${projectId}`
       )
+
     }
+
 
     /* -----------------------------------------------------
        ADD VOLUNTEER REGISTRATION
@@ -336,6 +509,7 @@ const processVolunteerSignup = async (
         projectId
       )
 
+
     if (!volunteer) {
 
       req.flash(
@@ -346,7 +520,24 @@ const processVolunteerSignup = async (
       return res.redirect(
         `/project/${projectId}`
       )
+
     }
+
+
+    /* -----------------------------------------------------
+       RECORD SUCCESSFUL VOLUNTEER SIGNUP
+    ----------------------------------------------------- */
+
+    await recordProjectActivity(
+
+      req,
+
+      'VOLUNTEER_SIGNUP',
+
+      `User signed up to volunteer for project: ${project.title} (Project ID: ${projectId}).`
+
+    )
+
 
     /* -----------------------------------------------------
        SUCCESS MESSAGE
@@ -356,6 +547,7 @@ const processVolunteerSignup = async (
       'success',
       'You have successfully signed up to volunteer for this project!'
     )
+
 
     return res.redirect(
       `/project/${projectId}`
@@ -371,6 +563,7 @@ const processVolunteerSignup = async (
     return next(error)
 
   }
+
 }
 
 
@@ -386,10 +579,12 @@ const processVolunteerWithdrawal = async (
 
   try {
 
-    const projectId = Number.parseInt(
-      req.params.id,
-      10
-    )
+    const projectId =
+      Number.parseInt(
+        req.params.id,
+        10
+      )
+
 
     /* -----------------------------------------------------
        VALIDATE PROJECT ID
@@ -407,7 +602,9 @@ const processVolunteerWithdrawal = async (
       error.status = 404
 
       return next(error)
+
     }
+
 
     /* -----------------------------------------------------
        VERIFY THAT THE PROJECT EXISTS
@@ -415,6 +612,7 @@ const processVolunteerWithdrawal = async (
 
     const project =
       await getProjectDetails(projectId)
+
 
     if (!project) {
 
@@ -425,7 +623,9 @@ const processVolunteerWithdrawal = async (
       error.status = 404
 
       return next(error)
+
     }
+
 
     /* -----------------------------------------------------
        GET THE LOGGED-IN USER
@@ -433,6 +633,7 @@ const processVolunteerWithdrawal = async (
 
     const userId =
       req.session.user.user_id
+
 
     /* -----------------------------------------------------
        REMOVE VOLUNTEER REGISTRATION
@@ -444,6 +645,7 @@ const processVolunteerWithdrawal = async (
         projectId
       )
 
+
     if (!removedVolunteer) {
 
       req.flash(
@@ -454,7 +656,24 @@ const processVolunteerWithdrawal = async (
       return res.redirect(
         `/project/${projectId}`
       )
+
     }
+
+
+    /* -----------------------------------------------------
+       RECORD SUCCESSFUL VOLUNTEER WITHDRAWAL
+    ----------------------------------------------------- */
+
+    await recordProjectActivity(
+
+      req,
+
+      'VOLUNTEER_WITHDRAW',
+
+      `User withdrew from project: ${project.title} (Project ID: ${projectId}).`
+
+    )
+
 
     /* -----------------------------------------------------
        SUCCESS MESSAGE
@@ -464,6 +683,7 @@ const processVolunteerWithdrawal = async (
       'success',
       'You have successfully withdrawn from this service project.'
     )
+
 
     return res.redirect(
       `/project/${projectId}`
@@ -479,6 +699,7 @@ const processVolunteerWithdrawal = async (
     return next(error)
 
   }
+
 }
 
 
@@ -497,10 +718,15 @@ const showNewProjectForm = async (
     const organizations =
       await getAllOrganizations()
 
+
     return res.render('new-project', {
+
       title: 'Add New Service Project',
+
       organizations,
+
       errors: []
+
     })
 
   } catch (error) {
@@ -508,6 +734,7 @@ const showNewProjectForm = async (
     return next(error)
 
   }
+
 }
 
 
@@ -523,6 +750,10 @@ const processNewProjectForm = async (
 
   try {
 
+    /* -----------------------------------------------------
+       GET SUBMITTED FORM DATA
+    ----------------------------------------------------- */
+
     const {
       title,
       description,
@@ -532,6 +763,7 @@ const processNewProjectForm = async (
       organization_id
     } = req.body
 
+
     /* -----------------------------------------------------
        CHECK VALIDATION ERRORS
     ----------------------------------------------------- */
@@ -539,21 +771,27 @@ const processNewProjectForm = async (
     const errors =
       validationResult(req)
 
+
     if (!errors.isEmpty()) {
 
       errors.array().forEach(
         (error) => {
+
           req.flash(
             'error',
             error.msg
           )
+
         }
       )
+
 
       return res.redirect(
         '/new-project'
       )
+
     }
+
 
     /* -----------------------------------------------------
        CREATE PROJECT
@@ -561,20 +799,56 @@ const processNewProjectForm = async (
 
     const newProjectId =
       await createProject(
+
         title,
+
         description,
+
         location,
+
         start_date,
+
         end_date,
+
         organization_id
+
       )
 
-    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+
+    /* -----------------------------------------------------
+       RECORD SUCCESSFUL PROJECT CREATION
+    ----------------------------------------------------- */
+
+    if (newProjectId) {
+
+      await recordProjectActivity(
+
+        req,
+
+        'PROJECT_CREATE',
+
+        `Created service project: ${title} (Project ID: ${newProjectId}).`
+
+      )
+
+    }
+
+
+    /* -----------------------------------------------------
+       OPTIONAL SQL DEBUGGING
+    ----------------------------------------------------- */
+
+    if (
+      process.env.ENABLE_SQL_LOGGING === 'true'
+    ) {
+
       console.log(
         'New service project created:',
         newProjectId
       )
+
     }
+
 
     /* -----------------------------------------------------
        SUCCESS MESSAGE
@@ -584,6 +858,7 @@ const processNewProjectForm = async (
       'success',
       'New service project created successfully!'
     )
+
 
     return res.redirect(
       '/projects'
@@ -599,6 +874,7 @@ const processNewProjectForm = async (
     return next(error)
 
   }
+
 }
 
 
@@ -620,6 +896,7 @@ const showEditProjectForm = async (
         10
       )
 
+
     /* -----------------------------------------------------
        VALIDATE PROJECT ID
     ----------------------------------------------------- */
@@ -636,7 +913,9 @@ const showEditProjectForm = async (
       error.status = 404
 
       return next(error)
+
     }
+
 
     /* -----------------------------------------------------
        GET EXISTING PROJECT
@@ -647,6 +926,7 @@ const showEditProjectForm = async (
         projectId
       )
 
+
     if (!project) {
 
       const error = new Error(
@@ -656,7 +936,9 @@ const showEditProjectForm = async (
       error.status = 404
 
       return next(error)
+
     }
+
 
     /* -----------------------------------------------------
        GET ORGANIZATIONS FOR DROPDOWN
@@ -665,6 +947,7 @@ const showEditProjectForm = async (
     const organizations =
       await getAllOrganizations()
 
+
     /* -----------------------------------------------------
        RENDER EDIT PROJECT VIEW
     ----------------------------------------------------- */
@@ -672,10 +955,15 @@ const showEditProjectForm = async (
     return res.render(
       'edit-project',
       {
+
         title: 'Edit Service Project',
+
         project,
+
         organizations,
+
         errors: []
+
       }
     )
 
@@ -684,6 +972,7 @@ const showEditProjectForm = async (
     return next(error)
 
   }
+
 }
 
 
@@ -705,6 +994,7 @@ const processEditProjectForm = async (
         10
       )
 
+
     /* -----------------------------------------------------
        VALIDATE PROJECT ID
     ----------------------------------------------------- */
@@ -721,7 +1011,9 @@ const processEditProjectForm = async (
       error.status = 404
 
       return next(error)
+
     }
+
 
     /* -----------------------------------------------------
        GET SUBMITTED FORM DATA
@@ -736,6 +1028,7 @@ const processEditProjectForm = async (
       organization_id
     } = req.body
 
+
     /* -----------------------------------------------------
        CHECK VALIDATION ERRORS
     ----------------------------------------------------- */
@@ -743,21 +1036,27 @@ const processEditProjectForm = async (
     const errors =
       validationResult(req)
 
+
     if (!errors.isEmpty()) {
 
       errors.array().forEach(
         (error) => {
+
           req.flash(
             'error',
             error.msg
           )
+
         }
       )
+
 
       return res.redirect(
         `/edit-project/${projectId}`
       )
+
     }
+
 
     /* -----------------------------------------------------
        UPDATE PROJECT
@@ -765,14 +1064,23 @@ const processEditProjectForm = async (
 
     const updatedProject =
       await updateProject(
+
         projectId,
+
         title,
+
         description,
+
         location,
+
         start_date,
+
         end_date,
+
         organization_id
+
       )
+
 
     if (!updatedProject) {
 
@@ -783,14 +1091,40 @@ const processEditProjectForm = async (
       error.status = 404
 
       return next(error)
+
     }
 
-    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+
+    /* -----------------------------------------------------
+       RECORD SUCCESSFUL PROJECT UPDATE
+    ----------------------------------------------------- */
+
+    await recordProjectActivity(
+
+      req,
+
+      'PROJECT_UPDATE',
+
+      `Updated service project: ${title} (Project ID: ${projectId}).`
+
+    )
+
+
+    /* -----------------------------------------------------
+       OPTIONAL SQL DEBUGGING
+    ----------------------------------------------------- */
+
+    if (
+      process.env.ENABLE_SQL_LOGGING === 'true'
+    ) {
+
       console.log(
         'Service project updated:',
         projectId
       )
+
     }
+
 
     /* -----------------------------------------------------
        SUCCESS MESSAGE
@@ -800,6 +1134,7 @@ const processEditProjectForm = async (
       'success',
       'Service project updated successfully!'
     )
+
 
     /* -----------------------------------------------------
        RETURN TO UPDATED PROJECT
@@ -819,6 +1154,7 @@ const processEditProjectForm = async (
     return next(error)
 
   }
+
 }
 
 

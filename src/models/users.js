@@ -5,8 +5,9 @@ import bcrypt from 'bcrypt'
 /* =========================================================
    CREATE NEW USER
    Public registration always creates a normal user.
-   Duplicate emails are handled safely.
+   Password is already hashed by the controller.
 ========================================================= */
+
 export const createUser = async (
   name,
   email,
@@ -42,12 +43,48 @@ export const createUser = async (
   const result = await db.query(query, values)
 
   if (result.rows.length === 0) {
-    const error = new Error(
-      'An account with this email already exists.'
+
+    const existingUser = await db.query(
+      `
+        SELECT user_id
+        FROM users
+        WHERE LOWER(email) = LOWER($1)
+        LIMIT 1
+      `,
+      [email]
     )
 
-    error.code = '23505'
-    throw error
+    if (existingUser.rows.length > 0) {
+      const error = new Error(
+        'An account with this email already exists.'
+      )
+
+      error.code = '23505'
+      throw error
+    }
+
+    const roleResult = await db.query(
+      `
+        SELECT role_id
+        FROM roles
+        WHERE role_name = $1
+        LIMIT 1
+      `,
+      [defaultRole]
+    )
+
+    if (roleResult.rows.length === 0) {
+      const error = new Error(
+        'The default user role does not exist.'
+      )
+
+      error.code = 'USER_ROLE_NOT_FOUND'
+      throw error
+    }
+
+    throw new Error(
+      'Unable to create the user account.'
+    )
   }
 
   if (process.env.ENABLE_SQL_LOGGING === 'true') {
@@ -62,11 +99,16 @@ export const createUser = async (
 
 
 /* =========================================================
-   FIND USER BY EMAIL
-   Retrieves account details and role for authentication.
-   The password hash is retrieved only for password checking.
+   AUTHENTICATE USER
+   Finds the account and verifies its password.
+   Returns the user information and role.
 ========================================================= */
-export const findUserByEmail = async (email) => {
+
+export const authenticateUser = async (
+  email,
+  password
+) => {
+
   const query = `
     SELECT
       u.user_id,
@@ -74,8 +116,8 @@ export const findUserByEmail = async (email) => {
       u.email,
       u.password_hash,
       r.role_name
-    FROM users u
-    JOIN roles r
+    FROM users AS u
+    INNER JOIN roles AS r
       ON u.role_id = r.role_id
     WHERE LOWER(u.email) = LOWER($1)
     LIMIT 1
@@ -83,106 +125,48 @@ export const findUserByEmail = async (email) => {
 
   const result = await db.query(query, [email])
 
-  return result.rows[0] || null
-}
-
-
-/* =========================================================
-   GET USER BY EMAIL
-   Compatibility alias for existing code that uses
-   getUserByEmail().
-========================================================= */
-export const getUserByEmail = findUserByEmail
-
-
-/* =========================================================
-   VERIFY PASSWORD
-   Compares the submitted password with its bcrypt hash.
-========================================================= */
-export const verifyPassword = async (
-  password,
-  passwordHash
-) => {
-  return bcrypt.compare(password, passwordHash)
-}
-
-
-/* =========================================================
-   AUTHENTICATE USER
-   Returns safe user information after successful login.
-   Never returns the password hash.
-========================================================= */
-export const authenticateUser = async (
-  email,
-  password
-) => {
-  const user = await findUserByEmail(email)
-
-  if (!user) {
+  if (result.rows.length === 0) {
     return null
   }
 
-  const passwordIsValid = await verifyPassword(
+  const user = result.rows[0]
+
+  const passwordMatches = await bcrypt.compare(
     password,
     user.password_hash
   )
 
-  if (!passwordIsValid) {
+  if (!passwordMatches) {
     return null
   }
 
-  return {
-    user_id: user.user_id,
-    name: user.name,
-    email: user.email,
-    role_name: user.role_name
-  }
+  delete user.password_hash
+
+  return user
 }
 
 
 /* =========================================================
    GET ALL USERS
-   Used by the administrator users page.
-   JOIN roles ensures every user is returned with their role.
+   Retrieves registered users for the admin users page.
+   Never returns password hashes.
 ========================================================= */
+
 export const getAllUsers = async () => {
+
   const query = `
     SELECT
       u.user_id,
       u.name,
       u.email,
       r.role_name
-    FROM users u
-    JOIN roles r
+    FROM users AS u
+    INNER JOIN roles AS r
       ON u.role_id = r.role_id
-    ORDER BY u.name ASC
+    ORDER BY u.user_id DESC
   `
 
   const result = await db.query(query)
 
   return result.rows
-}
-
-
-/* =========================================================
-   GET USER BY ID
-   Returns user details and role without the password hash.
-========================================================= */
-export const getUserById = async (userId) => {
-  const query = `
-    SELECT
-      u.user_id,
-      u.name,
-      u.email,
-      r.role_name
-    FROM users u
-    JOIN roles r
-      ON u.role_id = r.role_id
-    WHERE u.user_id = $1
-    LIMIT 1
-  `
-
-  const result = await db.query(query, [userId])
-
-  return result.rows[0] || null
 }

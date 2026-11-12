@@ -68,6 +68,15 @@ import {
 
 
 /* =========================================================
+   ACTIVITY LOG CONTROLLERS
+========================================================= */
+
+import {
+  showActivityHistory
+} from './controllers/activities.js'
+
+
+/* =========================================================
    CREATE ROUTER
 ========================================================= */
 
@@ -78,25 +87,28 @@ const router = express.Router()
    PUBLIC AUTHENTICATION ROUTES
 ========================================================= */
 
-/* Display registration form */
+// Display registration form.
 router.get(
   '/register',
   showUserRegistrationForm
 )
 
-/* Process registration */
+
+// Process user registration.
 router.post(
   '/register',
   processUserRegistrationForm
 )
 
-/* Display login form */
+
+// Display login form.
 router.get(
   '/login',
   showLoginForm
 )
 
-/* Process login */
+
+// Process user login.
 router.post(
   '/login',
   processLoginForm
@@ -106,7 +118,6 @@ router.post(
 /* =========================================================
    LOGOUT
    Only authenticated users can log out.
-   POST is used because logout changes session state.
 ========================================================= */
 
 router.post(
@@ -117,7 +128,8 @@ router.post(
 
 
 /* =========================================================
-   PROTECTED DASHBOARD
+   PROTECTED USER DASHBOARD
+   Only authenticated users can access their dashboard.
 ========================================================= */
 
 router.get(
@@ -128,7 +140,8 @@ router.get(
 
 
 /* =========================================================
-   ADMIN-ONLY USERS PAGE
+   ADMIN-ONLY USERS MANAGEMENT
+   Only administrators can access the users page.
 ========================================================= */
 
 router.get(
@@ -140,42 +153,57 @@ router.get(
 
 
 /* =========================================================
+   ADMIN-ONLY ACTIVITY HISTORY
+   Only administrators can access activity logs.
+========================================================= */
+
+router.get(
+  '/activity-logs',
+  requireLogin,
+  requireRole('admin'),
+  showActivityHistory
+)
+
+
+/* =========================================================
    HOME PAGE
 ========================================================= */
 
 router.get(
   '/',
   (req, res) => {
+
     return res.render('index', {
       title: 'Service Network'
     })
+
   }
 )
 
 
 /* =========================================================
-   ORGANIZATIONS
-   Listing and details are public.
+   ORGANIZATION ROUTES
 ========================================================= */
 
-/* Display all organizations */
+// Display all organizations.
 router.get(
   '/organizations',
   showOrganizationsPage
 )
 
-/* Display organization details */
+
+// Display organization details.
 router.get(
   '/organization/:id',
   showOrganizationDetailsPage
 )
 
 
-/* ---------------------------------------------------------
-   ADMIN-ONLY ORGANIZATION ROUTES
---------------------------------------------------------- */
+/* =========================================================
+   ADMIN-ONLY ORGANIZATION MANAGEMENT
+========================================================= */
 
-/* Display new organization form */
+// Display new organization form.
 router.get(
   '/new-organization',
   requireLogin,
@@ -183,7 +211,8 @@ router.get(
   showNewOrganizationForm
 )
 
-/* Process new organization */
+
+// Process new organization.
 router.post(
   '/new-organization',
   requireLogin,
@@ -192,7 +221,8 @@ router.post(
   processNewOrganizationForm
 )
 
-/* Display organization edit form */
+
+// Display organization edit form.
 router.get(
   '/edit-organization/:id',
   requireLogin,
@@ -200,7 +230,8 @@ router.get(
   showEditOrganizationForm
 )
 
-/* Process organization update */
+
+// Process organization update.
 router.post(
   '/edit-organization/:id',
   requireLogin,
@@ -211,36 +242,37 @@ router.post(
 
 
 /* =========================================================
-   SERVICE PROJECTS
-   Listing and details are public.
+   SERVICE PROJECT ROUTES
 ========================================================= */
 
-/* Display all service projects */
+// Display all service projects.
 router.get(
   '/projects',
   showProjectsPage
 )
 
-/* Display service project details */
+
+// Display service project details.
 router.get(
   '/project/:id',
   showProjectDetailsPage
 )
 
 
-/* ---------------------------------------------------------
-   W06 VOLUNTEER FUNCTIONALITY
-   Only logged-in users can volunteer or withdraw.
---------------------------------------------------------- */
+/* =========================================================
+   VOLUNTEER FUNCTIONALITY
+   Only authenticated users can register or withdraw.
+========================================================= */
 
-/* Register the logged-in user as a volunteer */
+// Register the logged-in user as a volunteer.
 router.post(
   '/project/:id/volunteer',
   requireLogin,
   processVolunteerSignup
 )
 
-/* Remove the logged-in user's volunteer registration */
+
+// Remove the logged-in user's volunteer registration.
 router.post(
   '/project/:id/unvolunteer',
   requireLogin,
@@ -248,11 +280,11 @@ router.post(
 )
 
 
-/* ---------------------------------------------------------
-   ADMIN-ONLY SERVICE PROJECT ROUTES
---------------------------------------------------------- */
+/* =========================================================
+   ADMIN-ONLY SERVICE PROJECT MANAGEMENT
+========================================================= */
 
-/* Display new project form */
+// Display new project form.
 router.get(
   '/new-project',
   requireLogin,
@@ -260,7 +292,8 @@ router.get(
   showNewProjectForm
 )
 
-/* Process new project */
+
+// Process new project.
 router.post(
   '/new-project',
   requireLogin,
@@ -269,7 +302,8 @@ router.post(
   processNewProjectForm
 )
 
-/* Display project edit form */
+
+// Display project edit form.
 router.get(
   '/edit-project/:id',
   requireLogin,
@@ -277,7 +311,8 @@ router.get(
   showEditProjectForm
 )
 
-/* Process project update */
+
+// Process project update.
 router.post(
   '/edit-project/:id',
   requireLogin,
@@ -288,28 +323,28 @@ router.post(
 
 
 /* =========================================================
-   SERVICE PROJECT CATEGORIES
-   Listing and details are public.
+   SERVICE PROJECT CATEGORY ROUTES
 ========================================================= */
 
-/* Display all categories */
+// Display all categories.
 router.get(
   '/categories',
   showCategoriesPage
 )
 
-/* Display category details */
+
+// Display category details.
 router.get(
   '/category/:id',
   showCategoryDetailsPage
 )
 
 
-/* ---------------------------------------------------------
-   ADMIN-ONLY CATEGORY ROUTES
---------------------------------------------------------- */
+/* =========================================================
+   ADMIN-ONLY CATEGORY MANAGEMENT
+========================================================= */
 
-/* Display new category form */
+// Display new category form.
 router.get(
   '/new-category',
   requireLogin,
@@ -317,7 +352,8 @@ router.get(
   showNewCategoryForm
 )
 
-/* Process new category */
+
+// Process new category.
 router.post(
   '/new-category',
   requireLogin,
@@ -326,7 +362,8 @@ router.post(
   processNewCategoryForm
 )
 
-/* Display category edit form */
+
+// Display category edit form.
 router.get(
   '/edit-category/:id',
   requireLogin,
@@ -334,7 +371,8 @@ router.get(
   showEditCategoryForm
 )
 
-/* Process category update */
+
+// Process category update.
 router.post(
   '/edit-category/:id',
   requireLogin,
@@ -345,11 +383,11 @@ router.post(
 
 
 /* =========================================================
-   ASSIGN CATEGORIES TO SERVICE PROJECT
-   Only administrators can assign categories.
+   ADMIN-ONLY CATEGORY ASSIGNMENT
+   Assign categories to service projects.
 ========================================================= */
 
-/* Display category assignment form */
+// Display category assignment form.
 router.get(
   '/assign-categories/:projectId',
   requireLogin,
@@ -357,7 +395,8 @@ router.get(
   showAssignCategoriesForm
 )
 
-/* Process category assignments */
+
+// Process category assignments.
 router.post(
   '/assign-categories/:projectId',
   requireLogin,

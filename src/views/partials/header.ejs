@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -103,7 +104,7 @@
             <!-- Authentication Navigation -->
             <% if (isLoggedIn && user) { %>
 
-                <!-- Dashboard -->
+                <!-- User Dashboard -->
                 <a
                     href="/dashboard"
                     class="<%= currentPath.startsWith('/dashboard') ? 'active' : '' %>"
@@ -115,12 +116,22 @@
                 <!-- Administrator-Only Navigation -->
                 <% if (isAdmin) { %>
 
+                    <!-- Manage Users -->
                     <a
                         href="/users"
                         class="<%= currentPath.startsWith('/users') ? 'active' : '' %>"
                         <% if (currentPath.startsWith('/users')) { %>aria-current="page"<% } %>
                     >
-                        Users
+                        Manage Users
+                    </a>
+
+                    <!-- Activity History -->
+                    <a
+                        href="/activity-logs"
+                        class="<%= currentPath.startsWith('/activity-logs') ? 'active' : '' %>"
+                        <% if (currentPath.startsWith('/activity-logs')) { %>aria-current="page"<% } %>
+                    >
+                        Activity History
                     </a>
 
                 <% } %>

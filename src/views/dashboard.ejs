@@ -11,7 +11,7 @@
     <h1><%= title %></h1>
 
     <p>
-      Welcome, <%= user.name %>! Welcome to your Service Network dashboard.
+      Welcome to your Service Network dashboard, <%= user.name %>.
     </p>
 
   </section>
@@ -74,7 +74,8 @@
 
     <section class="dashboard-actions">
 
-      <!-- Admin-only user management -->
+      <!-- Admin-only management actions -->
+
       <% if (user && user.role_name === 'admin') { %>
 
         <a
@@ -84,10 +85,21 @@
           Manage Users
         </a>
 
+
+        <!-- Admin-only activity history -->
+
+        <a
+          href="/activity-logs"
+          class="button button-secondary"
+        >
+          Activity History
+        </a>
+
       <% } %>
 
 
       <!-- View service projects -->
+
       <a
         href="/projects"
         class="button button-secondary"
@@ -97,6 +109,7 @@
 
 
       <!-- Return to home page -->
+
       <a
         href="/"
         class="button button-secondary"
@@ -106,6 +119,7 @@
 
 
       <!-- Log out -->
+
       <form
         action="/logout"
         method="POST"
@@ -134,8 +148,8 @@
     <h2>Your Volunteer Projects</h2>
 
     <p>
-      Review the service projects you have signed up for and manage
-      your volunteer commitments.
+      Review the service projects you have signed up for and
+      manage your volunteer commitments.
     </p>
 
 
@@ -163,7 +177,10 @@
               <p>
                 <strong>Start Date:</strong>
 
-                <% if (project.start_date) { %>
+                <% if (
+                  project.start_date &&
+                  !Number.isNaN(new Date(project.start_date).getTime())
+                ) { %>
 
                   <%= new Date(project.start_date).toLocaleDateString() %>
 
@@ -179,7 +196,10 @@
               <p>
                 <strong>End Date:</strong>
 
-                <% if (project.end_date) { %>
+                <% if (
+                  project.end_date &&
+                  !Number.isNaN(new Date(project.end_date).getTime())
+                ) { %>
 
                   <%= new Date(project.end_date).toLocaleDateString() %>
 
@@ -194,9 +214,12 @@
             </div>
 
 
+            <!-- VOLUNTEER PROJECT ACTIONS -->
+
             <div class="volunteer-project-actions">
 
               <!-- View project details -->
+
               <a
                 href="/project/<%= project.project_id %>"
                 class="button button-secondary"
@@ -205,7 +228,8 @@
               </a>
 
 
-              <!-- Withdraw from the project -->
+              <!-- Withdraw from project -->
+
               <form
                 action="/project/<%= project.project_id %>/unvolunteer"
                 method="POST"
@@ -230,7 +254,11 @@
 
     <% } else { %>
 
-      <!-- Displayed when the user has no volunteer commitments -->
+
+      <!-- =================================================
+           EMPTY VOLUNTEER PROJECT STATE
+      ================================================== -->
+
       <div class="empty-volunteer-projects">
 
         <p>
@@ -239,7 +267,7 @@
 
         <p>
           Explore the available opportunities and find a project
-          where you can make a difference.
+          where you can make a difference in your community.
         </p>
 
         <a
