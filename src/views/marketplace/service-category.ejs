@@ -1,0 +1,78 @@
+<%- include('../partials/header') %>
+
+<main class="container marketplace-container">
+
+  <section class="marketplace-hero">
+    <h1><%= category.category_name %></h1>
+
+    <p>
+      <%= category.description || 'Explore services in this category.' %>
+    </p>
+
+    <p class="service-count">
+      <strong><%= category.service_count %></strong>
+      <%= Number(category.service_count) === 1 ? 'service' : 'services' %>
+      available
+    </p>
+
+    <a href="/marketplace/categories" class="btn">
+      Back to Categories
+    </a>
+  </section>
+
+  <section class="marketplace-services">
+    <h2>Available Services</h2>
+
+    <% if (services && services.length > 0) { %>
+
+      <div class="service-grid">
+
+        <% services.forEach(service => { %>
+
+          <article class="service-card">
+
+            <h3><%= service.service_name %></h3>
+
+            <p>
+              <%= service.description %>
+            </p>
+
+            <p>
+              <strong>Service Provider:</strong>
+              <%= service.provider_name %>
+            </p>
+
+            <% if (service.location) { %>
+              <p>
+                <strong>Location:</strong>
+                <%= service.location %>
+              </p>
+            <% } %>
+
+            <% if (service.service_area) { %>
+              <p>
+                <strong>Service Area:</strong>
+                <%= service.service_area %>
+              </p>
+            <% } %>
+
+          </article>
+
+        <% }) %>
+
+      </div>
+
+    <% } else { %>
+
+      <p>
+        There are currently no approved services available
+        in this category. Please check back later.
+      </p>
+
+    <% } %>
+
+  </section>
+
+</main>
+
+<%- include('../partials/footer') %>

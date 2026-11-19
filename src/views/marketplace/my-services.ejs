@@ -1,0 +1,100 @@
+<%- include('../partials/header') %>
+
+<main class="marketplace-container">
+  <section class="marketplace-section">
+    <h1>My Services</h1>
+
+    <p>
+      Manage the services you have submitted to the Service Network Marketplace.
+    </p>
+
+    <div class="marketplace-actions">
+      <a href="/marketplace/register-service" class="btn btn-primary">
+        Register a New Service
+      </a>
+
+      <a href="/marketplace/categories" class="btn btn-secondary">
+        Browse Categories
+      </a>
+    </div>
+
+    <% if (services.length === 0) { %>
+
+      <div class="empty-state">
+        <h2>No Services Registered Yet</h2>
+
+        <p>
+          You have not submitted any services.
+          Register your first service to get started.
+        </p>
+      </div>
+
+    <% } else { %>
+
+      <div class="service-list">
+
+        <% services.forEach(service => { %>
+
+          <article class="service-card">
+
+            <h2><%= service.service_name %></h2>
+
+            <p>
+              <strong>Category:</strong>
+              <%= service.category_name %>
+            </p>
+
+            <p>
+              <strong>Description:</strong>
+              <%= service.description %>
+            </p>
+
+            <% if (service.location) { %>
+              <p>
+                <strong>Location:</strong>
+                <%= service.location %>
+              </p>
+            <% } %>
+
+            <% if (service.service_area) { %>
+              <p>
+                <strong>Service Area:</strong>
+                <%= service.service_area %>
+              </p>
+            <% } %>
+
+            <p>
+              <strong>Approval Status:</strong>
+
+              <span class="status-badge status-<%= service.approval_status %>">
+                <%= service.approval_status.toUpperCase() %>
+              </span>
+            </p>
+
+            <p>
+              <strong>Availability:</strong>
+              <%= service.availability_status.toUpperCase() %>
+            </p>
+
+            <p>
+              <strong>Listing Status:</strong>
+              <%= service.is_active ? 'Active' : 'Inactive' %>
+            </p>
+
+            <p>
+              <strong>Submitted:</strong>
+              <%= new Date(service.created_at).toLocaleDateString() %>
+            </p>
+
+          </article>
+
+        <% }) %>
+
+      </div>
+
+    <% } %>
+
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

@@ -8,6 +8,7 @@ import path from 'path'
 import { pool, testConnection } from './src/models/db.js'
 import flash from './src/middleware/flash.js'
 import router from './src/routes.js'
+import marketplaceRouter from './src/marketplace/routes/marketplace-routes.js'
 
 
 /* =========================================================
@@ -178,7 +179,12 @@ app.use((req, res, next) => {
    APPLICATION ROUTES
 ========================================================= */
 
+// Existing Service Network routes.
 app.use(router)
+
+// Premium Marketplace routes.
+app.use('/marketplace', marketplaceRouter)
+
 
 
 

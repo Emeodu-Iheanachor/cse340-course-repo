@@ -1,460 +1,511 @@
 <%- include('partials/header') %>
 
 <main class="activity-page">
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
 
-    <!-- =====================================================
-         PAGE HEADER
-    ====================================================== -->
+<section class="page-heading">
 
-    <section class="page-heading">
+    <h1><%= title %></h1>
 
-        <h1><%= title %></h1>
+    <p>
+        Monitor user activities and review important
+        events taking place within Service Network.
+    </p>
+
+</section>
+
+
+<!-- =====================================================
+     ACTIVITY STATISTICS
+====================================================== -->
+
+<section class="activity-statistics">
+
+    <div class="stat-card">
+
+        <h3>Total Activities</h3>
 
         <p>
-            Monitor user activities and review important
-            events taking place within Service Network.
+            <%= statistics.totalActivities %>
         </p>
 
-    </section>
+    </div>
 
 
-    <!-- =====================================================
-         ACTIVITY STATISTICS
-    ====================================================== -->
+    <div class="stat-card">
 
-    <section class="activity-statistics">
+        <h3>Active Users</h3>
 
-        <div class="stat-card">
+        <p>
+            <%= statistics.activeUsers %>
+        </p>
 
-            <h3>Total Activities</h3>
+    </div>
 
-            <p>
-                <%= statistics.totalActivities %>
-            </p>
 
-        </div>
+    <div class="stat-card">
 
+        <h3>Activities Today</h3>
 
-        <div class="stat-card">
+        <p>
+            <%= statistics.todayActivities %>
+        </p>
 
-            <h3>Active Users</h3>
+    </div>
 
-            <p>
-                <%= statistics.activeUsers %>
-            </p>
 
-        </div>
+    <div class="stat-card">
 
+        <h3>Total Registrations</h3>
 
-        <div class="stat-card">
+        <p>
+            <%= statistics.totalRegistrations %>
+        </p>
 
-            <h3>Activities Today</h3>
+    </div>
 
-            <p>
-                <%= statistics.todayActivities %>
-            </p>
 
-        </div>
+    <div class="stat-card">
 
+        <h3>Total Logins</h3>
 
-        <div class="stat-card">
+        <p>
+            <%= statistics.totalLogins %>
+        </p>
 
-            <h3>Total Registrations</h3>
+    </div>
 
-            <p>
-                <%= statistics.totalRegistrations %>
-            </p>
 
-        </div>
+    <div class="stat-card">
 
+        <h3>Total Logouts</h3>
 
-        <div class="stat-card">
+        <p>
+            <%= statistics.totalLogouts %>
+        </p>
 
-            <h3>Total Logins</h3>
+    </div>
 
-            <p>
-                <%= statistics.totalLogins %>
-            </p>
+</section>
 
-        </div>
 
+<!-- =====================================================
+     ACTIVITY FILTERS
+====================================================== -->
 
-        <div class="stat-card">
+<section class="activity-filters">
 
-            <h3>Total Logouts</h3>
+    <h2>Filter Activities</h2>
 
-            <p>
-                <%= statistics.totalLogouts %>
-            </p>
+    <form action="/activity-logs" method="GET">
 
-        </div>
+        <!-- ACTIVITY TYPE -->
 
-    </section>
+        <div class="form-group">
 
+            <label for="action">
+                Activity Type
+            </label>
 
-    <!-- =====================================================
-         ACTIVITY FILTERS
-    ====================================================== -->
-
-    <section class="activity-filters">
-
-        <h2>Filter Activities</h2>
-
-        <form action="/activity-logs" method="GET">
-
-            <!-- ACTIVITY TYPE -->
-
-            <div class="form-group">
-
-                <label for="action">
-                    Activity Type
-                </label>
-
-                <select
-                    id="action"
-                    name="action"
-                >
-
-                    <option value="">
-                        All Activities
-                    </option>
-
-
-                    <!-- AUTHENTICATION ACTIVITIES -->
-
-                    <option
-                        value="REGISTER"
-                        <%= filters.action === 'REGISTER' ? 'selected' : '' %>
-                    >
-                        Registration
-                    </option>
-
-
-                    <option
-                        value="LOGIN"
-                        <%= filters.action === 'LOGIN' ? 'selected' : '' %>
-                    >
-                        Login
-                    </option>
-
-
-                    <option
-                        value="LOGOUT"
-                        <%= filters.action === 'LOGOUT' ? 'selected' : '' %>
-                    >
-                        Logout
-                    </option>
-
-
-                    <!-- PROJECT MANAGEMENT ACTIVITIES -->
-
-                    <option
-                        value="PROJECT_CREATE"
-                        <%= filters.action === 'PROJECT_CREATE' ? 'selected' : '' %>
-                    >
-                        Project Created
-                    </option>
-
-
-                    <option
-                        value="PROJECT_UPDATE"
-                        <%= filters.action === 'PROJECT_UPDATE' ? 'selected' : '' %>
-                    >
-                        Project Updated
-                    </option>
-
-
-                    <!-- VOLUNTEER PARTICIPATION ACTIVITIES -->
-
-                    <option
-                        value="VOLUNTEER_SIGNUP"
-                        <%= filters.action === 'VOLUNTEER_SIGNUP' ? 'selected' : '' %>
-                    >
-                        Volunteer Signup
-                    </option>
-
-
-                    <option
-                        value="VOLUNTEER_WITHDRAW"
-                        <%= filters.action === 'VOLUNTEER_WITHDRAW' ? 'selected' : '' %>
-                    >
-                        Volunteer Withdrawal
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- USER ID FILTER -->
-
-            <div class="form-group">
-
-                <label for="userId">
-                    User ID
-                </label>
-
-                <input
-                    type="number"
-                    id="userId"
-                    name="userId"
-                    min="1"
-                    step="1"
-                    value="<%= filters.userId %>"
-                    placeholder="Enter user ID"
-                >
-
-            </div>
-
-
-            <!-- FILTER BUTTONS -->
-
-            <button type="submit">
-                Apply Filters
-            </button>
-
-
-            <a
-                href="/activity-logs"
-                class="button-secondary"
+            <select
+                id="action"
+                name="action"
             >
-                Clear Filters
-            </a>
 
-        </form>
+                <option
+                    value=""
+                    <%= !filters.action ? 'selected' : '' %>
+                >
+                    All Activities
+                </option>
 
-    </section>
+
+                <!-- AUTHENTICATION ACTIVITIES -->
+
+                <option
+                    value="REGISTER"
+                    <%= filters.action === 'REGISTER' ? 'selected' : '' %>
+                >
+                    Registration
+                </option>
 
 
-    <!-- =====================================================
-         ACTIVITY RECORDS
-    ====================================================== -->
+                <option
+                    value="LOGIN"
+                    <%= filters.action === 'LOGIN' ? 'selected' : '' %>
+                >
+                    Login
+                </option>
 
-    <section class="activity-records">
 
-        <h2>Activity Records</h2>
+                <option
+                    value="LOGOUT"
+                    <%= filters.action === 'LOGOUT' ? 'selected' : '' %>
+                >
+                    Logout
+                </option>
 
-        <% if (activities.length > 0) { %>
 
-            <div class="table-container">
+                <!-- PROJECT MANAGEMENT ACTIVITIES -->
 
-                <table>
+                <option
+                    value="PROJECT_CREATE"
+                    <%= filters.action === 'PROJECT_CREATE' ? 'selected' : '' %>
+                >
+                    Project Created
+                </option>
 
-                    <thead>
+
+                <option
+                    value="PROJECT_UPDATE"
+                    <%= filters.action === 'PROJECT_UPDATE' ? 'selected' : '' %>
+                >
+                    Project Updated
+                </option>
+
+
+                <!-- VOLUNTEER PARTICIPATION ACTIVITIES -->
+
+                <option
+                    value="VOLUNTEER_SIGNUP"
+                    <%= filters.action === 'VOLUNTEER_SIGNUP' ? 'selected' : '' %>
+                >
+                    Volunteer Signup
+                </option>
+
+
+                <option
+                    value="VOLUNTEER_WITHDRAW"
+                    <%= filters.action === 'VOLUNTEER_WITHDRAW' ? 'selected' : '' %>
+                >
+                    Volunteer Withdrawal
+                </option>
+
+
+                <!-- MARKETPLACE SERVICE ACTIVITIES -->
+
+                <option
+                    value="SERVICE_SUBMITTED"
+                    <%= filters.action === 'SERVICE_SUBMITTED' ? 'selected' : '' %>
+                >
+                    Service Submitted
+                </option>
+
+
+                <option
+                    value="SERVICE_APPROVED"
+                    <%= filters.action === 'SERVICE_APPROVED' ? 'selected' : '' %>
+                >
+                    Service Approved
+                </option>
+
+
+                <option
+                    value="SERVICE_REJECTED"
+                    <%= filters.action === 'SERVICE_REJECTED' ? 'selected' : '' %>
+                >
+                    Service Rejected
+                </option>
+
+
+                <option
+                    value="SERVICE_SUSPENDED"
+                    <%= filters.action === 'SERVICE_SUSPENDED' ? 'selected' : '' %>
+                >
+                    Service Suspended
+                </option>
+
+
+                <option
+                    value="SERVICE_CANCELLED"
+                    <%= filters.action === 'SERVICE_CANCELLED' ? 'selected' : '' %>
+                >
+                    Service Cancelled
+                </option>
+
+
+                <option
+                    value="SERVICE_REINSTATED"
+                    <%= filters.action === 'SERVICE_REINSTATED' ? 'selected' : '' %>
+                >
+                    Service Reinstated
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- USER ID FILTER -->
+
+        <div class="form-group">
+
+            <label for="userId">
+                User ID
+            </label>
+
+            <input
+                type="number"
+                id="userId"
+                name="userId"
+                min="1"
+                step="1"
+                value="<%= filters.userId %>"
+                placeholder="Enter user ID"
+            >
+
+        </div>
+
+
+        <!-- FILTER BUTTONS -->
+
+        <button type="submit">
+            Apply Filters
+        </button>
+
+
+        <a
+            href="/activity-logs"
+            class="button-secondary"
+        >
+            Clear Filters
+        </a>
+
+    </form>
+
+</section>
+
+
+<!-- =====================================================
+     ACTIVITY RECORDS
+====================================================== -->
+
+<section class="activity-records">
+
+    <h2>Activity Records</h2>
+
+    <% if (activities.length > 0) { %>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Activity ID</th>
+
+                        <th>User</th>
+
+                        <th>Action</th>
+
+                        <th>Description</th>
+
+                        <th>IP Address</th>
+
+                        <th>Date and Time</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <% activities.forEach(activity => { %>
 
                         <tr>
 
-                            <th>Activity ID</th>
+                            <!-- ACTIVITY ID -->
 
-                            <th>User</th>
+                            <td>
+                                <%= activity.activity_id %>
+                            </td>
 
-                            <th>Action</th>
 
-                            <th>Description</th>
+                            <!-- USER INFORMATION -->
 
-                            <th>IP Address</th>
+                            <td>
 
-                            <th>Date and Time</th>
+                                <% if (activity.user_name) { %>
+
+                                    <strong>
+                                        <%= activity.user_name %>
+                                    </strong>
+
+                                    <br>
+
+                                    <small>
+                                        <%= activity.user_email || 'Email unavailable' %>
+                                    </small>
+
+                                <% } else { %>
+
+                                    <span>
+                                        Deleted or unavailable user
+                                    </span>
+
+                                <% } %>
+
+
+                                <% if (activity.user_id) { %>
+
+                                    <br>
+
+                                    <small>
+                                        User ID: <%= activity.user_id %>
+                                    </small>
+
+                                <% } %>
+
+                            </td>
+
+
+                            <!-- ACTIVITY TYPE -->
+
+                            <td>
+
+                                <span class="activity-badge <%= String(activity.action || '').toLowerCase() %>">
+
+                                    <%= activity.action %>
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- ACTIVITY DESCRIPTION -->
+
+                            <td>
+
+                                <%= activity.description || 'No description available.' %>
+
+                            </td>
+
+
+                            <!-- IP ADDRESS -->
+
+                            <td>
+
+                                <%= activity.ip_address || 'Unavailable' %>
+
+                            </td>
+
+
+                            <!-- DATE AND TIME -->
+
+                            <td>
+
+                                <%= new Date(activity.created_at).toLocaleString() %>
+
+                            </td>
 
                         </tr>
 
-                    </thead>
+                    <% }) %>
 
+                </tbody>
 
-                    <tbody>
+            </table>
 
-                        <% activities.forEach(activity => { %>
+        </div>
 
-                            <tr>
 
-                                <!-- ACTIVITY ID -->
+        <!-- =================================================
+             PAGINATION
+        ================================================== -->
 
-                                <td>
-                                    <%= activity.activity_id %>
-                                </td>
+        <div class="pagination">
 
+            <p>
 
-                                <!-- USER INFORMATION -->
+                Page
+                <%= pagination.currentPage %>
 
-                                <td>
+                of
+                <%= Math.max(1, pagination.totalPages) %>
 
-                                    <% if (activity.user_name) { %>
+                |
 
-                                        <strong>
-                                            <%= activity.user_name %>
-                                        </strong>
+                Total records:
+                <%= pagination.total %>
 
-                                        <br>
+            </p>
 
-                                        <small>
-                                            <%= activity.user_email || 'Email unavailable' %>
-                                        </small>
 
-                                    <% } else { %>
+            <!-- PREVIOUS PAGE -->
 
-                                        <span>
-                                            Deleted or unavailable user
-                                        </span>
+            <% if (pagination.currentPage > 1) { %>
 
-                                    <% } %>
-
-
-                                    <% if (activity.user_id) { %>
-
-                                        <br>
-
-                                        <small>
-                                            User ID: <%= activity.user_id %>
-                                        </small>
-
-                                    <% } %>
-
-                                </td>
-
-
-                                <!-- ACTIVITY TYPE -->
-
-                                <td>
-
-                                    <span class="activity-badge <%= String(activity.action || '').toLowerCase() %>">
-
-                                        <%= activity.action %>
-
-                                    </span>
-
-                                </td>
-
-
-                                <!-- ACTIVITY DESCRIPTION -->
-
-                                <td>
-
-                                    <%= activity.description || 'No description available.' %>
-
-                                </td>
-
-
-                                <!-- IP ADDRESS -->
-
-                                <td>
-
-                                    <%= activity.ip_address || 'Unavailable' %>
-
-                                </td>
-
-
-                                <!-- DATE AND TIME -->
-
-                                <td>
-
-                                    <%= new Date(activity.created_at).toLocaleString() %>
-
-                                </td>
-
-                            </tr>
-
-                        <% }) %>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            <!-- =================================================
-                 PAGINATION
-            ================================================== -->
-
-            <div class="pagination">
-
-                <p>
-
-                    Page
-                    <%= pagination.currentPage %>
-
-                    of
-                    <%= Math.max(1, pagination.totalPages) %>
-
-                    |
-
-                    Total records:
-                    <%= pagination.total %>
-
-                </p>
-
-
-                <!-- PREVIOUS PAGE -->
-
-                <% if (pagination.currentPage > 1) { %>
-
-                    <a
-                        href="/activity-logs?page=<%= pagination.currentPage - 1 %>&action=<%= encodeURIComponent(filters.action) %>&userId=<%= encodeURIComponent(filters.userId) %>"
-                    >
-                        Previous
-                    </a>
-
-                <% } %>
-
-
-                <!-- NEXT PAGE -->
-
-                <% if (pagination.currentPage < pagination.totalPages) { %>
-
-                    <a
-                        href="/activity-logs?page=<%= pagination.currentPage + 1 %>&action=<%= encodeURIComponent(filters.action) %>&userId=<%= encodeURIComponent(filters.userId) %>"
-                    >
-                        Next
-                    </a>
-
-                <% } %>
-
-            </div>
-
-
-        <% } else { %>
-
-
-            <!-- =================================================
-                 EMPTY STATE
-            ================================================== -->
-
-            <div class="empty-state">
-
-                <h3>No Activities Found</h3>
-
-                <p>
-                    There are currently no activity records
-                    matching your selected filters.
-                </p>
-
-                <a href="/activity-logs">
-                    View All Activities
+                <a
+                    href="/activity-logs?page=<%= pagination.currentPage - 1 %>&action=<%= encodeURIComponent(filters.action) %>&userId=<%= encodeURIComponent(filters.userId) %>"
+                >
+                    Previous
                 </a>
 
-            </div>
-
-        <% } %>
-
-    </section>
+            <% } %>
 
 
-    <!-- =====================================================
-         ADMINISTRATION NAVIGATION
-    ====================================================== -->
+            <!-- NEXT PAGE -->
 
-    <section class="activity-navigation">
+            <% if (pagination.currentPage < pagination.totalPages) { %>
 
-        <a href="/dashboard">
-            Back to Dashboard
-        </a>
+                <a
+                    href="/activity-logs?page=<%= pagination.currentPage + 1 %>&action=<%= encodeURIComponent(filters.action) %>&userId=<%= encodeURIComponent(filters.userId) %>"
+                >
+                    Next
+                </a>
 
-        <a href="/users">
-            Manage Users
-        </a>
+            <% } %>
 
-    </section>
+        </div>
 
+
+    <% } else { %>
+
+
+        <!-- =================================================
+             EMPTY STATE
+        ================================================== -->
+
+        <div class="empty-state">
+
+            <h3>No Activities Found</h3>
+
+            <p>
+                There are currently no activity records
+                matching your selected filters.
+            </p>
+
+            <a href="/activity-logs">
+                View All Activities
+            </a>
+
+        </div>
+
+    <% } %>
+
+</section>
+
+
+<!-- =====================================================
+     ADMINISTRATION NAVIGATION
+====================================================== -->
+
+<section class="activity-navigation">
+
+    <a href="/dashboard">
+        Back to Dashboard
+    </a>
+
+    <a href="/users">
+        Manage Users
+    </a>
+
+</section>
 </main>
 
 <%- include('partials/footer') %>

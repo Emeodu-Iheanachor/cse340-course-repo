@@ -1,0 +1,105 @@
+<%- include('../../partials/header') %>
+
+<main class="container marketplace-container">
+
+  <section class="marketplace-hero">
+
+    <h1>Marketplace Service Approvals</h1>
+
+    <p>
+      Review service submissions from providers
+      and decide whether they can appear in the public marketplace.
+    </p>
+
+    <a
+      href="/marketplace/categories"
+      class="btn btn-secondary"
+    >
+      View Public Marketplace
+    </a>
+
+  </section>
+
+
+  <section class="marketplace-services">
+
+    <h2>Pending Service Submissions</h2>
+
+    <% if (services && services.length > 0) { %>
+
+      <div class="service-grid">
+
+        <% services.forEach(service => { %>
+
+          <article class="service-card">
+
+            <h3>
+              <%= service.service_name %>
+            </h3>
+
+            <p>
+              <strong>Provider:</strong>
+              <%= service.provider_name %>
+            </p>
+
+            <p>
+              <strong>Email:</strong>
+              <%= service.provider_email %>
+            </p>
+
+            <p>
+              <strong>Category:</strong>
+              <%= service.category_name %>
+            </p>
+
+            <p>
+              <strong>Location:</strong>
+              <%= service.location || 'Not specified' %>
+            </p>
+
+            <p>
+              <strong>Submitted:</strong>
+              <%= new Date(service.created_at).toLocaleDateString() %>
+            </p>
+
+            <p>
+              <strong>Approval Status:</strong>
+
+              <span class="status-badge status-pending">
+                PENDING
+              </span>
+            </p>
+
+            <a
+              href="/marketplace/admin/services/<%= service.user_service_id %>"
+              class="btn btn-primary"
+            >
+              Review Submission
+            </a>
+
+          </article>
+
+        <% }) %>
+
+      </div>
+
+    <% } else { %>
+
+      <div class="empty-state">
+
+        <h2>No Pending Submissions</h2>
+
+        <p>
+          There are currently no service submissions
+          awaiting administrator approval.
+        </p>
+
+      </div>
+
+    <% } %>
+
+  </section>
+
+</main>
+
+<%- include('../../partials/footer') %>

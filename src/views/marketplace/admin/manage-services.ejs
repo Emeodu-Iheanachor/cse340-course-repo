@@ -1,0 +1,129 @@
+<%- include('../../partials/header') %>
+
+<main class="container marketplace-container">
+
+  <section class="marketplace-hero">
+<h1>Manage Marketplace Services</h1>
+
+<p>
+  View and manage all service submissions registered
+  on the Service Network marketplace.
+</p>
+
+<div class="marketplace-actions">
+
+  <a
+    href="/marketplace/admin/services"
+    class="btn btn-secondary"
+  >
+    Pending Approvals
+  </a>
+
+  <a
+    href="/marketplace/categories"
+    class="btn btn-secondary"
+  >
+    Public Marketplace
+  </a>
+
+</div>
+  </section>
+
+  <section class="marketplace-services">
+<h2>All Registered Services</h2>
+
+<% if (services && services.length > 0) { %>
+
+  <div class="service-grid">
+
+    <% services.forEach(service => { %>
+
+      <article class="service-card">
+
+        <h3>
+          <%= service.service_name %>
+        </h3>
+
+        <p>
+          <strong>Service ID:</strong>
+          <%= service.user_service_id %>
+        </p>
+
+        <p>
+          <strong>Provider:</strong>
+          <%= service.provider_name %>
+        </p>
+
+        <p>
+          <strong>Email:</strong>
+          <%= service.provider_email %>
+        </p>
+
+        <p>
+          <strong>Category:</strong>
+          <%= service.category_name %>
+        </p>
+
+        <p>
+          <strong>Location:</strong>
+          <%= service.location || 'Not specified' %>
+        </p>
+
+        <p>
+          <strong>Approval Status:</strong>
+
+          <span class="status-badge status-<%= service.approval_status %>">
+            <%= service.approval_status.toUpperCase() %>
+          </span>
+
+        </p>
+
+        <p>
+          <strong>Availability:</strong>
+          <%= service.availability_status.toUpperCase() %>
+        </p>
+
+        <p>
+          <strong>Listing:</strong>
+          <%= service.is_active ? 'Active' : 'Inactive' %>
+        </p>
+
+        <p>
+          <strong>Last Updated:</strong>
+          <%= new Date(service.updated_at).toLocaleDateString() %>
+        </p>
+
+        <a
+          href="/marketplace/admin/services/<%= service.user_service_id %>"
+          class="btn btn-primary"
+        >
+          Manage Service
+        </a>
+
+      </article>
+
+    <% }) %>
+
+  </div>
+
+<% } else { %>
+
+  <div class="empty-state">
+
+    <h2>No Registered Services</h2>
+
+    <p>
+      There are currently no services registered
+      in the marketplace.
+    </p>
+
+  </div>
+
+<% } %>
+  </section>
+
+</main>
+
+<%- include('../../partials/footer') %>
+
+

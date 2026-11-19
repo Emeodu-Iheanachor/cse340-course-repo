@@ -112,8 +112,7 @@
                 >
                     My Dashboard
                 </a>
-
-                <!-- Administrator-Only Navigation -->
+             <!-- Administrator-Only Navigation -->
                 <% if (isAdmin) { %>
 
                     <!-- Manage Users -->
@@ -134,7 +133,17 @@
                         Activity History
                     </a>
 
+                    <!-- Marketplace Service Approvals -->
+                    <a
+                        href="/marketplace/admin/services"
+                        class="<%= currentPath.startsWith('/marketplace/admin') ? 'active' : '' %>"
+                        <% if (currentPath.startsWith('/marketplace/admin')) { %>aria-current="page"<% } %>
+                    >
+                        Marketplace Approvals
+                    </a>
+
                 <% } %>
+
 
                 <!-- Logged-in User -->
                 <span class="nav-user">

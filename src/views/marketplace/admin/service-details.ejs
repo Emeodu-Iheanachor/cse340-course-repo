@@ -1,0 +1,353 @@
+<%- include('../../partials/header') %>
+
+<main class="container marketplace-container">
+
+  <section class="marketplace-section">
+
+    <h1>Marketplace Service Management</h1>
+
+    <p>
+      Review service information and manage its approval status.
+    </p>
+
+    <article class="service-card">
+
+      <h2>
+        <%= service.service_name %>
+      </h2>
+
+      <!-- SERVICE INFORMATION -->
+      <h3>Service Information</h3>
+
+      <p>
+        <strong>Category:</strong>
+        <%= service.category_name %>
+      </p>
+
+      <p>
+        <strong>Description:</strong>
+        <%= service.description %>
+      </p>
+
+      <p>
+        <strong>Location:</strong>
+        <%= service.location || 'Not specified' %>
+      </p>
+
+      <p>
+        <strong>Service Area:</strong>
+        <%= service.service_area || 'Not specified' %>
+      </p>
+
+
+      <!-- PROVIDER INFORMATION -->
+      <h3>Provider Information</h3>
+
+      <p>
+        <strong>Provider Name:</strong>
+        <%= service.provider_name %>
+      </p>
+
+      <p>
+        <strong>Provider Email:</strong>
+        <%= service.provider_email %>
+      </p>
+
+
+      <!-- SERVICE STATUS -->
+      <h3>Service Status</h3>
+
+      <p>
+        <strong>Service ID:</strong>
+        <%= service.user_service_id %>
+      </p>
+
+      <p>
+        <strong>Availability:</strong>
+        <%= service.availability_status.toUpperCase() %>
+      </p>
+
+      <p>
+        <strong>Approval Status:</strong>
+
+        <span class="status-badge status-<%= service.approval_status %>">
+          <%= service.approval_status.toUpperCase() %>
+        </span>
+      </p>
+
+      <p>
+        <strong>Listing Status:</strong>
+        <%= service.is_active ? 'Active' : 'Inactive' %>
+      </p>
+
+      <p>
+        <strong>Submitted:</strong>
+        <%= new Date(service.created_at).toLocaleString() %>
+      </p>
+
+      <% if (service.updated_at) { %>
+        <p>
+          <strong>Last Updated:</strong>
+          <%= new Date(service.updated_at).toLocaleString() %>
+        </p>
+      <% } %>
+
+
+      <!-- ADMINISTRATOR ACTIONS -->
+      <h3>Administrator Actions</h3>
+
+
+      <!-- PENDING SERVICE -->
+      <% if (service.approval_status === 'pending') { %>
+
+        <p>
+          This service is awaiting administrator approval.
+        </p>
+
+        <div class="marketplace-actions">
+
+          <form
+            action="/marketplace/admin/services/<%= service.user_service_id %>/approve"
+            method="POST"
+            onsubmit="return confirm('Are you sure you want to approve this service?')"
+          >
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              Approve Service
+            </button>
+
+          </form>
+
+
+          <form
+            action="/marketplace/admin/services/<%= service.user_service_id %>/reject"
+            method="POST"
+            onsubmit="return confirm('Are you sure you want to reject this service?')"
+          >
+
+            <button
+              type="submit"
+              class="btn btn-secondary"
+            >
+              Reject Service
+            </button>
+
+          </form>
+
+        </div>
+
+
+      <!-- APPROVED SERVICE -->
+      <% } else if (service.approval_status === 'approved') { %>
+
+        <p>
+          This service is approved and can appear in the public marketplace
+          when its listing is active and available.
+        </p>
+
+        <div class="marketplace-actions">
+
+          <!-- SUSPEND SERVICE -->
+          <form
+            action="/marketplace/admin/services/<%= service.user_service_id %>/suspend"
+            method="POST"
+            onsubmit="return confirm('Are you sure you want to suspend this service?')"
+          >
+
+            <div class="form-group">
+
+              <label for="suspend-reason">
+                Reason for Suspension
+              </label>
+
+              <textarea
+                id="suspend-reason"
+                name="reason"
+                rows="4"
+                maxlength="1000"
+                required
+                placeholder="Explain why this service is being suspended."
+              ></textarea>
+
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-secondary"
+            >
+              Suspend Service
+            </button>
+
+          </form>
+
+
+          <!-- CANCEL SERVICE -->
+          <form
+            action="/marketplace/admin/services/<%= service.user_service_id %>/cancel"
+            method="POST"
+            onsubmit="return confirm('Are you sure you want to cancel this service? This action cannot be reversed.')"
+          >
+
+            <div class="form-group">
+
+              <label for="cancel-reason">
+                Reason for Cancellation
+              </label>
+
+              <textarea
+                id="cancel-reason"
+                name="reason"
+                rows="4"
+                maxlength="1000"
+                required
+                placeholder="Explain why this service is being cancelled."
+              ></textarea>
+
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-secondary"
+            >
+              Cancel Service
+            </button>
+
+          </form>
+
+        </div>
+
+
+      <!-- SUSPENDED SERVICE -->
+      <% } else if (service.approval_status === 'suspended') { %>
+
+        <p>
+          This service is currently suspended and is not visible
+          in the public marketplace.
+        </p>
+
+        <div class="marketplace-actions">
+
+          <!-- REINSTATE SERVICE -->
+          <% if (
+            service.availability_status === 'available' &&
+            service.is_active
+          ) { %>
+
+            <form
+              action="/marketplace/admin/services/<%= service.user_service_id %>/reinstate"
+              method="POST"
+              onsubmit="return confirm('Are you sure you want to reinstate this service?')"
+            >
+
+              <div class="form-group">
+
+                <label for="reinstate-reason">
+                  Reason for Reinstatement (Optional)
+                </label>
+
+                <textarea
+                  id="reinstate-reason"
+                  name="reason"
+                  rows="3"
+                  maxlength="1000"
+                  placeholder="Provide an explanation if necessary."
+                ></textarea>
+
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary"
+              >
+                Reinstate Service
+              </button>
+
+            </form>
+
+          <% } else { %>
+
+            <p class="empty-state">
+              This service cannot currently be reinstated because
+              its listing is inactive or unavailable.
+            </p>
+
+          <% } %>
+
+
+          <!-- CANCEL SUSPENDED SERVICE -->
+          <form
+            action="/marketplace/admin/services/<%= service.user_service_id %>/cancel"
+            method="POST"
+            onsubmit="return confirm('Are you sure you want to cancel this suspended service?')"
+          >
+
+            <div class="form-group">
+
+              <label for="suspended-cancel-reason">
+                Reason for Cancellation
+              </label>
+
+              <textarea
+                id="suspended-cancel-reason"
+                name="reason"
+                rows="4"
+                maxlength="1000"
+                required
+                placeholder="Explain why this service is being cancelled."
+              ></textarea>
+
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-secondary"
+            >
+              Cancel Service
+            </button>
+
+          </form>
+
+        </div>
+
+
+      <!-- REJECTED OR CANCELLED SERVICE -->
+      <% } else { %>
+
+        <div class="empty-state">
+
+          <p>
+            This service has been
+            <strong><%= service.approval_status %></strong>.
+          </p>
+
+          <p>
+            No further status-management actions are available.
+          </p>
+
+        </div>
+
+      <% } %>
+
+    </article>
+
+
+    <!-- NAVIGATION -->
+    <div class="marketplace-actions">
+
+      <a
+        href="/marketplace/admin/services"
+        class="btn btn-secondary"
+      >
+        Back to Pending Submissions
+      </a>
+
+    </div>
+
+  </section>
+
+</main>
+
+<%- include('../../partials/footer') %>

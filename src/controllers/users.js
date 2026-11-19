@@ -2,6 +2,16 @@ import bcrypt from 'bcrypt'
 
 
 /* =========================================================
+   AUTHENTICATION MIDDLEWARE IMPORTS
+========================================================= */
+
+import {
+  requireLogin,
+  requireRole
+} from '../middleware/auth.js'
+
+
+/* =========================================================
    DATABASE MODEL IMPORTS
 ========================================================= */
 
@@ -20,90 +30,6 @@ import {
 import {
   createActivityLog
 } from '../models/activity-model.js'
-
-
-/* =========================================================
-   REQUIRE LOGIN MIDDLEWARE
-
-   Protects routes that require authentication.
-   Only logged-in users can access protected routes.
-========================================================= */
-
-const requireLogin = (req, res, next) => {
-
-  // Verify authentication.
-  if (!req.session?.user) {
-
-    req.flash(
-      'error',
-      'You must be logged in to access that page.'
-    )
-
-    return res.redirect('/login')
-  }
-
-
-  // Allow authenticated users to continue.
-  return next()
-
-}
-
-
-/* =========================================================
-   REQUIRE ROLE MIDDLEWARE
-
-   Protects routes that require a specific user role.
-
-   Only authenticated users with the required role
-   are permitted to continue.
-========================================================= */
-
-const requireRole = (requiredRole) => {
-
-  return (req, res, next) => {
-
-    // Verify authentication.
-    if (!req.session?.user) {
-
-      req.flash(
-        'error',
-        'You must be logged in to access that page.'
-      )
-
-      return res.redirect('/login')
-    }
-
-
-    // Normalize the authenticated user's role.
-    const userRole = String(
-      req.session.user.role_name || ''
-    ).trim().toLowerCase()
-
-
-    // Normalize the required role.
-    const expectedRole = String(
-      requiredRole || ''
-    ).trim().toLowerCase()
-
-
-    // Verify authorization.
-    if (!expectedRole || userRole !== expectedRole) {
-
-      req.flash(
-        'error',
-        'You do not have permission to access this page.'
-      )
-
-      return res.redirect('/dashboard')
-    }
-
-
-    // Allow authorized users to continue.
-    return next()
-
-  }
-
-}
 
 
 /* =========================================================
@@ -732,7 +658,8 @@ const processLogout = (req, res) => {
 /* =========================================================
    EXPORT CONTROLLERS AND MIDDLEWARE
 
-   These names match src/routes.js.
+   Middleware is imported from src/middleware/auth.js.
+   Re-exporting preserves compatibility with src/routes.js.
 ========================================================= */
 
 export {

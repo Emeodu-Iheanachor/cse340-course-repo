@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+
+<main class="container marketplace-container">
+
+  <section class="marketplace-hero">
+    <h1>Service Network Marketplace</h1>
+
+    <p>
+      Discover trusted services and connect with service providers
+      across your community.
+    </p>
+  </section>
+
+  <section class="marketplace-categories">
+
+    <h2>Explore Service Categories</h2>
+
+    <% if (categories && categories.length > 0) { %>
+
+      <div class="category-grid">
+
+        <% categories.forEach(category => { %>
+
+          <article class="category-card">
+
+            <h3>
+              <a href="/marketplace/categories/<%= encodeURIComponent(category.slug) %>">
+                <%= category.category_name %>
+              </a>
+            </h3>
+
+            <p>
+              <%= category.description || 'Explore services in this category.' %>
+            </p>
+
+            <p class="service-count">
+              <strong><%= category.service_count %></strong>
+              <%= Number(category.service_count) === 1 ? 'service' : 'services' %>
+              available
+            </p>
+
+            <a
+              class="btn"
+              href="/marketplace/categories/<%= encodeURIComponent(category.slug) %>"
+            >
+              Explore Category
+            </a>
+
+          </article>
+
+        <% }) %>
+
+      </div>
+
+    <% } else { %>
+
+      <p>
+        No service categories are currently available.
+        Please check back later.
+      </p>
+
+    <% } %>
+
+  </section>
+
+</main>
+
+<%- include('../partials/footer') %>
